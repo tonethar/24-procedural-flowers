@@ -9,7 +9,10 @@
 - ES6 modules
 - ES6 class
 - Arrow functions
-- JSDoc
+- JSDoc 
+
+##v3
+
 - TODO:
   - Webpack/babel/bundling
   - ESLint?

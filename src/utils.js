@@ -19,7 +19,7 @@ const dtr = degrees => degrees * (Math.PI/180);
 const fillRect = (ctx, x, y, width, height, color) => {
   ctx.save();
   ctx.fillStyle=color;
-  ctx.fillRect(x,y,width,height);
+  ctx.fillRect(x, y, width, height);
   ctx.restore();
 };
 
@@ -36,7 +36,7 @@ const fillCircle = (ctx, x, y, radius, color) => {
   ctx.save();
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(x,y,radius,0,Math.PI * 2);
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.closePath();
   ctx.fill();
   ctx.restore();
