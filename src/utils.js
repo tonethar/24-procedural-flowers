@@ -1,14 +1,35 @@
+// @ts-check
+
 /**
- * Converts degree values to radians.
- * 
- * @param {number} degrees 
- * @returns {number} The value in radians
+ * @module utils
+ * @description Utility functions
+ * @author TJ
+ */
+
+ /**
+ * @static assertNonNull
+ * @author https://docs.joshuatz.com/cheatsheets/js/jsdoc/
+ * @desc Utility function since can't use a TS-style post-fix assert (yet) in JSDoc
+ *  - Takes any union type and excludes `null`
+ * @template T
+ * @param {T} thing - any union type
+ * @returns {Exclude<T, null>}
+ */
+ const assertNonNull = thing => {
+	return /** @type {Exclude<T, null>} */ (thing);
+}
+
+/**
+ * @static dtr
+ * @desc Converts degree values to radians.
+ * @param {number} degrees - The value in degrees.
+ * @returns {number} The value in radians.
  */
 const dtr = degrees => degrees * (Math.PI/180);
 
 /**
- * Fills a rectangle.
- * 
+ * @static fillRect
+ * @desc Fills a rectangle in the provided <kbd>ctx</kbd>. The rectangle's upper-left corner begins at <kbd>x,y</kbd>
  * @param {CanvasRenderingContext2D} ctx 
  * @param {number} x 
  * @param {number} y 
@@ -24,8 +45,8 @@ const fillRect = (ctx, x, y, width, height, color) => {
 };
 
 /**
- * Fills a circle
- * 
+ * @static fillCircle
+ * @desc Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
  * @param {CanvasRenderingContext2D} ctx 
  * @param {number} x 
  * @param {number} y 
@@ -42,4 +63,4 @@ const fillCircle = (ctx, x, y, radius, color) => {
   ctx.restore();
 };
 
-export { dtr, fillRect, fillCircle };
+export { assertNonNull, dtr, fillRect, fillCircle };

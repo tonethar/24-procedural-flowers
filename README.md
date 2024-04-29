@@ -1,4 +1,4 @@
-# PhylloFlower
+# Procedural Flowers
 
 ## v1
 - "Done" version of IGME-330 HW
@@ -11,9 +11,7 @@
 - Arrow functions
 - JSDoc 
 
-##v3
-
-- TODO:
-  - Webpack/babel/bundling
-  - ESLint?
-  - external CSS?
+## v3
+- Webpack/babel/bundling
+- ESLint
+- external CSS?
