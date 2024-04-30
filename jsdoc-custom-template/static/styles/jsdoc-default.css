@@ -180,6 +180,23 @@ h4
     color: #4d4e53;
 }
 
+/**/
+/* .container-overview h2{
+    background-color:green;
+} */
+
+.subsection-title{
+    background-color:coral;
+    padding-left:2px;
+}
+
+.name{
+    border-top:1px solid gray;
+    padding-top:1em;
+}
+
+/**/
+
 h5, .container-overview .subsection-title
 {
     font-size: 120%;

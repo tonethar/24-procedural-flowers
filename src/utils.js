@@ -9,7 +9,7 @@
  /**
  * @static assertNonNull
  * @author https://docs.joshuatz.com/cheatsheets/js/jsdoc/
- * @desc Utility function since can't use a TS-style post-fix assert (yet) in JSDoc
+ * @desc Utility function because we can't use a TS-style post-fix assert (yet) in JSDoc
  *  - Takes any union type and excludes `null`
  * @template T
  * @param {T} thing - any union type

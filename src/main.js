@@ -11,13 +11,13 @@ import Flower from "./Flower.js";
 import { assertNonNull, fillCircle, fillRect } from "./utils.js";
 
 /**
- * Width of canvas
+ * Width of `canvas`
  * @type {number}
  */
 const canvasWidth = 640;
 
 /**
- * Height of canvas
+ * Height of `canvas`
  * @type {number}
  */
 const canvasHeight = 480;
@@ -53,13 +53,13 @@ const fps = 60;
 const mainFlower = new Flower( canvasWidth/2, canvasHeight/2, divergence, c, petalSize, fillCircle );
 
 /**
- * Reference to <kbd><canvas></kbd> element
+ * Reference to `canvas` element
  * @type {!HTMLCanvasElement}
  */
 let canvas;
 
 /**
- * Reference to drawing context of <kbd>canvas</kbd>
+ * Reference to drawing context of `canvas`
  * @type {!CanvasRenderingContext2D}
  */
 let ctx;
