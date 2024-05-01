@@ -1,38 +1,42 @@
 // @ts-check
+/** @auth TJ */
+import "./types/FlowerParams.js";
 import { dtr } from "./utils.js";
 
-/** @class 
- * Flower represents a procedurally drawn flower. 
- * @auth TJ
+/** 
+ * @class Flower
+ * @desc Represents a procedurally drawn flower. 
+ * @property {number} n - current petal generation.
  * */
 class Flower{
   /**
-   * Creates an instance of Flower.
-   * 
-   * @param {number} centerX - `x` around which petals are drawn.
-   * @param {number} centerY - `y` around which petals are drawn.
-   * @param {number} divergence - rotation (in radians) between successive petals.
-   * @param {number} c - spacing between petals.
-   * @param {number} petalSize - width of each petal in pixels.
-   * @param {Function} drawPetalFunction - function that draws petals.
-   * 
-   * @property {number} n - current petal generation.
-   * @property {number} centerX - `x` around which petals are drawn.
-   * @property {number} centerY - `y` around which petals are drawn.
-   * @property {number} divergence - rotation (in radians) between successive petals.
-   * @property {number} c - spacing between petals.
-   * @property {number} petalSize - width of each petal in pixels.
-   * @property {Function} drawPetalFunction - function that draws petals.
+   * @desc Creates an instance of Flower.
+   * @param {FlowerParams} params
    */
-  constructor(centerX, centerY, divergence, c, petalSize, drawPetalFunction){
+  constructor(params){
     //Object.assign(this, { centerX, centerY, divergence, c, petalSize, drawPetalFunction }); //:-(
+    
+    /** @type {number} */
     this.n = 0;
-    this.centerX = centerX;
-    this.centerY = centerY;
-    this.divergence = divergence;
-    this.petalSize = petalSize;
-    this.drawPetalFunction = drawPetalFunction;
-    this.c = c;
+
+    // Required properies from FlowerParams
+    /** @type {number} */
+    this.centerX = params.centerX;
+
+    /** @type {number} */
+    this.centerY = params.centerY;
+
+    /** @type {number} */
+    this.divergence = params.divergence;
+
+    /** @type {number} */
+    this.c = params.c;
+
+    /** @type {number} */
+    this.petalSize = params.petalSize;
+
+    /** @type {function} */
+    this.drawPetalFunction = params.drawPetalFunction;
   }
 
   /**
@@ -48,9 +52,10 @@ class Flower{
     const color = `hsl(${this.n/5 % 361},100%,50%)`; // 4
     this.drawPetalFunction(ctx, x, y, this.petalSize, color);
     this.n++;
-    this.c+=.005;
-    this.petalSize +=.01;
+    this.c += .005;
+    this.petalSize += .01;
   }
+
 };
 
 export default Flower;

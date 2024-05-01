@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phyllo 2</title>
-  <style>canvas{ border: 1px solid black; }</style>
+  <title>Phyllo 4</title>
+  <style>
+    canvas{ border: 1px solid black; }
+    body{ font-family: sans-serif; }
+  </style>
   <!-- <script type="module" src="./src/main.js"></script> -->
 </head>
 <body>
@@ -19,6 +22,11 @@
       <option value="137.7">137.9</option>
     </select>
     <button id="btn-restart">Restart App</button>
+    <label>
+      Clear every frame? 
+      <input id="cb-clear-every-frame" type="checkbox">
+    </label>
+    
   </div>
 </body>
 <script src="dist/bundle.js"></script>

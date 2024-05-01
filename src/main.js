@@ -8,6 +8,7 @@
  */
 
 import Flower from "./Flower.js";
+import RotatingFlower from "./RotatingFlower.js";
 import { assertNonNull, fillCircle, fillRect } from "./utils.js";
 
 /**
@@ -47,10 +48,22 @@ const petalSize = 2;
 const fps = 60;
 
 /**
+ * @type {boolean}
+ */
+let clearScreenEveryFrame = false;
+
+/**
  * The primary flower being drawn
  * @type Flower
  */
-const mainFlower = new Flower( canvasWidth/2, canvasHeight/2, divergence, c, petalSize, fillCircle );
+//const mainFlower = new Flower( canvasWidth/2, canvasHeight/2, divergence, c, petalSize, fillCircle );
+//const mainFlower = new Flower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
+const mainFlower = new RotatingFlower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
+// @ts-ignore
+mainFlower.deltaRotation = .01; // FIXME: JSDoc error 
+
+const flower2 = new Flower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
+
 
 /**
  * Reference to `canvas` element
@@ -69,7 +82,11 @@ let ctx;
  */
 const loop = () => {
   window.setTimeout(loop, 1000/fps);
+  if(clearScreenEveryFrame){
+    fillRect(ctx, 0, 0, canvasWidth, canvasHeight, "black");
+  }
   mainFlower.update(ctx);
+  //flower2.update(ctx);
 };
 
 /**
@@ -101,6 +118,14 @@ const init = () => {
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.onchange = () => {
     mainFlower.divergence = +ctrlDivergence.value;
+  };
+
+  /**
+   * @type {HTMLInputElement}
+   */
+  const cbClearEveryFrame = assertNonNull(document.querySelector("#cb-clear-every-frame"));
+  cbClearEveryFrame.onchange = () => {
+    clearScreenEveryFrame = cbClearEveryFrame.checked;
   };
 
   // III. start up app

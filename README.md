@@ -13,5 +13,7 @@
 
 ## v3
 - Webpack/babel/bundling
-- ESLint
-- external CSS?
+- JSDoc for type checking
+
+## v4
+- FlowerParams
