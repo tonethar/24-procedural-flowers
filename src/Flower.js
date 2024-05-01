@@ -1,12 +1,14 @@
 // @ts-check
-/** @auth TJ */
+
+/* IMPORTS */
 import "./types/FlowerParams.js";
 import { dtr } from "./utils.js";
 
 /** 
  * @class Flower
+ * @prop {number} n - current petal generation.
  * @desc Represents a procedurally drawn flower. 
- * @property {number} n - current petal generation.
+ * @author TJ
  * */
 class Flower{
   /**

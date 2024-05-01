@@ -22,14 +22,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // @ts-check
-/** @auth TJ */
+
+/* IMPORTS */
 
 
 
 /** 
  * @class Flower
+ * @prop {number} n - current petal generation.
  * @desc Represents a procedurally drawn flower. 
- * @property {number} n - current petal generation.
+ * @author TJ
  * */
 var Flower = /*#__PURE__*/function () {
   /**
@@ -122,7 +124,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // @ts-check
-/** @auth TJ */
+
+/* IMPORTS */
 
 
 
@@ -130,9 +133,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 
 /** 
  * @class RotatingFlower
- * @desc Represents a pre-rendered rotating flower.
  * @extends Flower
- * @property {FlowerPetal[]} _petals
+ * @prop {FlowerPetal[]} _petals
+ * @desc Represents a pre-rendered rotating flower.
+ * @author TJ
  * @private
  */
 var RotatingFlower = /*#__PURE__*/function (_Flower) {
@@ -145,15 +149,16 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
     _classCallCheck(this, RotatingFlower);
     _this = _callSuper(this, RotatingFlower, [params]);
     /**
-     * @name _petals
      * @type {FlowerPetal[]}
      */
     _this._petals = [];
 
     // Optional properties from FlowerParams, which are required for RotatingFlower
     _this.rotation = params.rotation || 0;
-    _this.deltaRotation = params.deltaRotation || 0;
     _this.deltaC = params.deltaC || 0;
+    _this.deltaDivergence = params.deltaDivergence || 0;
+    _this.deltaPetalSize = params.deltaPetalSize || 0;
+    _this.deltaRotation = params.deltaRotation || 0;
     return _this;
   }
 
@@ -194,13 +199,42 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
       }
       ctx.restore();
       this.n++;
+      this.c += this.deltaC;
+      this.divergence += this.deltaDivergence;
+      this.petalSize += this.deltaPetalSize;
       this.rotation += this.deltaRotation;
-      this.c += .005;
-      this.petalSize += .01;
     }
   }]);
 }(_Flower_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RotatingFlower);
+
+/***/ }),
+
+/***/ "./src/types/AppDefaults.js":
+/*!**********************************!*\
+  !*** ./src/types/AppDefaults.js ***!
+  \**********************************/
+/***/ (() => {
+
+// @ts-check
+
+/**
+ * @name AppDefaults
+ * @desc JSDoc type definition.
+ * @author TJ
+ * @typedef {Object} AppDefaults
+ * @prop {number} c - padding between petals in pixels.
+ * @prop {number} canvasWidth - width of canvas in pixels.
+ * @prop {number} canvasHeight - height of canvas in pixels.
+ * @prop {string} clearColor - CSS color to fill background with.
+ * @prop {number} deltaC - `c` delta per frame.
+ * @prop {number} deltaDivergence - `divergence` delta per frame.
+ * @prop {number} deltaPetalSize - `petalSize` delta per frame.
+ * @prop {number} deltaRotation - `rotation` delta per frame.
+ * @prop {number} divergence - degrees of rotation per frame.
+ * @prop {number} fps - target frames-per-second of animation loop.
+ * @prop {number} petalSize - radius of petals in pixels.
+ */
 
 /***/ }),
 
@@ -211,21 +245,22 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
 /***/ (() => {
 
 // @ts-check
-/** @auth TJ */
 /**
+ * @name FlowerParams
+ * @desc JSDoc type definition. These are also properties of the Flower class.
+ * @author TJ
  * @typedef {Object} FlowerParams
- * @desc These are also properties of the Flower class.
- * @property {number} centerX - `x` around which petals are drawn.
- * @property {number} centerY - `y` around which petals are drawn.
- * @property {number} divergence - rotation (in radians) between successive petals.
- * @property {number} c - spacing between petals.
- * @property {number} petalSize - width of each petal in pixels.
- * @property {Function} drawPetalFunction - function that draws petals.
- * @property {number} [rotation=0] - rotation of flower in radians.
- * @property {number} [deltaRotation=0] - `rotation` delta per frame
- * @property {number} [deltaC=0] - `c` delta per frame
- * @property {number} [deltaDivergence=0] - `divergence` delta per frame
- * @property {number} [deltaPetalSize=0] - `petalSize` delta per frame
+ * @prop {number} centerX - center `x` of Flower around which petals are drawn.
+ * @prop {number} centerY - center `y` of Flower around which petals are drawn.
+ * @prop {number} divergence - rotation (in radians) between successive petals.
+ * @prop {number} c - spacing between petals.
+ * @prop {number} petalSize - width of each petal in pixels.
+ * @prop {Function} drawPetalFunction - function that draws petals.
+ * @prop {number} [rotation=0] - rotation of flower in radians.
+ * @prop {number} [deltaRotation=0] - `rotation` delta per frame.
+ * @prop {number} [deltaC=0] - `c` delta per frame.
+ * @prop {number} [deltaDivergence=0] - `divergence` delta per frame.
+ * @prop {number} [deltaPetalSize=0] - `petalSize` delta per frame.
  */
 
 /***/ }),
@@ -237,13 +272,15 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
 /***/ (() => {
 
 // @ts-check
-/** @auth TJ *
 /**
+ * @name FlowerPetal
+ * @desc JSDoc type definition
+ * @author TJ
  * @typedef {Object} FlowerPetal
- * @property {number} x
- * @property {number} y
- * @property {number} petalSize - width of each petal in pixels.
- * @property {string} color - CSS color of petal.
+ * @prop {number} x - 'x' of petal.
+ * @prop {number} y - 'y' of petal.
+ * @prop {number} petalSize - width of each petal in pixels.
+ * @prop {string} color - CSS color of petal.
  */
 
 /***/ }),
@@ -260,13 +297,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   assertNonNull: () => (/* binding */ assertNonNull),
 /* harmony export */   dtr: () => (/* binding */ dtr),
 /* harmony export */   fillCircle: () => (/* binding */ fillCircle),
-/* harmony export */   fillRect: () => (/* binding */ fillRect)
+/* harmony export */   fillRect: () => (/* binding */ fillRect),
+/* harmony export */   getRandom: () => (/* binding */ getRandom)
 /* harmony export */ });
 // @ts-check
+/* eslint max-params: 0 */
 
 /**
  * @module utils
- * @description Utility functions
+ * @desc Utility functions
  * @author TJ
  */
 
@@ -294,21 +333,16 @@ var dtr = function dtr(degrees) {
 };
 
 /**
- * @static fillRect
- * @desc Fills a rectangle in the provided <kbd>ctx</kbd>. The rectangle's upper-left corner begins at <kbd>x,y</kbd>
- * @param {CanvasRenderingContext2D} ctx 
- * @param {number} x 
- * @param {number} y 
- * @param {number} width 
- * @param {number} height 
- * @param {string} color 
+ * @static getRandom
+ * @param {number} min 
+ * @param {number} max 
+ * @returns {number}
  */
-var fillRect = function fillRect(ctx, x, y, width, height, color) {
-  ctx.save();
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y, width, height);
-  ctx.restore();
+var getRandom = function getRandom(min, max) {
+  return Math.random() * (max - min) + min;
 };
+
+/* CANVAS UTILS */
 
 /**
  * @static fillCircle
@@ -329,6 +363,22 @@ var fillCircle = function fillCircle(ctx, x, y, radius, color) {
   ctx.restore();
 };
 
+/**
+ * @static fillRect
+ * @desc Fills a rectangle in the provided <kbd>ctx</kbd>. The rectangle's upper-left corner begins at <kbd>x,y</kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} width 
+ * @param {number} height 
+ * @param {string} color 
+ */
+var fillRect = function fillRect(ctx, x, y, width, height, color) {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, width, height);
+  ctx.restore();
+};
 
 /***/ })
 
@@ -408,153 +458,193 @@ var __webpack_exports__ = {};
   !*** ./src/main.js ***!
   \*********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Flower_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Flower.js */ "./src/Flower.js");
-/* harmony import */ var _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RotatingFlower.js */ "./src/RotatingFlower.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _types_AppDefaults_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types/AppDefaults.js */ "./src/types/AppDefaults.js");
+/* harmony import */ var _types_AppDefaults_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_AppDefaults_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Flower_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Flower.js */ "./src/Flower.js");
+/* harmony import */ var _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RotatingFlower.js */ "./src/RotatingFlower.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 // @ts-check
 /*global window, document*/
 
 /**
  * @module main
- * @description This is the main module of the application
+ * @description Main module of the application.
  * @author TJ
  */
 
+/* IMPORTS */
 
 
 
 
-/**
- * Width of `canvas`
- * @type {number}
- */
-var canvasWidth = 640;
 
-/**
- * Height of `canvas`
- * @type {number}
- */
-var canvasHeight = 480;
+/* CONSTANTS */
 
-/**
- * Default divergence value.
- * @type {number}
- */
-var divergence = 137.5;
-
-/**
- * Default padding value.
- * @type {number}
- */
-var c = 4;
-
-/**
- * Default petalSize value.
- * @type {number}
- */
-var petalSize = 2;
-
-/**
- * Default frames-per-second value.
- * @type {number}
- */
-var fps = 60;
-
-/**
- * @type {boolean}
- */
-var clearScreenEveryFrame = false;
-
-/**
- * The primary flower being drawn
- * @type Flower
- */
-//const mainFlower = new Flower( canvasWidth/2, canvasHeight/2, divergence, c, petalSize, fillCircle );
-//const mainFlower = new Flower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
-var mainFlower = new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  centerX: canvasWidth / 2,
-  centerY: canvasHeight / 2,
-  divergence: divergence,
-  c: c,
-  petalSize: petalSize,
-  drawPetalFunction: _utils_js__WEBPACK_IMPORTED_MODULE_2__.fillCircle
-});
-// @ts-ignore
-mainFlower.deltaRotation = .01; // FIXME: JSDoc error 
-
-var flower2 = new _Flower_js__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  centerX: canvasWidth / 2,
-  centerY: canvasHeight / 2,
-  divergence: divergence,
-  c: c,
-  petalSize: petalSize,
-  drawPetalFunction: _utils_js__WEBPACK_IMPORTED_MODULE_2__.fillCircle
+/** @type {AppDefaults} */
+var DEFAULTS = Object.freeze({
+  c: 4,
+  canvasWidth: 800,
+  canvasHeight: 600,
+  clearColor: "#000",
+  deltaC: .005,
+  deltaDivergence: 0,
+  deltaPetalSize: .01,
+  deltaRotation: .01,
+  divergence: 137.5,
+  fps: 60,
+  petalSize: 2
 });
 
 /**
- * Reference to `canvas` element
- * @type {!HTMLCanvasElement}
+ * Reference to `canvas` element.
+ * @type {!HTMLCanvasElement} 
  */
-var canvas;
+var canvas = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#canvas"));
 
 /**
- * Reference to drawing context of `canvas`
+ * Reference to drawing context of `canvas`.
  * @type {!CanvasRenderingContext2D}
  */
-var ctx;
+var ctx = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(canvas.getContext("2d"));
+
+/* PROPERTIES */
+
+/**
+ * @name clearScreenEveryFrame
+ * @desc Toggled by checkbox.
+ * @type {boolean}
+ */
+var clearScreenEveryFrame = true;
+
+/**
+ * @name currentDivergence
+ * @desc Set by &lt;select>.
+ * @type {number}
+ */
+var currentDivergence = DEFAULTS.divergence;
+
+/**
+ * @name currentC
+ * @desc Set by &lt;select>.
+ * @type {number}
+ */
+var currentC = DEFAULTS.c;
+
+/**
+ * Array of current flowers to draw.
+ * @type {Flower[]}
+ */
+var flowerSprites = [];
+
+/* METHODS */
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @returns {Flower}
+ */
+var createRandomFlower = function createRandomFlower(x, y) {
+  /** @type {FlowerParams} */
+  var params = {
+    c: currentC,
+    centerX: x,
+    centerY: y,
+    deltaC: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(.002, .01),
+    deltaDivergence: 0,
+    deltaPetalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(.01, .04),
+    deltaRotation: Math.random() < .5 ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(-.002, -.02) : (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(.002, .02),
+    divergence: currentDivergence,
+    drawPetalFunction: _utils_js__WEBPACK_IMPORTED_MODULE_3__.fillCircle,
+    petalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(1, 5)
+  };
+  return new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
+};
+var initFlowerSprites = function initFlowerSprites() {
+  // clear array
+  flowerSprites.length = 0;
+
+  // add new default Flowersprite
+  /** @type {FlowerParams} */
+  var params = {
+    c: currentC,
+    centerX: DEFAULTS.canvasWidth / 2,
+    centerY: DEFAULTS.canvasHeight / 2,
+    deltaC: DEFAULTS.deltaC,
+    deltaDivergence: DEFAULTS.deltaDivergence,
+    deltaPetalSize: DEFAULTS.deltaPetalSize,
+    deltaRotation: DEFAULTS.deltaRotation,
+    divergence: currentDivergence,
+    drawPetalFunction: _utils_js__WEBPACK_IMPORTED_MODULE_3__.fillCircle,
+    petalSize: DEFAULTS.petalSize
+  };
+  flowerSprites.push(new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params));
+
+  //flowerSprites.push(createRandomFlower(DEFAULTS.canvasWidth/2,DEFAULTS.canvasHeight/2));
+};
 
 /**
  * Called every frame.
  */
 var loop = function loop() {
-  window.setTimeout(loop, 1000 / fps);
+  window.setTimeout(loop, 1000 / DEFAULTS.fps);
   if (clearScreenEveryFrame) {
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.fillRect)(ctx, 0, 0, canvasWidth, canvasHeight, "black");
+    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
-  mainFlower.update(ctx);
-  //flower2.update(ctx);
+  for (var _i = 0, _flowerSprites = flowerSprites; _i < _flowerSprites.length; _i++) {
+    var f = _flowerSprites[_i];
+    f.update(ctx);
+  }
 };
 
 /**
- * Handles initialization.
+ * Handles app initialization.
  */
 var init = function init() {
-  // I. init variables
-  canvas = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.assertNonNull)(document.querySelector("#canvas"));
-  ctx = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.assertNonNull)(canvas.getContext("2d"));
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  // I. Setup canvas & drawing context
+  canvas.width = DEFAULTS.canvasWidth;
+  canvas.height = DEFAULTS.canvasHeight;
+  ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
 
   // II. setup UI
-  /** 
-   * @type {HTMLButtonElement!} 
-   * */
-  var btnRestart = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.assertNonNull)(document.querySelector("#btn-restart"));
+  /**  @type {!HTMLButtonElement}  */
+  var btnRestart = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.fillRect)(ctx, 0, 0, canvasWidth, canvasHeight, "black");
-    mainFlower.n = 0;
-    mainFlower.c = 4;
-    mainFlower.petalSize = 2;
+    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
+    initFlowerSprites();
   };
 
-  /** 
-   * @type {HTMLSelectElement!} 
-   * */
-  var ctrlDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.assertNonNull)(document.querySelector("#ctrl-divergence"));
+  /**  @type {!HTMLButtonElement}  */
+  var btnReset = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-reset"));
+  btnReset.onclick = function () {
+    return window.location.reload();
+  };
+
+  /** @type {!HTMLSelectElement} */
+  var ctrlDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.onchange = function () {
-    mainFlower.divergence = +ctrlDivergence.value;
+    currentDivergence = +ctrlDivergence.value;
+    // change most recent flower's divergence value
+    (flowerSprites === null || flowerSprites === void 0 ? void 0 : flowerSprites[flowerSprites.length - 1]).divergence = currentDivergence;
   };
 
-  /**
-   * @type {HTMLInputElement}
-   */
-  var cbClearEveryFrame = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
+  /** @type {!HTMLSelectElement} */
+  var ctrlC = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
+  ctrlC.onchange = function () {
+    currentC = +ctrlC.value;
+    // change most recent flower's c value
+    (flowerSprites === null || flowerSprites === void 0 ? void 0 : flowerSprites[flowerSprites.length - 1]).c = currentC;
+  };
+
+  /** @type {!HTMLInputElement} */
+  var cbClearEveryFrame = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
     clearScreenEveryFrame = cbClearEveryFrame.checked;
   };
 
-  // III. start up app
+  // III. Set up flower sprites
+  initFlowerSprites();
+
+  // IV. start up app
   loop();
 };
 init();

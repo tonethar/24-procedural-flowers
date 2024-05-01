@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: types/FlowerPetal.js</title>
+    <title>JSDoc: Source: types/AppDefaults.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: types/FlowerPetal.js</h1>
+    <h1 class="page-title">Source: types/AppDefaults.js</h1>
 
     
 
@@ -27,17 +27,19 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-check
+
 /**
- * @name FlowerPetal
- * @desc JSDoc type definition
+ * @name AppDefaults
+ * @desc JSDoc type definition.
  * @author TJ
- * @typedef {Object} FlowerPetal
- * @prop {number} x - 'x' of petal.
- * @prop {number} y - 'y' of petal.
- * @prop {number} petalSize - width of each petal in pixels.
- * @prop {string} color - CSS color of petal.
- */
-</code></pre>
+ * @typedef {Object} AppDefaults
+ * @prop {number} canvasWidth - width of canvas in pixels.
+ * @prop {number} canvasHeight - height of canvas in pixels.
+ * @prop {number} divergence - degrees of rotation per frame.
+ * @prop {number} c - padding between petals in pixels.
+ * @prop {number} petalSize - radius of petals in pixels.
+ * @prop {number} fps - target frames-per-second of animation loop.
+ */</code></pre>
         </article>
     </section>
 

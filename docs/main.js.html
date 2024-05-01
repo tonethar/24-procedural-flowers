@@ -31,132 +31,143 @@
 
 /**
  * @module main
- * @description This is the main module of the application
+ * @description Main module of the application.
  * @author TJ
  */
 
+/* IMPORTS */
+import "./types/AppDefaults.js";
 import Flower from "./Flower.js";
 import RotatingFlower from "./RotatingFlower.js";
-import { assertNonNull, fillCircle, fillRect } from "./utils.js";
+import { assertNonNull, getRandom, fillCircle, fillRect } from "./utils.js";
+
+/* CONSTANTS */
+
+/** @type {AppDefaults} */
+const DEFAULTS = {
+  canvasWidth:  640,
+  canvasHeight: 480,
+  divergence:   137.5,
+  c:            4,
+  petalSize:    2,
+  fps:          60,
+};
 
 /**
- * Width of `canvas`
- * @type {number}
+ * Reference to `canvas` element.
+ * @type {!HTMLCanvasElement} 
  */
-const canvasWidth = 640;
+const canvas = assertNonNull(document.querySelector("#canvas"));
 
 /**
- * Height of `canvas`
- * @type {number}
- */
-const canvasHeight = 480;
-
-/**
- * Default divergence value.
- * @type {number}
- */
-const divergence = 137.5;
-
-/**
- * Default padding value.
- * @type {number}
- */
-const c = 4;
-
-/**
- * Default petalSize value.
- * @type {number}
- */
-const petalSize = 2;
-
-/**
- * Default frames-per-second value.
- * @type {number}
- */
-const fps = 60;
-
-/**
- * @type {boolean}
- */
-let clearScreenEveryFrame = false;
-
-/**
- * The primary flower being drawn
- * @type Flower
- */
-//const mainFlower = new Flower( canvasWidth/2, canvasHeight/2, divergence, c, petalSize, fillCircle );
-//const mainFlower = new Flower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
-const mainFlower = new RotatingFlower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
-// @ts-ignore
-mainFlower.deltaRotation = .01; // FIXME: JSDoc error 
-
-const flower2 = new Flower( {centerX: canvasWidth/2, centerY:canvasHeight/2, divergence, c, petalSize, drawPetalFunction: fillCircle});
-
-
-/**
- * Reference to `canvas` element
- * @type {!HTMLCanvasElement}
- */
-let canvas;
-
-/**
- * Reference to drawing context of `canvas`
+ * Reference to drawing context of `canvas`.
  * @type {!CanvasRenderingContext2D}
  */
-let ctx;
+const ctx = assertNonNull(canvas.getContext("2d"));
+
+
+/* PROPERTIES */
+
+/**
+ * @name clearScreenEveryFrame
+ * @desc Toggled by checkbox.
+ * @type {boolean}
+ */
+let clearScreenEveryFrame = true;
+
+/**
+ * @name currentDivergence
+ * @desc Set by &amp;lt;select>.
+ * @type {number}
+ */
+let currentDivergence = DEFAULTS.divergence;
+
+/**
+ * Array of current flowers to draw.
+ * @type {Flower[]}
+ */
+const flowerSprites = [];
+
+/* METHODS */
+
+/**
+ * 
+ * @returns {Flower}
+ */
+const createRandomFlower = () => {
+    /** @type {FlowerParams} */
+    const params =  {
+      centerX: DEFAULTS.canvasWidth/2, 
+      centerY: DEFAULTS.canvasHeight/2, 
+      divergence: DEFAULTS.divergence, 
+      c: DEFAULTS.c,
+      petalSize: DEFAULTS.petalSize, 
+      drawPetalFunction: fillCircle,
+      deltaC: getRandom(.002, .01),
+      deltaDivergence: 0,
+      deltaPetalSize: .01 /*getRandom(1,4)*/,
+      deltaRotation: .01 /*Math.random() &lt; .5 ? getRandom(-.002, -.02) : getRandom(.002, .02)*/,
+    };
+    return new RotatingFlower(params);
+};
+
+const initFlowerSprites = (num=1) => {
+  // clear array
+  flowerSprites.length = 0;
+
+  // add new Flowersprite
+  flowerSprites.push(createRandomFlower());
+};
 
 /**
  * Called every frame.
  */
 const loop = () => {
-  window.setTimeout(loop, 1000/fps);
+  window.setTimeout(loop, 1000/DEFAULTS.fps);
   if(clearScreenEveryFrame){
-    fillRect(ctx, 0, 0, canvasWidth, canvasHeight, "black");
+    fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
   }
-  mainFlower.update(ctx);
-  //flower2.update(ctx);
+  for(const f of flowerSprites){
+    f.update(ctx);
+  }
 };
 
 /**
- * Handles initialization.
+ * Handles app initialization.
  */
 const init = () => {
-  // I. init variables
-  canvas = assertNonNull(document.querySelector("#canvas"));
-  ctx = assertNonNull(canvas.getContext("2d"));
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  // I. Setup canvas &amp; drawing context
+  canvas.width = DEFAULTS.canvasWidth;
+  canvas.height = DEFAULTS.canvasHeight;
+  ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
 
   // II. setup UI
-  /** 
-   * @type {HTMLButtonElement!} 
-   * */
+  /**  @type {HTMLButtonElement!}  */
   const btnRestart =  assertNonNull(document.querySelector("#btn-restart"));
   btnRestart.onclick = () => {
-    fillRect(ctx, 0, 0, canvasWidth, canvasHeight, "black");
-    mainFlower.n = 0;
-    mainFlower.c = 4;
-    mainFlower.petalSize = 2;
+    fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
+    // mainFlower.n = 0;
+    // mainFlower.c = 4;
+    // mainFlower.petalSize = 2;
+    initFlowerSprites();
   };
 
-  /** 
-   * @type {HTMLSelectElement!} 
-   * */
+  /** @type {HTMLSelectElement!} */
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.onchange = () => {
-    mainFlower.divergence = +ctrlDivergence.value;
+   // mainFlower.divergence = +ctrlDivergence.value;
   };
 
-  /**
-   * @type {HTMLInputElement}
-   */
+  /** @type {HTMLInputElement} */
   const cbClearEveryFrame = assertNonNull(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = () => {
     clearScreenEveryFrame = cbClearEveryFrame.checked;
   };
 
-  // III. start up app
+  // III. Set up flower sprites
+  initFlowerSprites();
+
+  // IV. start up app
   loop();
 };
 
@@ -171,13 +182,13 @@ init();
 </div>
 
 <nav>
-    <h2><a href="index.html">Procedural Flower Project</a></h2><h3>Modules</h3><ul><li><a href="module-main.html">main</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Classes</h3><ul><li><a href="Flower.html">Flower</a></li><li><a href="RotatingFlower.html">RotatingFlower</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_petals">_petals</a></li></ul>
+    <h2><a href="index.html">Procedural Flower Project</a></h2><h3>Modules</h3><ul><li><a href="module-main.html">main</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Classes</h3><ul><li><a href="Flower.html">Flower</a></li><li><a href="RotatingFlower.html">RotatingFlower</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 30 2024 22:53:18 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed May 01 2024 12:05:36 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,8 +1,9 @@
 // @ts-check
+/* eslint max-params: 0 */
 
 /**
  * @module utils
- * @description Utility functions
+ * @desc Utility functions
  * @author TJ
  */
 
@@ -15,7 +16,7 @@
  * @param {T} thing - any union type
  * @returns {Exclude<T, null>}
  */
- const assertNonNull = thing => {
+ export const assertNonNull = thing => {
 	return /** @type {Exclude<T, null>} */ (thing);
 }
 
@@ -25,7 +26,36 @@
  * @param {number} degrees - The value in degrees.
  * @returns {number} The value in radians.
  */
-const dtr = degrees => degrees * (Math.PI/180);
+export const dtr = degrees => degrees * (Math.PI/180);
+
+/**
+ * @static getRandom
+ * @param {number} min 
+ * @param {number} max 
+ * @returns {number}
+ */
+export const getRandom = (min, max) => Math.random() * (max - min) + min;
+
+/* CANVAS UTILS */
+
+/**
+ * @static fillCircle
+ * @desc Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} radius 
+ * @param {string} color 
+ */
+export const fillCircle = (ctx, x, y, radius, color) => {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+};
 
 /**
  * @static fillRect
@@ -37,30 +67,9 @@ const dtr = degrees => degrees * (Math.PI/180);
  * @param {number} height 
  * @param {string} color 
  */
-const fillRect = (ctx, x, y, width, height, color) => {
+export const fillRect = (ctx, x, y, width, height, color) => {
   ctx.save();
   ctx.fillStyle=color;
   ctx.fillRect(x, y, width, height);
   ctx.restore();
 };
-
-/**
- * @static fillCircle
- * @desc Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
- * @param {CanvasRenderingContext2D} ctx 
- * @param {number} x 
- * @param {number} y 
- * @param {number} radius 
- * @param {string} color 
- */
-const fillCircle = (ctx, x, y, radius, color) => {
-  ctx.save();
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-};
-
-export { assertNonNull, dtr, fillRect, fillCircle };

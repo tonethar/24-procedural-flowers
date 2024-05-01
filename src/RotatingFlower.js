@@ -1,5 +1,6 @@
 // @ts-check
-/** @auth TJ */
+
+/* IMPORTS */
 import "./types/FlowerParams.js";
 import "./types/FlowerPetal.js";
 import Flower from "./Flower.js";
@@ -7,9 +8,10 @@ import { dtr } from "./utils.js";
 
 /** 
  * @class RotatingFlower
- * @desc Represents a pre-rendered rotating flower.
  * @extends Flower
- * @property {FlowerPetal[]} _petals
+ * @prop {FlowerPetal[]} _petals
+ * @desc Represents a pre-rendered rotating flower.
+ * @author TJ
  * @private
  */
 class RotatingFlower extends Flower{
@@ -20,15 +22,16 @@ class RotatingFlower extends Flower{
   constructor(params){
     super(params);
     /**
-     * @name _petals
      * @type {FlowerPetal[]}
      */
     this._petals = [];
 
     // Optional properties from FlowerParams, which are required for RotatingFlower
     this.rotation = params.rotation || 0;
-    this.deltaRotation = params.deltaRotation || 0;
     this.deltaC = params.deltaC || 0;
+    this.deltaDivergence = params.deltaDivergence || 0;
+    this.deltaPetalSize = params.deltaPetalSize || 0;
+    this.deltaRotation = params.deltaRotation || 0;
   }
 
   /**
@@ -53,9 +56,11 @@ class RotatingFlower extends Flower{
     ctx.restore();
 
     this.n++;
+    this.c += this.deltaC;
+    this.divergence += this.deltaDivergence;
+    this.petalSize += this.deltaPetalSize;
     this.rotation += this.deltaRotation;
-    this.c += .005;
-    this.petalSize +=.01;
+  
   }
 }
 

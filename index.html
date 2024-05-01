@@ -5,27 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phyllo 4</title>
   <style>
-    canvas{ border: 1px solid black; }
     body{ font-family: sans-serif; }
+    canvas{ border: 1px solid lightgray; }
+    label{ border: 1px solid lightgray; padding: .25em; margin-right: .25em; }
+    button{ font-size: 1.1em; margin-top: .5em; padding: .2em;}
+    #controls{ max-width: 800px; margin-top:.33em;}
   </style>
   <!-- <script type="module" src="./src/main.js"></script> -->
 </head>
 <body>
   <canvas id="canvas"></canvas>
   <div id="controls">
-    <label>Divergence Angle</label>
-    <select id="ctrl-divergence">
-      <option value="137.1">137.1</option>
-      <option value="137.3">137.3</option>
-      <option value="137.5" selected>137.5</option>
-      <option value="137.7">137.7</option>
-      <option value="137.7">137.9</option>
-    </select>
-    <button id="btn-restart">Restart App</button>
+    <label>Divergence Angle:
+      <select id="ctrl-divergence">
+        <option>137.1</option>
+        <option>137.3</option>
+        <option selected>137.5</option>
+        <option>137.7</option>
+        <option>137.9</option>
+      </select>
+    </label>
+
+    <label>Petal size:
+      <select id="ctrl-petal-size">
+        <option>1</option>
+        <option selected>2</option>
+        <option>3</option>
+        <option>5</option>
+        <option>8</option>
+        <option>10</option>
+      </select>
+    </label>
+
+    <label>Petal spacing:
+      <select id="ctrl-c">
+        <option>2</option>
+        <option>3</option>
+        <option selected>4</option>
+        <option>5</option>
+        <option>8</option>
+        <option>10</option>
+      </select>
+    </label>
+   
     <label>
       Clear every frame? 
-      <input id="cb-clear-every-frame" type="checkbox">
+      <input id="cb-clear-every-frame" type="checkbox" checked>
     </label>
+
+    <br>
+
+    <label>
+      Click to spawn flowers? 
+      <input id="cb-spawn-flowers" type="checkbox">
+    </label>
+
+    <button 
+      id="btn-restart" 
+      title="Clears screen and restarts Flower animation using current control settings"
+    >Clear & Restart</button>
+    <button 
+      id="btn-reset"
+      title="Clears screen, resets controls and restarts Flower animation"
+    >Reset UI & Restart</button>
     
   </div>
 </body>
