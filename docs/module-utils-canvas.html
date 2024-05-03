@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: utils</title>
+    <title>JSDoc: Module: utils-canvas</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: utils</h1>
+    <h1 class="page-title">Module: utils-canvas</h1>
 
     
 
@@ -94,7 +94,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line4">line 4</a>
+        <a href="utils-canvas.js.html">utils-canvas.js</a>, <a href="utils-canvas.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -151,7 +151,7 @@
     
 
     
-    <h4 class="name" id=".assertNonNull"><span class="type-signature">(static) </span>assertNonNull<span class="signature">(thing)</span><span class="type-signature"> &rarr; {Exclude.&lt;T, null>}</span></h4>
+    <h4 class="name" id=".fillCircle"><span class="type-signature">(static) </span>fillCircle<span class="signature">(ctx, x, y, radius, color)</span><span class="type-signature"></span></h4>
     
 
     
@@ -159,10 +159,7 @@
 
 
 <div class="description">
-    <p>Utility function because we can't use a TS-style post-fix assert (yet) in JSDoc</p>
-<ul>
-<li>Takes any union type and excludes <code>null</code></li>
-</ul>
+    <p>Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd></p>
 </div>
 
 
@@ -198,13 +195,13 @@
 
         <tr>
             
-                <td class="name"><code>thing</code></td>
+                <td class="name"><code>ctx</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">T</span>
+<span class="param-type">CanvasRenderingContext2D</span>
 
 
             
@@ -214,7 +211,99 @@
 
             
 
-            <td class="description last"><p>any union type</p></td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>radius</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -245,13 +334,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>https://docs.joshuatz.com/cheatsheets/js/jsdoc/</li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -262,7 +344,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line10">line 10</a>
+        <a href="utils-canvas.js.html">utils-canvas.js</a>, <a href="utils-canvas.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -287,24 +369,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Exclude.&lt;T, null></span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -316,7 +380,7 @@
     
 
     
-    <h4 class="name" id=".dtr"><span class="type-signature">(static) </span>dtr<span class="signature">(degrees)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".fillRect"><span class="type-signature">(static) </span>fillRect<span class="signature">(ctx, x, y, width, height, color)</span><span class="type-signature"></span></h4>
     
 
     
@@ -324,7 +388,7 @@
 
 
 <div class="description">
-    <p>Converts degree values to radians.</p>
+    <p>Fills a rectangle in the provided <kbd>ctx</kbd>. The rectangle's upper-left corner begins at <kbd>x,y</kbd></p>
 </div>
 
 
@@ -360,13 +424,13 @@
 
         <tr>
             
-                <td class="name"><code>degrees</code></td>
+                <td class="name"><code>ctx</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">CanvasRenderingContext2D</span>
 
 
             
@@ -376,146 +440,14 @@
 
             
 
-            <td class="description last"><p>The value in degrees.</p></td>
+            <td class="description last"></td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line24">line 24</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The value in radians.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".getRandomNumber"><span class="type-signature">(static) </span>getRandomNumber<span class="signature">(min, max)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>min</code></td>
+                <td class="name"><code>x</code></td>
             
 
             <td class="type">
@@ -538,13 +470,82 @@
 
         <tr>
             
-                <td class="name"><code>max</code></td>
+                <td class="name"><code>y</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
             
@@ -595,7 +596,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line41">line 41</a>
+        <a href="utils-canvas.js.html">utils-canvas.js</a>, <a href="utils-canvas.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -620,175 +621,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".randomArrayElement"><span class="type-signature">(static) </span>randomArrayElement<span class="signature">(arr)</span><span class="type-signature"> &rarr; {any}</span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>arr</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;any></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line33">line 33</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">any</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 

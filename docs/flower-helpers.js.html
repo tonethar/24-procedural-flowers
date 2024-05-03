@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: utils.js</title>
+    <title>JSDoc: Source: flower-helpers.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: utils.js</h1>
+    <h1 class="page-title">Source: flower-helpers.js</h1>
 
     
 
@@ -29,52 +29,68 @@
             <pre class="prettyprint source linenums"><code>// @ts-check
 /* eslint max-params: 0 */
 
+import "./types/FlowerPetalDrawFunc.js";
+
 /**
- * @module utils
+ * @module flower-helpers
  * @desc Utility functions
  * @author TJ
  */
 
- /**
- * @function assertNonNull
+/**
+ * @function petalFillCircle
  * @static
- * @author https://docs.joshuatz.com/cheatsheets/js/jsdoc/
- * @desc Utility function because we can't use a TS-style post-fix assert (yet) in JSDoc
- *  - Takes any union type and excludes `null`
- * @template T
- * @param {T} thing - any union type
- * @returns {Exclude&lt;T, null>}
+ * @desc Fills a circle in the provided &lt;kbd>ctx&lt;/kbd>. The circle is centered on  &lt;kbd>x,y&lt;/kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} radius 
+ * @param {string} color 
  */
- export const assertNonNull = thing => {
-	return /** @type {Exclude&lt;T, null>} */ (thing);
-}
+export const petalFillCircle = (ctx, x, y, radius, color) => {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+};
 
 /**
- * @function dtr
- * @static
- * @desc Converts degree values to radians.
- * @param {number} degrees - The value in degrees.
- * @returns {number} The value in radians.
+ * @function petalStrokeCircle
+ * @desc strokes a circle in the provided &lt;kbd>ctx&lt;/kbd>. The circle is centered on  &lt;kbd>x,y&lt;/kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} radius 
+ * @param {string} color 
  */
-export const dtr = degrees => degrees * (Math.PI/180);
+
+export const petalStrokeCircle = (ctx, x, y, radius, color) => {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+};
 
 /**
- * @function randomArrayElement
- * @static
- * @param {any[]} arr 
- * @returns {any}
+ * 
+ * @param {*} ctx 
+ * @param {*} x 
+ * @param {*} y 
+ * @param {*} radius 
+ * @param {*} color 
  */
-export const randomArrayElement = arr => arr[Math.floor(Math.random() * arr.length)];
-
-/**
- * @function getRandomNumber
- * @static
- * @param {number} min 
- * @param {number} max 
- * @returns {number}
- */
-export const getRandomNumber = (min, max) => Math.random() * (max - min) + min;
-</code></pre>
+export const petalFillSquare = (ctx, x, y, radius, color) => {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.fillRect(x - radius/2, y - radius/2, radius, radius);
+  ctx.restore();
+};</code></pre>
         </article>
     </section>
 
