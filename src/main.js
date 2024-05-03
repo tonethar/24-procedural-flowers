@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 /*global window, document*/
 
 /**
@@ -9,115 +9,176 @@
 
 /* IMPORTS */
 import "./types/AppDefaults.js";
+//import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
 import Flower from "./Flower.js";
 import RotatingFlower from "./RotatingFlower.js";
-import { assertNonNull, getRandom, fillCircle, fillRect } from "./utils.js";
+import { assertNonNull, getRandomNumber, randomArrayElement } from "./utils.js";
+import { fillRect } from "./utils-canvas.js";
+import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-helpers.js";
 
 /* CONSTANTS */
 
 /** @type {AppDefaults} */
 const DEFAULTS = Object.freeze({
-  c:            4,
-  canvasWidth:  800,
-  canvasHeight: 600,
-  clearColor:   "#000",
-  deltaC: .005,
-  deltaDivergence: 0,
-  deltaPetalSize: .01,
-  deltaRotation: .01,
-  divergence:   137.5,
-  fps:          60,
-  petalSize:    2,
+  c:                      4,
+  canvasWidth:            800,
+  canvasHeight:           600,
+  clearColor:             "#000",
+  deltaC:                 .005,
+  deltaDivergence:        0,
+  deltaPetalSize:         .01,
+  deltaRotation:          .01,
+  divergence:             137.5,
+  fps:                    60,
+  maxFlowers:             10,
+  maxPetals:              1000,
+  minFlowerOpacity:       .5,
+  petalSize:              2,
+  randomDivergenceValues: [137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
+  randomFlowerDelay:      5000,
+  randomFlowerPadding:    100,
 });
 
+
 /**
- * Reference to `canvas` element.
+ * @name canvas
+ * @desc Reference to `canvas` element.
  * @type {!HTMLCanvasElement} 
  */
 const canvas = assertNonNull(document.querySelector("#canvas"));
 
 /**
- * Reference to drawing context of `canvas`.
+ * @name ctx
+ * @desc Reference to drawing context of `canvas`.
  * @type {!CanvasRenderingContext2D}
  */
 const ctx = assertNonNull(canvas.getContext("2d"));
 
+const petalFunctions = [petalFillCircle, petalFillCircle, petalFillCircle, petalStrokeCircle, petalFillSquare];
 
-/* PROPERTIES */
-
-/**
- * @name clearScreenEveryFrame
- * @desc Toggled by checkbox.
- * @type {boolean}
- */
-let clearScreenEveryFrame = true;
+// PROPERTIES
 
 /**
- * @name currentDivergence
- * @desc Set by &lt;select>.
- * @type {number}
+ * @name state
+ * @type {AppState}
+ * @desc App state variables.
  */
-let currentDivergence = DEFAULTS.divergence;
+const state = Object.seal({
+  clearScreenEveryFrame: true,
+  currentC:              DEFAULTS.c,
+  currentDivergence:     DEFAULTS.divergence,
+  flowerSprites:         [],
+  petalSize:              DEFAULTS.petalSize,
+  randomFlowers:         true,
+});
 
-/**
- * @name currentC
- * @desc Set by &lt;select>.
- * @type {number}
- */
-let currentC = DEFAULTS.c;
 
 
-/**
- * Array of current flowers to draw.
- * @type {Flower[]}
- */
-const flowerSprites = [];
 
 /* METHODS */
 
 /**
- * @param {number} x
- * @param {number} y
+ * @name addFlowerToList
+ * @desc Adds a new flower to the end of the list.
+ * @param {Flower} flower
+ */
+const addFlowerToList = flower => {
+  // if too many flowers, remove oldest one
+  if(state.flowerSprites.length > DEFAULTS.maxFlowers-1){
+    state.flowerSprites.shift();
+  }
+  // add new flower to end of list
+  state.flowerSprites.push(flower);
+}
+
+/**
+ * @name createDefaultFlower
+ * @desc Instantiates a new flower using default values.
+ * @param {number} x 
+ * @param {number} y 
+ * @returns {Flower}
+ */
+const createDefaultFlower = (x, y) => {
+   /** @type {FlowerParams} */
+   const params =  {
+    c: DEFAULTS.c,
+    centerX: x, 
+    centerY: y, 
+    deltaC: DEFAULTS.deltaC,
+    deltaDivergence: DEFAULTS.deltaDivergence,
+    deltaPetalSize: DEFAULTS.deltaPetalSize,
+    deltaRotation: DEFAULTS.deltaRotation,
+    divergence: state.currentDivergence, 
+    drawPetalFunction: petalFillCircle,
+    petalSize: DEFAULTS.petalSize, 
+  };
+  return new RotatingFlower(params);
+};
+
+/**
+ * @name createFlowerWithCurrentUISettings
+ * @desc Instantiates a new flower using current UI values.
+ * @param {number} x 
+ * @param {number} y 
+ * @returns {Flower}
+ */
+const createFlowerWithCurrentUISettings = (x, y) =>{
+  // add new default Flowersprite
+   /** @type {FlowerParams} */
+   const params =  {
+    c: state.currentC,
+    centerX: x, 
+    centerY: y, 
+    deltaC: DEFAULTS.deltaC,
+    deltaDivergence: DEFAULTS.deltaDivergence,
+    deltaPetalSize: DEFAULTS.deltaPetalSize,
+    deltaRotation: DEFAULTS.deltaRotation,
+    divergence: state.currentDivergence, 
+    drawPetalFunction: petalFillCircle,
+    petalSize: state.petalSize, 
+  };
+  return new RotatingFlower(params);
+}
+
+/**
+ * @name createRandomFlower
+ * @desc Instantiates a new flower using random values.
+ * @param {number} x - the `x` position of the new flower
+ * @param {number} y - the `y` position of the new flower
  * @returns {Flower}
  */
 const createRandomFlower = (x, y) => {
     /** @type {FlowerParams} */
     const params =  {
-      c: currentC,
+      alpha: DEFAULTS.minFlowerOpacity + Math.random()/2,
+      c: getRandomNumber(2, 6),
       centerX: x, 
       centerY: y, 
-      deltaC: getRandom(.002, .01),
-      deltaDivergence: 0,
-      deltaPetalSize: getRandom(.01,.04),
-      deltaRotation: Math.random() < .5 ? getRandom(-.002, -.02) : getRandom(.002, .02),
-      divergence: currentDivergence, 
-      drawPetalFunction: fillCircle,
-      petalSize: getRandom(1, 5), 
+      deltaC: getRandomNumber(.002, .01),
+      deltaDivergence: Math.random() < 0 ? 0 : getRandomNumber(-.005,.005),
+      deltaPetalSize: getRandomNumber(.01,.04),
+      deltaRotation: Math.random() < .5 ? getRandomNumber(-.002, -.02) : getRandomNumber(.002, .02),
+      divergence: randomArrayElement(DEFAULTS.randomDivergenceValues), 
+      drawPetalFunction: randomArrayElement(petalFunctions),
+      petalSize: getRandomNumber(1, 5), 
     };
     return new RotatingFlower(params);
 };
 
-const initFlowerSprites = () => {
+/**
+ * @name initFlowerSprites
+ * @desc instantiates initial flower using defaults and adds it to flowers list.
+ */
+const initFlowerSprites = (useCurrentSettings=false) => {
   // clear array
-  flowerSprites.length = 0;
+  state.flowerSprites.length = 0;
 
   // add new default Flowersprite
-   /** @type {FlowerParams} */
-   const params =  {
-    c: currentC,
-    centerX: DEFAULTS.canvasWidth/2, 
-    centerY: DEFAULTS.canvasHeight/2, 
-    deltaC: DEFAULTS.deltaC,
-    deltaDivergence: DEFAULTS.deltaDivergence,
-    deltaPetalSize: DEFAULTS.deltaPetalSize,
-    deltaRotation: DEFAULTS.deltaRotation,
-    divergence: currentDivergence, 
-    drawPetalFunction: fillCircle,
-    petalSize: DEFAULTS.petalSize, 
-  };
-  flowerSprites.push(new RotatingFlower(params));
-
-  //flowerSprites.push(createRandomFlower(DEFAULTS.canvasWidth/2,DEFAULTS.canvasHeight/2));
+  if(useCurrentSettings){
+    addFlowerToList(createFlowerWithCurrentUISettings(DEFAULTS.canvasWidth/2, DEFAULTS.canvasHeight/2));
+  }else{
+    addFlowerToList(createDefaultFlower(DEFAULTS.canvasWidth/2, DEFAULTS.canvasHeight/2));
+  }
 };
 
 /**
@@ -125,10 +186,10 @@ const initFlowerSprites = () => {
  */
 const loop = () => {
   window.setTimeout(loop, 1000/DEFAULTS.fps);
-  if(clearScreenEveryFrame){
+  if(state.clearScreenEveryFrame){
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
-  for(const f of flowerSprites){
+  for(const f of state.flowerSprites){
     f.update(ctx);
   }
 };
@@ -147,7 +208,7 @@ const init = () => {
   const btnRestart =  assertNonNull(document.querySelector("#btn-restart"));
   btnRestart.onclick = () => {
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
-    initFlowerSprites();
+    initFlowerSprites(true);
   };
 
   /**  @type {!HTMLButtonElement}  */
@@ -157,26 +218,52 @@ const init = () => {
   /** @type {!HTMLSelectElement} */
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.onchange = () => {
-    currentDivergence = +ctrlDivergence.value;
+    state.currentDivergence = +ctrlDivergence.value;
     // change most recent flower's divergence value
-    (flowerSprites?.[flowerSprites.length-1]).divergence = currentDivergence;
+    (state.flowerSprites?.[state.flowerSprites.length-1]).divergence = state.currentDivergence;
   };
+
+   /** @type {!HTMLSelectElement} */
+   const ctrlPetalSize = assertNonNull(document.querySelector("#ctrl-petal-size"));
+   ctrlPetalSize.onchange = () => {
+     state.petalSize = +ctrlPetalSize.value;
+     // change most recent flower's c value
+     (state.flowerSprites?.[state.flowerSprites.length-1]).petalSize = state.petalSize;
+   };
 
   /** @type {!HTMLSelectElement} */
   const ctrlC = assertNonNull(document.querySelector("#ctrl-c"));
   ctrlC.onchange = () => {
-    currentC = +ctrlC.value;
+    state.currentC = +ctrlC.value;
     // change most recent flower's c value
-    (flowerSprites?.[flowerSprites.length-1]).c = currentC;
+    (state.flowerSprites?.[state.flowerSprites.length-1]).c = state.currentC;
   };
 
   /** @type {!HTMLInputElement} */
   const cbClearEveryFrame = assertNonNull(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = () => {
-    clearScreenEveryFrame = cbClearEveryFrame.checked;
+    state.clearScreenEveryFrame = cbClearEveryFrame.checked;
+  };
+
+  /** @type {!HTMLInputElement} */
+  const cbRandomFlowers = assertNonNull(document.querySelector("#cb-random-flowers"));
+  cbRandomFlowers.onchange = () => {
+    state.randomFlowers = cbRandomFlowers.checked;
   };
 
   // III. Set up flower sprites
+  RotatingFlower.maxPetals = DEFAULTS.maxPetals;
+
+  // Interval to create random flowers
+  setInterval(()=> {
+    if(state.randomFlowers){
+      const padding = DEFAULTS.randomFlowerPadding;
+      const x = getRandomNumber(padding, DEFAULTS.canvasWidth-padding);
+      const y = getRandomNumber(padding, DEFAULTS.canvasHeight-padding);
+      addFlowerToList(createRandomFlower(x,y));
+    }
+  }, DEFAULTS.randomFlowerDelay);
+
   initFlowerSprites();
 
   // IV. start up app

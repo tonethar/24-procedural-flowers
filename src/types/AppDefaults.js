@@ -15,5 +15,11 @@
  * @prop {number} deltaRotation - `rotation` delta per frame.
  * @prop {number} divergence - degrees of rotation per frame.
  * @prop {number} fps - target frames-per-second of animation loop.
+ * @prop {number} maxFlowers - maximum number of flowers to render.
+ * @prop {number} maxPetals - maximum number of petals each flower will contain.
+ * @prop {number} minFlowerOpacity - minimum opacity of randomly generated flowers.
  * @prop {number} petalSize - radius of petals in pixels.
+ * @prop {number[]} randomDivergenceValues - an array of divergence values.
+ * @prop {number} randomFlowerDelay - time between randomly spawned flowers in milliseconds.
+ * @prop {number} randomFlowerPadding - offset in pixels of randomly spawned flowers.
  */

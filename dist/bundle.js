@@ -114,8 +114,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -123,6 +121,9 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // @ts-check
 
 /* IMPORTS */
@@ -148,17 +149,17 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
     var _this;
     _classCallCheck(this, RotatingFlower);
     _this = _callSuper(this, RotatingFlower, [params]);
-    /**
-     * @type {FlowerPetal[]}
-     */
+    /** @type {FlowerPetal[]}*/
     _this._petals = [];
 
     // Optional properties from FlowerParams, which are required for RotatingFlower
-    _this.rotation = params.rotation || 0;
+    _this.alpha = params.alpha || 1;
+    _this.colorFunction = params.colorFunction || "TODO: need a function ref!!";
     _this.deltaC = params.deltaC || 0;
     _this.deltaDivergence = params.deltaDivergence || 0;
     _this.deltaPetalSize = params.deltaPetalSize || 0;
     _this.deltaRotation = params.deltaRotation || 0;
+    _this.rotation = params.rotation || 0;
     return _this;
   }
 
@@ -176,13 +177,19 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
       var y = r * Math.sin(a); //+ this.centerY;
       var color = "hsl(".concat(this.n / 5 % 361, ",100%,50%)"); // 4
 
-      this._petals.push({
-        x: x,
-        y: y,
-        color: color,
-        petalSize: this.petalSize
-      });
+      // If there's room, create a new petal
+      if (this._petals.length < RotatingFlower.maxPetals) {
+        this._petals.push({
+          x: x,
+          y: y,
+          color: color,
+          petalSize: this.petalSize
+        });
+      }
+
+      // Draw all petals
       ctx.save();
+      ctx.globalAlpha = this.alpha;
       ctx.translate(this.centerX, this.centerY);
       ctx.rotate(this.rotation);
       var _iterator = _createForOfIteratorHelper(this._petals),
@@ -190,6 +197,8 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var p = _step.value;
+          // let aDegrees = (n * divergence) % 256; // 2
+          // let color = `rgb(${aDegrees},0,255)`;
           this.drawPetalFunction(ctx, p.x, p.y, this.petalSize, p.color);
         }
       } catch (err) {
@@ -206,7 +215,94 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
     }
   }]);
 }(_Flower_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+/**
+ * @type {number}
+ */
+_defineProperty(RotatingFlower, "maxPetals", 50);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RotatingFlower);
+
+/***/ }),
+
+/***/ "./src/flower-helpers.js":
+/*!*******************************!*\
+  !*** ./src/flower-helpers.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   petalFillCircle: () => (/* binding */ petalFillCircle),
+/* harmony export */   petalFillSquare: () => (/* binding */ petalFillSquare),
+/* harmony export */   petalStrokeCircle: () => (/* binding */ petalStrokeCircle)
+/* harmony export */ });
+/* harmony import */ var _types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types/FlowerPetalDrawFunc.js */ "./src/types/FlowerPetalDrawFunc.js");
+/* harmony import */ var _types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0__);
+// @ts-check
+/* eslint max-params: 0 */
+
+
+
+/**
+ * @module flower-helpers
+ * @desc Utility functions
+ * @author TJ
+ */
+
+/**
+ * @function petalFillCircle
+ * @static
+ * @desc Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} radius 
+ * @param {string} color 
+ */
+var petalFillCircle = function petalFillCircle(ctx, x, y, radius, color) {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+};
+
+/**
+ * @function petalStrokeCircle
+ * @desc strokes a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} radius 
+ * @param {string} color 
+ */
+
+var petalStrokeCircle = function petalStrokeCircle(ctx, x, y, radius, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+};
+
+/**
+ * 
+ * @param {*} ctx 
+ * @param {*} x 
+ * @param {*} y 
+ * @param {*} radius 
+ * @param {*} color 
+ */
+var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.fillRect(x - radius / 2, y - radius / 2, radius, radius);
+  ctx.restore();
+};
 
 /***/ }),
 
@@ -233,7 +329,13 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
  * @prop {number} deltaRotation - `rotation` delta per frame.
  * @prop {number} divergence - degrees of rotation per frame.
  * @prop {number} fps - target frames-per-second of animation loop.
+ * @prop {number} maxFlowers - maximum number of flowers to render.
+ * @prop {number} maxPetals - maximum number of petals each flower will contain.
+ * @prop {number} minFlowerOpacity - minimum opacity of randomly generated flowers.
  * @prop {number} petalSize - radius of petals in pixels.
+ * @prop {number[]} randomDivergenceValues - an array of divergence values.
+ * @prop {number} randomFlowerDelay - time between randomly spawned flowers in milliseconds.
+ * @prop {number} randomFlowerPadding - offset in pixels of randomly spawned flowers.
  */
 
 /***/ }),
@@ -250,17 +352,19 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
  * @desc JSDoc type definition. These are also properties of the Flower class.
  * @author TJ
  * @typedef {Object} FlowerParams
+ * @prop {number} c - spacing between petals.
  * @prop {number} centerX - center `x` of Flower around which petals are drawn.
  * @prop {number} centerY - center `y` of Flower around which petals are drawn.
  * @prop {number} divergence - rotation (in radians) between successive petals.
- * @prop {number} c - spacing between petals.
  * @prop {number} petalSize - width of each petal in pixels.
  * @prop {Function} drawPetalFunction - function that draws petals.
- * @prop {number} [rotation=0] - rotation of flower in radians.
+ * @prop {number} [alpha=1] - opacity of entire flower
+ * @prop {Function} [colorFunction=0] - function used to determine color of petal.
  * @prop {number} [deltaRotation=0] - `rotation` delta per frame.
  * @prop {number} [deltaC=0] - `c` delta per frame.
  * @prop {number} [deltaDivergence=0] - `divergence` delta per frame.
  * @prop {number} [deltaPetalSize=0] - `petalSize` delta per frame.
+ * @prop {number} [rotation=0] - rotation of flower in radians.
  */
 
 /***/ }),
@@ -285,67 +389,53 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
 
 /***/ }),
 
-/***/ "./src/utils.js":
-/*!**********************!*\
-  !*** ./src/utils.js ***!
-  \**********************/
+/***/ "./src/types/FlowerPetalDrawFunc.js":
+/*!******************************************!*\
+  !*** ./src/types/FlowerPetalDrawFunc.js ***!
+  \******************************************/
+/***/ (() => {
+
+// @ts-check
+/**
+ * @name FlowerPetalDrawFunc
+ * @desc JSDoc type definition
+ * @author TJ
+ * @typedef {Object} FlowerPetalDrawFunc
+ * @prop {CanvasRenderingContext2D} ctx - drawing context where the petal will be rendered.
+ * @prop {number} x - 'x' of petal.
+ * @prop {number} y - 'y' of petal.
+ * @prop {number} radius - 1/2 width of each petal in pixels.
+ * @prop {string} color - CSS color of petal.
+ */
+
+//(ctx, x, y, radius, color)
+
+/***/ }),
+
+/***/ "./src/utils-canvas.js":
+/*!*****************************!*\
+  !*** ./src/utils-canvas.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   assertNonNull: () => (/* binding */ assertNonNull),
-/* harmony export */   dtr: () => (/* binding */ dtr),
 /* harmony export */   fillCircle: () => (/* binding */ fillCircle),
-/* harmony export */   fillRect: () => (/* binding */ fillRect),
-/* harmony export */   getRandom: () => (/* binding */ getRandom)
+/* harmony export */   fillRect: () => (/* binding */ fillRect)
 /* harmony export */ });
 // @ts-check
 /* eslint max-params: 0 */
 
 /**
- * @module utils
+ * @module utils-canvas
  * @desc Utility functions
  * @author TJ
  */
 
 /**
-* @static assertNonNull
-* @author https://docs.joshuatz.com/cheatsheets/js/jsdoc/
-* @desc Utility function because we can't use a TS-style post-fix assert (yet) in JSDoc
-*  - Takes any union type and excludes `null`
-* @template T
-* @param {T} thing - any union type
-* @returns {Exclude<T, null>}
-*/
-var assertNonNull = function assertNonNull(thing) {
-  return /** @type {Exclude<T, null>} */thing;
-};
-
-/**
- * @static dtr
- * @desc Converts degree values to radians.
- * @param {number} degrees - The value in degrees.
- * @returns {number} The value in radians.
- */
-var dtr = function dtr(degrees) {
-  return degrees * (Math.PI / 180);
-};
-
-/**
- * @static getRandom
- * @param {number} min 
- * @param {number} max 
- * @returns {number}
- */
-var getRandom = function getRandom(min, max) {
-  return Math.random() * (max - min) + min;
-};
-
-/* CANVAS UTILS */
-
-/**
- * @static fillCircle
+ * @function fillCircle
+ * @static
  * @desc Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
  * @param {CanvasRenderingContext2D} ctx 
  * @param {number} x 
@@ -364,7 +454,8 @@ var fillCircle = function fillCircle(ctx, x, y, radius, color) {
 };
 
 /**
- * @static fillRect
+ * @function fillRect
+ * @static
  * @desc Fills a rectangle in the provided <kbd>ctx</kbd>. The rectangle's upper-left corner begins at <kbd>x,y</kbd>
  * @param {CanvasRenderingContext2D} ctx 
  * @param {number} x 
@@ -378,6 +469,77 @@ var fillRect = function fillRect(ctx, x, y, width, height, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, width, height);
   ctx.restore();
+};
+
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   assertNonNull: () => (/* binding */ assertNonNull),
+/* harmony export */   dtr: () => (/* binding */ dtr),
+/* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber),
+/* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
+/* harmony export */ });
+// @ts-check
+/* eslint max-params: 0 */
+
+/**
+ * @module utils
+ * @desc Utility functions
+ * @author TJ
+ */
+
+/**
+* @function assertNonNull
+* @static
+* @author https://docs.joshuatz.com/cheatsheets/js/jsdoc/
+* @desc Utility function because we can't use a TS-style post-fix assert (yet) in JSDoc
+*  - Takes any union type and excludes `null`
+* @template T
+* @param {T} thing - any union type
+* @returns {Exclude<T, null>}
+*/
+var assertNonNull = function assertNonNull(thing) {
+  return /** @type {Exclude<T, null>} */thing;
+};
+
+/**
+ * @function dtr
+ * @static
+ * @desc Converts degree values to radians.
+ * @param {number} degrees - The value in degrees.
+ * @returns {number} The value in radians.
+ */
+var dtr = function dtr(degrees) {
+  return degrees * (Math.PI / 180);
+};
+
+/**
+ * @function randomArrayElement
+ * @static
+ * @param {any[]} arr 
+ * @returns {any}
+ */
+var randomArrayElement = function randomArrayElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+/**
+ * @function getRandomNumber
+ * @static
+ * @param {number} min 
+ * @param {number} max 
+ * @returns {number}
+ */
+var getRandomNumber = function getRandomNumber(min, max) {
+  return Math.random() * (max - min) + min;
 };
 
 /***/ })
@@ -463,7 +625,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Flower_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Flower.js */ "./src/Flower.js");
 /* harmony import */ var _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RotatingFlower.js */ "./src/RotatingFlower.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-// @ts-check
+/* harmony import */ var _utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils-canvas.js */ "./src/utils-canvas.js");
+/* harmony import */ var _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./flower-helpers.js */ "./src/flower-helpers.js");
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+// @ts-nocheck
 /*global window, document*/
 
 /**
@@ -473,6 +640,9 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* IMPORTS */
+
+//import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
+
 
 
 
@@ -492,94 +662,151 @@ var DEFAULTS = Object.freeze({
   deltaRotation: .01,
   divergence: 137.5,
   fps: 60,
-  petalSize: 2
+  maxFlowers: 10,
+  maxPetals: 1000,
+  minFlowerOpacity: .5,
+  petalSize: 2,
+  randomDivergenceValues: [137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
+  randomFlowerDelay: 5000,
+  randomFlowerPadding: 100
 });
 
 /**
- * Reference to `canvas` element.
+ * @name canvas
+ * @desc Reference to `canvas` element.
  * @type {!HTMLCanvasElement} 
  */
 var canvas = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#canvas"));
 
 /**
- * Reference to drawing context of `canvas`.
+ * @name ctx
+ * @desc Reference to drawing context of `canvas`.
  * @type {!CanvasRenderingContext2D}
  */
 var ctx = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(canvas.getContext("2d"));
+var petalFunctions = [_flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle, _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle, _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle, _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalStrokeCircle, _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillSquare];
 
-/* PROPERTIES */
-
-/**
- * @name clearScreenEveryFrame
- * @desc Toggled by checkbox.
- * @type {boolean}
- */
-var clearScreenEveryFrame = true;
+// PROPERTIES
 
 /**
- * @name currentDivergence
- * @desc Set by &lt;select>.
- * @type {number}
+ * @name state
+ * @type {AppState}
+ * @desc App state variables.
  */
-var currentDivergence = DEFAULTS.divergence;
-
-/**
- * @name currentC
- * @desc Set by &lt;select>.
- * @type {number}
- */
-var currentC = DEFAULTS.c;
-
-/**
- * Array of current flowers to draw.
- * @type {Flower[]}
- */
-var flowerSprites = [];
+var state = Object.seal({
+  clearScreenEveryFrame: true,
+  currentC: DEFAULTS.c,
+  currentDivergence: DEFAULTS.divergence,
+  flowerSprites: [],
+  petalSize: DEFAULTS.petalSize,
+  randomFlowers: true
+});
 
 /* METHODS */
 
 /**
- * @param {number} x
- * @param {number} y
+ * @name addFlowerToList
+ * @desc Adds a new flower to the end of the list.
+ * @param {Flower} flower
+ */
+var addFlowerToList = function addFlowerToList(flower) {
+  // if too many flowers, remove oldest one
+  if (state.flowerSprites.length > DEFAULTS.maxFlowers - 1) {
+    state.flowerSprites.shift();
+  }
+  // add new flower to end of list
+  state.flowerSprites.push(flower);
+};
+
+/**
+ * @name createDefaultFlower
+ * @desc Instantiates a new flower using default values.
+ * @param {number} x 
+ * @param {number} y 
+ * @returns {Flower}
+ */
+var createDefaultFlower = function createDefaultFlower(x, y) {
+  /** @type {FlowerParams} */
+  var params = {
+    c: DEFAULTS.c,
+    centerX: x,
+    centerY: y,
+    deltaC: DEFAULTS.deltaC,
+    deltaDivergence: DEFAULTS.deltaDivergence,
+    deltaPetalSize: DEFAULTS.deltaPetalSize,
+    deltaRotation: DEFAULTS.deltaRotation,
+    divergence: state.currentDivergence,
+    drawPetalFunction: _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle,
+    petalSize: DEFAULTS.petalSize
+  };
+  return new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
+};
+
+/**
+ * @name createFlowerWithCurrentUISettings
+ * @desc Instantiates a new flower using current UI values.
+ * @param {number} x 
+ * @param {number} y 
+ * @returns {Flower}
+ */
+var createFlowerWithCurrentUISettings = function createFlowerWithCurrentUISettings(x, y) {
+  // add new default Flowersprite
+  /** @type {FlowerParams} */
+  var params = {
+    c: state.currentC,
+    centerX: x,
+    centerY: y,
+    deltaC: DEFAULTS.deltaC,
+    deltaDivergence: DEFAULTS.deltaDivergence,
+    deltaPetalSize: DEFAULTS.deltaPetalSize,
+    deltaRotation: DEFAULTS.deltaRotation,
+    divergence: state.currentDivergence,
+    drawPetalFunction: _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle,
+    petalSize: state.petalSize
+  };
+  return new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
+};
+
+/**
+ * @name createRandomFlower
+ * @desc Instantiates a new flower using random values.
+ * @param {number} x - the `x` position of the new flower
+ * @param {number} y - the `y` position of the new flower
  * @returns {Flower}
  */
 var createRandomFlower = function createRandomFlower(x, y) {
   /** @type {FlowerParams} */
   var params = {
-    c: currentC,
+    alpha: DEFAULTS.minFlowerOpacity + Math.random() / 2,
+    c: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(2, 6),
     centerX: x,
     centerY: y,
-    deltaC: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(.002, .01),
-    deltaDivergence: 0,
-    deltaPetalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(.01, .04),
-    deltaRotation: Math.random() < .5 ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(-.002, -.02) : (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(.002, .02),
-    divergence: currentDivergence,
-    drawPetalFunction: _utils_js__WEBPACK_IMPORTED_MODULE_3__.fillCircle,
-    petalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandom)(1, 5)
+    deltaC: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .01),
+    deltaDivergence: Math.random() < 0 ? 0 : (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.005, .005),
+    deltaPetalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.01, .04),
+    deltaRotation: Math.random() < .5 ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.002, -.02) : (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .02),
+    divergence: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.randomArrayElement)(DEFAULTS.randomDivergenceValues),
+    drawPetalFunction: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.randomArrayElement)(petalFunctions),
+    petalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(1, 5)
   };
   return new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
 };
+
+/**
+ * @name initFlowerSprites
+ * @desc instantiates initial flower using defaults and adds it to flowers list.
+ */
 var initFlowerSprites = function initFlowerSprites() {
+  var useCurrentSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   // clear array
-  flowerSprites.length = 0;
+  state.flowerSprites.length = 0;
 
   // add new default Flowersprite
-  /** @type {FlowerParams} */
-  var params = {
-    c: currentC,
-    centerX: DEFAULTS.canvasWidth / 2,
-    centerY: DEFAULTS.canvasHeight / 2,
-    deltaC: DEFAULTS.deltaC,
-    deltaDivergence: DEFAULTS.deltaDivergence,
-    deltaPetalSize: DEFAULTS.deltaPetalSize,
-    deltaRotation: DEFAULTS.deltaRotation,
-    divergence: currentDivergence,
-    drawPetalFunction: _utils_js__WEBPACK_IMPORTED_MODULE_3__.fillCircle,
-    petalSize: DEFAULTS.petalSize
-  };
-  flowerSprites.push(new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params));
-
-  //flowerSprites.push(createRandomFlower(DEFAULTS.canvasWidth/2,DEFAULTS.canvasHeight/2));
+  if (useCurrentSettings) {
+    addFlowerToList(createFlowerWithCurrentUISettings(DEFAULTS.canvasWidth / 2, DEFAULTS.canvasHeight / 2));
+  } else {
+    addFlowerToList(createDefaultFlower(DEFAULTS.canvasWidth / 2, DEFAULTS.canvasHeight / 2));
+  }
 };
 
 /**
@@ -587,12 +814,20 @@ var initFlowerSprites = function initFlowerSprites() {
  */
 var loop = function loop() {
   window.setTimeout(loop, 1000 / DEFAULTS.fps);
-  if (clearScreenEveryFrame) {
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
+  if (state.clearScreenEveryFrame) {
+    (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
-  for (var _i = 0, _flowerSprites = flowerSprites; _i < _flowerSprites.length; _i++) {
-    var f = _flowerSprites[_i];
-    f.update(ctx);
+  var _iterator = _createForOfIteratorHelper(state.flowerSprites),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var f = _step.value;
+      f.update(ctx);
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
   }
 };
 
@@ -609,8 +844,8 @@ var init = function init() {
   /**  @type {!HTMLButtonElement}  */
   var btnRestart = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
-    initFlowerSprites();
+    (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
+    initFlowerSprites(true);
   };
 
   /**  @type {!HTMLButtonElement}  */
@@ -622,26 +857,54 @@ var init = function init() {
   /** @type {!HTMLSelectElement} */
   var ctrlDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.onchange = function () {
-    currentDivergence = +ctrlDivergence.value;
+    var _state$flowerSprites;
+    state.currentDivergence = +ctrlDivergence.value;
     // change most recent flower's divergence value
-    (flowerSprites === null || flowerSprites === void 0 ? void 0 : flowerSprites[flowerSprites.length - 1]).divergence = currentDivergence;
+    ((_state$flowerSprites = state.flowerSprites) === null || _state$flowerSprites === void 0 ? void 0 : _state$flowerSprites[state.flowerSprites.length - 1]).divergence = state.currentDivergence;
+  };
+
+  /** @type {!HTMLSelectElement} */
+  var ctrlPetalSize = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
+  ctrlPetalSize.onchange = function () {
+    var _state$flowerSprites2;
+    state.petalSize = +ctrlPetalSize.value;
+    // change most recent flower's c value
+    ((_state$flowerSprites2 = state.flowerSprites) === null || _state$flowerSprites2 === void 0 ? void 0 : _state$flowerSprites2[state.flowerSprites.length - 1]).petalSize = state.petalSize;
   };
 
   /** @type {!HTMLSelectElement} */
   var ctrlC = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
   ctrlC.onchange = function () {
-    currentC = +ctrlC.value;
+    var _state$flowerSprites3;
+    state.currentC = +ctrlC.value;
     // change most recent flower's c value
-    (flowerSprites === null || flowerSprites === void 0 ? void 0 : flowerSprites[flowerSprites.length - 1]).c = currentC;
+    ((_state$flowerSprites3 = state.flowerSprites) === null || _state$flowerSprites3 === void 0 ? void 0 : _state$flowerSprites3[state.flowerSprites.length - 1]).c = state.currentC;
   };
 
   /** @type {!HTMLInputElement} */
   var cbClearEveryFrame = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
-    clearScreenEveryFrame = cbClearEveryFrame.checked;
+    state.clearScreenEveryFrame = cbClearEveryFrame.checked;
+  };
+
+  /** @type {!HTMLInputElement} */
+  var cbRandomFlowers = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-random-flowers"));
+  cbRandomFlowers.onchange = function () {
+    state.randomFlowers = cbRandomFlowers.checked;
   };
 
   // III. Set up flower sprites
+  _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"].maxPetals = DEFAULTS.maxPetals;
+
+  // Interval to create random flowers
+  setInterval(function () {
+    if (state.randomFlowers) {
+      var padding = DEFAULTS.randomFlowerPadding;
+      var x = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, DEFAULTS.canvasWidth - padding);
+      var y = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, DEFAULTS.canvasHeight - padding);
+      addFlowerToList(createRandomFlower(x, y));
+    }
+  }, DEFAULTS.randomFlowerDelay);
   initFlowerSprites();
 
   // IV. start up app
