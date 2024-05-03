@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phyllo 4</title>
+  <title>Phyllo 5</title>
   <style>
     body{ font-family: sans-serif; }
     canvas{ border: 1px solid lightgray; }
@@ -23,6 +23,8 @@
         <option selected>137.5</option>
         <option>137.7</option>
         <option>137.9</option>
+        <option>139</option>
+        <option>140</option>
       </select>
     </label>
 
@@ -48,16 +50,21 @@
       </select>
     </label>
    
-    <label>
+    <label title="">
       Clear every frame? 
       <input id="cb-clear-every-frame" type="checkbox" checked>
     </label>
 
     <br>
 
-    <label>
-      Click to spawn flowers? 
-      <input id="cb-spawn-flowers" type="checkbox">
+    <label title="New flowers will spawn periodically.">
+      Random flowers? 
+      <input id="cb-random-flowers" type="checkbox" checked>
+    </label>
+
+    <label title="Click to spawn a new flower using UI settings.">
+      Click to spawn flower? 
+      <input id="cb-click-new-flower" type="checkbox">
     </label>
 
     <button 
@@ -66,7 +73,7 @@
     >Clear & Restart</button>
     <button 
       id="btn-reset"
-      title="Clears screen, resets controls and restarts Flower animation"
+      title="Clears screen, resets controls to default values and restarts Flower animation"
     >Reset UI & Restart</button>
     
   </div>
