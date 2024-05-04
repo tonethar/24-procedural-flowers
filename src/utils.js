@@ -1,6 +1,8 @@
 // @ts-check
 /* eslint max-params: 0 */
 
+import "./types/Point.js";
+
 /**
  * @module utils
  * @desc Utility functions
@@ -51,7 +53,7 @@ export const getRandomNumber = (min, max) => Math.random() * (max - min) + min;
  * @function getXY
  * @static
  * @param {!MouseEvent} e
- * @returns {Object}
+ * @returns {Point}
  */
 export const getXY = e =>  {
   const x = e.offsetX;

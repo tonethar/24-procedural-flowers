@@ -1,5 +1,4 @@
 // @ts-check
-
 /**
  * @name AppDefaults
  * @desc JSDoc type definition.

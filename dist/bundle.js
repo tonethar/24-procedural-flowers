@@ -313,7 +313,6 @@ var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
 /***/ (() => {
 
 // @ts-check
-
 /**
  * @name AppDefaults
  * @desc JSDoc type definition.
@@ -412,6 +411,24 @@ var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
 
 /***/ }),
 
+/***/ "./src/types/Point.js":
+/*!****************************!*\
+  !*** ./src/types/Point.js ***!
+  \****************************/
+/***/ (() => {
+
+// @ts-check
+/**
+ * @name Point
+ * @desc JSDoc type definition.
+ * @author TJ
+ * @typedef {Object} Point
+ * @property {number} x 
+ * @property {number} y
+ */
+
+/***/ }),
+
 /***/ "./src/utils-canvas.js":
 /*!*****************************!*\
   !*** ./src/utils-canvas.js ***!
@@ -489,8 +506,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   goFullScreen: () => (/* binding */ goFullScreen),
 /* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
 /* harmony export */ });
+/* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types/Point.js */ "./src/types/Point.js");
+/* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_Point_js__WEBPACK_IMPORTED_MODULE_0__);
 // @ts-check
 /* eslint max-params: 0 */
+
+
 
 /**
  * @module utils
@@ -548,7 +569,7 @@ var getRandomNumber = function getRandomNumber(min, max) {
  * @function getXY
  * @static
  * @param {!MouseEvent} e
- * @returns {Object}
+ * @returns {Point}
  */
 var getXY = function getXY(e) {
   var x = e.offsetX;
