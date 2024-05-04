@@ -10,12 +10,12 @@
 
 ## II. Instructions
 - `git clone https://github.com/tonethar/24-procedural-flowers.git`
-- `cd procedural-flowers`
+- `cd 24-procedural-flowers`
 - `npm start`
 
 ***OR***
 
-- No git? No Node.js? No problem! With branches later than **v2** you can just run and edit the code in native ES6 mode:
+- No git? No Node.js? No problem! Even with branches later than **v2** you can just run and edit the code in native ES6 mode:
   - download **index.html** and contents of **src/** folder
   - in **index.html**, delete the `<script src="dist/bundle.js"></script>` line
   - in **index.html**, uncomment the `<script type="module" src="./src/main.js"></script>` line
@@ -45,5 +45,6 @@
 - `FlowerPetal` interface
 
 ### v5
-- Multiple flowers with random starting values
+- Periodically spawned flowers with random starting values
+- Click on canvas to create a new flower
 

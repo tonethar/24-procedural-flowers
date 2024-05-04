@@ -59,3 +59,10 @@ export const getXY = e =>  {
   console.log(x,y);
   return {x, y};
 };
+
+/**
+ * @function goFullScreen
+ * @static
+ * @param {HTMLElement} element 
+ */
+export const goFullScreen = element => element.requestFullscreen();

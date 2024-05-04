@@ -486,6 +486,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   dtr: () => (/* binding */ dtr),
 /* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber),
 /* harmony export */   getXY: () => (/* binding */ getXY),
+/* harmony export */   goFullScreen: () => (/* binding */ goFullScreen),
 /* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
 /* harmony export */ });
 // @ts-check
@@ -557,6 +558,15 @@ var getXY = function getXY(e) {
     x: x,
     y: y
   };
+};
+
+/**
+ * @function goFullScreen
+ * @static
+ * @param {HTMLElement} element 
+ */
+var goFullScreen = function goFullScreen(element) {
+  return element.requestFullscreen();
 };
 
 /***/ })
@@ -829,6 +839,8 @@ var init = function init() {
   ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
 
   // II. setup UI
+
+  // Buttons
   /**  @type {!HTMLButtonElement}  */
   var btnRestart = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
@@ -840,6 +852,12 @@ var init = function init() {
   var btnReset = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-reset"));
   btnReset.onclick = function () {
     return window.location.reload();
+  };
+
+  /**  @type {!HTMLButtonElement}  */
+  var btnFS = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-fs"));
+  btnFS.onclick = function () {
+    return (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.goFullScreen)(canvas);
   };
 
   /** @type {!HTMLSelectElement} */

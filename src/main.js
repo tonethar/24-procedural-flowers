@@ -12,7 +12,7 @@ import "./types/AppDefaults.js";
 //import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
 import Flower from "./Flower.js";
 import RotatingFlower from "./RotatingFlower.js";
-import { assertNonNull, getRandomNumber, getXY, randomArrayElement } from "./utils.js";
+import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils.js";
 import { fillRect } from "./utils-canvas.js";
 import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-helpers.js";
 
@@ -174,6 +174,8 @@ const init = () => {
   ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
 
   // II. setup UI
+
+  // Buttons
   /**  @type {!HTMLButtonElement}  */
   const btnRestart =  assertNonNull(document.querySelector("#btn-restart"));
   btnRestart.onclick = () => {
@@ -184,6 +186,10 @@ const init = () => {
   /**  @type {!HTMLButtonElement}  */
   const btnReset =  assertNonNull(document.querySelector("#btn-reset"));
   btnReset.onclick = () => window.location.reload();
+
+  /**  @type {!HTMLButtonElement}  */
+  const btnFS =  assertNonNull(document.querySelector("#btn-fs"));
+  btnFS.onclick = () => goFullScreen(canvas);
 
   /** @type {!HTMLSelectElement} */
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
