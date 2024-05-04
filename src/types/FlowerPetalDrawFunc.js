@@ -10,6 +10,3 @@
  * @prop {number} radius - 1/2 width of each petal in pixels.
  * @prop {string} color - CSS color of petal.
  */
-
-
-//(ctx, x, y, radius, color)
