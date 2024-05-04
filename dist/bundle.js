@@ -322,6 +322,7 @@ var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
  * @prop {number} canvasWidth - width of canvas in pixels.
  * @prop {number} canvasHeight - height of canvas in pixels.
  * @prop {string} clearColor - CSS color to fill background with.
+ * @prop {boolean} clearEveryFrame - Clear screen every frame?
  * @prop {number} deltaC - `c` delta per frame.
  * @prop {number} deltaDivergence - `divergence` delta per frame.
  * @prop {number} deltaPetalSize - `petalSize` delta per frame.
@@ -335,6 +336,7 @@ var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
  * @prop {number[]} randomDivergenceValues - an array of divergence values.
  * @prop {number} randomFlowerDelay - time between randomly spawned flowers in milliseconds.
  * @prop {number} randomFlowerPadding - offset in pixels of randomly spawned flowers.
+ * @prop {boolean} randomFlowers 
  */
 
 /***/ }),
@@ -406,8 +408,6 @@ var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
  * @prop {number} radius - 1/2 width of each petal in pixels.
  * @prop {string} color - CSS color of petal.
  */
-
-//(ctx, x, y, radius, color)
 
 /***/ }),
 
@@ -704,6 +704,7 @@ var DEFAULTS = Object.freeze({
   canvasWidth: 800,
   canvasHeight: 600,
   clearColor: "#000",
+  clearEveryFrame: true,
   deltaC: .005,
   deltaDivergence: 0,
   deltaPetalSize: .01,
@@ -716,7 +717,8 @@ var DEFAULTS = Object.freeze({
   petalSize: 2,
   randomDivergenceValues: [137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
   randomFlowerDelay: 5000,
-  randomFlowerPadding: 100
+  randomFlowerPadding: 100,
+  randomFlowers: false
 });
 
 /**
@@ -742,12 +744,12 @@ var petalFunctions = [_flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillC
  * @desc App state variables. Most of these could be saved to localStorage.
  */
 var state = Object.seal({
-  clearScreenEveryFrame: true,
+  clearEveryFrame: DEFAULTS.clearEveryFrame,
   currentC: DEFAULTS.c,
   currentDivergence: DEFAULTS.divergence,
+  currentPetalSize: DEFAULTS.petalSize,
   flowerList: [],
-  petalSize: DEFAULTS.petalSize,
-  randomFlowers: true
+  randomFlowers: DEFAULTS.randomFlowers
 });
 
 /* METHODS */
@@ -786,7 +788,7 @@ var createFlowerWithCurrentUISettings = function createFlowerWithCurrentUISettin
     deltaRotation: DEFAULTS.deltaRotation,
     divergence: state.currentDivergence,
     drawPetalFunction: _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle,
-    petalSize: state.petalSize
+    petalSize: state.currentPetalSize
   };
   return new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
 };
@@ -821,7 +823,6 @@ var createRandomFlower = function createRandomFlower(x, y) {
  * @desc instantiates initial flower using defaults and adds it to flowers list.
  */
 var initFlowerSprites = function initFlowerSprites() {
-  var useCurrentSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   // clear list
   state.flowerList.length = 0;
   // add flower to list
@@ -833,7 +834,7 @@ var initFlowerSprites = function initFlowerSprites() {
  */
 var loop = function loop() {
   window.setTimeout(loop, 1000 / DEFAULTS.fps);
-  if (state.clearScreenEveryFrame) {
+  if (state.clearEveryFrame) {
     (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
   var _iterator = _createForOfIteratorHelper(state.flowerList),
@@ -866,7 +867,7 @@ var init = function init() {
   var btnRestart = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
     (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
-    initFlowerSprites(true);
+    initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
@@ -883,6 +884,7 @@ var init = function init() {
 
   /** @type {!HTMLSelectElement} */
   var ctrlDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
+  ctrlDivergence.value = DEFAULTS.divergence;
   ctrlDivergence.onchange = function () {
     var _state$flowerList;
     state.currentDivergence = +ctrlDivergence.value;
@@ -892,15 +894,17 @@ var init = function init() {
 
   /** @type {!HTMLSelectElement} */
   var ctrlPetalSize = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
+  ctrlPetalSize.value = DEFAULTS.petalSize;
   ctrlPetalSize.onchange = function () {
     var _state$flowerList2;
-    state.petalSize = +ctrlPetalSize.value;
-    // change most recent flower's c value
+    state.currentPetalSize = +ctrlPetalSize.value;
+    // change most recent flower's petalSize value
     ((_state$flowerList2 = state.flowerList) === null || _state$flowerList2 === void 0 ? void 0 : _state$flowerList2[state.flowerList.length - 1]).petalSize = state.petalSize;
   };
 
   /** @type {!HTMLSelectElement} */
   var ctrlC = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
+  ctrlC.value = DEFAULTS.c;
   ctrlC.onchange = function () {
     var _state$flowerList3;
     state.currentC = +ctrlC.value;
@@ -911,11 +915,12 @@ var init = function init() {
   /** @type {!HTMLInputElement} */
   var cbClearEveryFrame = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
-    state.clearScreenEveryFrame = cbClearEveryFrame.checked;
+    state.clearEveryFrame = cbClearEveryFrame.checked;
   };
 
   /** @type {!HTMLInputElement} */
   var cbRandomFlowers = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-random-flowers"));
+  cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
   cbRandomFlowers.onchange = function () {
     state.randomFlowers = cbRandomFlowers.checked;
   };
@@ -936,8 +941,9 @@ var init = function init() {
   // initialize starting flower
   initFlowerSprites();
 
-  // get canvas clicking working
+  // enable canvas clicking
   canvas.onclick = function (e) {
+    /** @type {Point} */
     var loc = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getXY)(e);
     addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
   };

@@ -24,6 +24,7 @@ const DEFAULTS = Object.freeze({
   canvasWidth:            800,
   canvasHeight:           600,
   clearColor:             "#000",
+  clearEveryFrame:        true,
   deltaC:                 .005,
   deltaDivergence:        0,
   deltaPetalSize:         .01,
@@ -37,6 +38,7 @@ const DEFAULTS = Object.freeze({
   randomDivergenceValues: [137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
   randomFlowerDelay:      5000,
   randomFlowerPadding:    100,
+  randomFlowers:          false,
 });
 
 
@@ -64,12 +66,12 @@ const petalFunctions = [petalFillCircle, petalFillCircle, petalFillCircle, petal
  * @desc App state variables. Most of these could be saved to localStorage.
  */
 const state = Object.seal({
-  clearScreenEveryFrame: true,
-  currentC:              DEFAULTS.c,
-  currentDivergence:     DEFAULTS.divergence,
-  flowerList:            [],
-  petalSize:             DEFAULTS.petalSize,
-  randomFlowers:         true,
+  clearEveryFrame:    DEFAULTS.clearEveryFrame,
+  currentC:           DEFAULTS.c,
+  currentDivergence:  DEFAULTS.divergence,
+  currentPetalSize:   DEFAULTS.petalSize,
+  flowerList:         [],
+  randomFlowers:      DEFAULTS.randomFlowers,
 });
 
 
@@ -88,7 +90,6 @@ const addFlowerToList = flower => {
   // add new flower to end of list
   state.flowerList.push(flower);
 }
-
 
 /**
  * @name createFlowerWithCurrentUISettings
@@ -110,7 +111,7 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
     deltaRotation: DEFAULTS.deltaRotation,
     divergence: state.currentDivergence, 
     drawPetalFunction: petalFillCircle,
-    petalSize: state.petalSize, 
+    petalSize: state.currentPetalSize, 
   };
   return new RotatingFlower(params);
 }
@@ -144,7 +145,7 @@ const createRandomFlower = (x, y) => {
  * @name initFlowerSprites
  * @desc instantiates initial flower using defaults and adds it to flowers list.
  */
-const initFlowerSprites = (useCurrentSettings=false) => {
+const initFlowerSprites = () => {
   // clear list
   state.flowerList.length = 0;
   // add flower to list
@@ -156,7 +157,7 @@ const initFlowerSprites = (useCurrentSettings=false) => {
  */
 const loop = () => {
   window.setTimeout(loop, 1000/DEFAULTS.fps);
-  if(state.clearScreenEveryFrame){
+  if(state.clearEveryFrame){
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
   for(const f of state.flowerList){
@@ -180,7 +181,7 @@ const init = () => {
   const btnRestart =  assertNonNull(document.querySelector("#btn-restart"));
   btnRestart.onclick = () => {
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
-    initFlowerSprites(true);
+    initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
@@ -193,6 +194,7 @@ const init = () => {
 
   /** @type {!HTMLSelectElement} */
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
+  ctrlDivergence.value = DEFAULTS.divergence;
   ctrlDivergence.onchange = () => {
     state.currentDivergence = +ctrlDivergence.value;
     // change most recent flower's divergence value
@@ -201,14 +203,16 @@ const init = () => {
 
    /** @type {!HTMLSelectElement} */
    const ctrlPetalSize = assertNonNull(document.querySelector("#ctrl-petal-size"));
+   ctrlPetalSize.value = DEFAULTS.petalSize;
    ctrlPetalSize.onchange = () => {
-     state.petalSize = +ctrlPetalSize.value;
-     // change most recent flower's c value
+     state.currentPetalSize = +ctrlPetalSize.value;
+     // change most recent flower's petalSize value
      (state.flowerList?.[state.flowerList.length-1]).petalSize = state.petalSize;
    };
 
   /** @type {!HTMLSelectElement} */
   const ctrlC = assertNonNull(document.querySelector("#ctrl-c"));
+  ctrlC.value = DEFAULTS.c;
   ctrlC.onchange = () => {
     state.currentC = +ctrlC.value;
     // change most recent flower's c value
@@ -218,11 +222,12 @@ const init = () => {
   /** @type {!HTMLInputElement} */
   const cbClearEveryFrame = assertNonNull(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = () => {
-    state.clearScreenEveryFrame = cbClearEveryFrame.checked;
+    state.clearEveryFrame = cbClearEveryFrame.checked;
   };
 
   /** @type {!HTMLInputElement} */
   const cbRandomFlowers = assertNonNull(document.querySelector("#cb-random-flowers"));
+  cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
   cbRandomFlowers.onchange = () => {
     state.randomFlowers = cbRandomFlowers.checked;
   };
@@ -244,8 +249,9 @@ const init = () => {
   // initialize starting flower
   initFlowerSprites();
 
-  // get canvas clicking working
+  // enable canvas clicking
   canvas.onclick = e => {
+    /** @type {Point} */
     const loc = getXY(e);
     addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
   }
