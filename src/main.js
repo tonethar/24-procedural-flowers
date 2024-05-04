@@ -12,7 +12,7 @@ import "./types/AppDefaults.js";
 //import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
 import Flower from "./Flower.js";
 import RotatingFlower from "./RotatingFlower.js";
-import { assertNonNull, getRandomNumber, randomArrayElement } from "./utils.js";
+import { assertNonNull, getRandomNumber, getXY, randomArrayElement } from "./utils.js";
 import { fillRect } from "./utils-canvas.js";
 import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-helpers.js";
 
@@ -20,7 +20,7 @@ import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-he
 
 /** @type {AppDefaults} */
 const DEFAULTS = Object.freeze({
-  c:                      4,
+  c:                      5,
   canvasWidth:            800,
   canvasHeight:           600,
   clearColor:             "#000",
@@ -61,18 +61,16 @@ const petalFunctions = [petalFillCircle, petalFillCircle, petalFillCircle, petal
 /**
  * @name state
  * @type {AppState}
- * @desc App state variables.
+ * @desc App state variables. Most of these could be saved to localStorage.
  */
 const state = Object.seal({
   clearScreenEveryFrame: true,
   currentC:              DEFAULTS.c,
   currentDivergence:     DEFAULTS.divergence,
-  flowerSprites:         [],
-  petalSize:              DEFAULTS.petalSize,
+  flowerList:            [],
+  petalSize:             DEFAULTS.petalSize,
   randomFlowers:         true,
 });
-
-
 
 
 /* METHODS */
@@ -84,11 +82,11 @@ const state = Object.seal({
  */
 const addFlowerToList = flower => {
   // if too many flowers, remove oldest one
-  if(state.flowerSprites.length > DEFAULTS.maxFlowers-1){
-    state.flowerSprites.shift();
+  if(state.flowerList.length > DEFAULTS.maxFlowers-1){
+    state.flowerList.shift();
   }
   // add new flower to end of list
-  state.flowerSprites.push(flower);
+  state.flowerList.push(flower);
 }
 
 /**
@@ -171,7 +169,7 @@ const createRandomFlower = (x, y) => {
  */
 const initFlowerSprites = (useCurrentSettings=false) => {
   // clear array
-  state.flowerSprites.length = 0;
+  state.flowerList.length = 0;
 
   // add new default Flowersprite
   if(useCurrentSettings){
@@ -189,7 +187,7 @@ const loop = () => {
   if(state.clearScreenEveryFrame){
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
-  for(const f of state.flowerSprites){
+  for(const f of state.flowerList){
     f.update(ctx);
   }
 };
@@ -220,7 +218,7 @@ const init = () => {
   ctrlDivergence.onchange = () => {
     state.currentDivergence = +ctrlDivergence.value;
     // change most recent flower's divergence value
-    (state.flowerSprites?.[state.flowerSprites.length-1]).divergence = state.currentDivergence;
+    (state.flowerList?.[state.flowerList.length-1]).divergence = state.currentDivergence;
   };
 
    /** @type {!HTMLSelectElement} */
@@ -228,7 +226,7 @@ const init = () => {
    ctrlPetalSize.onchange = () => {
      state.petalSize = +ctrlPetalSize.value;
      // change most recent flower's c value
-     (state.flowerSprites?.[state.flowerSprites.length-1]).petalSize = state.petalSize;
+     (state.flowerList?.[state.flowerList.length-1]).petalSize = state.petalSize;
    };
 
   /** @type {!HTMLSelectElement} */
@@ -236,7 +234,7 @@ const init = () => {
   ctrlC.onchange = () => {
     state.currentC = +ctrlC.value;
     // change most recent flower's c value
-    (state.flowerSprites?.[state.flowerSprites.length-1]).c = state.currentC;
+    (state.flowerList?.[state.flowerList.length-1]).c = state.currentC;
   };
 
   /** @type {!HTMLInputElement} */
@@ -251,6 +249,7 @@ const init = () => {
     state.randomFlowers = cbRandomFlowers.checked;
   };
 
+
   // III. Set up flower sprites
   RotatingFlower.maxPetals = DEFAULTS.maxPetals;
 
@@ -264,7 +263,14 @@ const init = () => {
     }
   }, DEFAULTS.randomFlowerDelay);
 
+  // initialize starting flower
   initFlowerSprites();
+
+  // get canvas clicking working
+  canvas.onclick = e => {
+    const loc = getXY(e);
+    addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
+  }
 
   // IV. start up app
   loop();

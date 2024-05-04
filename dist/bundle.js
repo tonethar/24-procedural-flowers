@@ -485,6 +485,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   assertNonNull: () => (/* binding */ assertNonNull),
 /* harmony export */   dtr: () => (/* binding */ dtr),
 /* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber),
+/* harmony export */   getXY: () => (/* binding */ getXY),
 /* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
 /* harmony export */ });
 // @ts-check
@@ -540,6 +541,22 @@ var randomArrayElement = function randomArrayElement(arr) {
  */
 var getRandomNumber = function getRandomNumber(min, max) {
   return Math.random() * (max - min) + min;
+};
+
+/**
+ * @function getXY
+ * @static
+ * @param {!MouseEvent} e
+ * @returns {Object}
+ */
+var getXY = function getXY(e) {
+  var x = e.offsetX;
+  var y = e.offsetY;
+  console.log(x, y);
+  return {
+    x: x,
+    y: y
+  };
 };
 
 /***/ })
@@ -652,7 +669,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /** @type {AppDefaults} */
 var DEFAULTS = Object.freeze({
-  c: 4,
+  c: 5,
   canvasWidth: 800,
   canvasHeight: 600,
   clearColor: "#000",
@@ -691,13 +708,13 @@ var petalFunctions = [_flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillC
 /**
  * @name state
  * @type {AppState}
- * @desc App state variables.
+ * @desc App state variables. Most of these could be saved to localStorage.
  */
 var state = Object.seal({
   clearScreenEveryFrame: true,
   currentC: DEFAULTS.c,
   currentDivergence: DEFAULTS.divergence,
-  flowerSprites: [],
+  flowerList: [],
   petalSize: DEFAULTS.petalSize,
   randomFlowers: true
 });
@@ -711,11 +728,11 @@ var state = Object.seal({
  */
 var addFlowerToList = function addFlowerToList(flower) {
   // if too many flowers, remove oldest one
-  if (state.flowerSprites.length > DEFAULTS.maxFlowers - 1) {
-    state.flowerSprites.shift();
+  if (state.flowerList.length > DEFAULTS.maxFlowers - 1) {
+    state.flowerList.shift();
   }
   // add new flower to end of list
-  state.flowerSprites.push(flower);
+  state.flowerList.push(flower);
 };
 
 /**
@@ -799,7 +816,7 @@ var createRandomFlower = function createRandomFlower(x, y) {
 var initFlowerSprites = function initFlowerSprites() {
   var useCurrentSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   // clear array
-  state.flowerSprites.length = 0;
+  state.flowerList.length = 0;
 
   // add new default Flowersprite
   if (useCurrentSettings) {
@@ -817,7 +834,7 @@ var loop = function loop() {
   if (state.clearScreenEveryFrame) {
     (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
-  var _iterator = _createForOfIteratorHelper(state.flowerSprites),
+  var _iterator = _createForOfIteratorHelper(state.flowerList),
     _step;
   try {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
@@ -857,28 +874,28 @@ var init = function init() {
   /** @type {!HTMLSelectElement} */
   var ctrlDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.onchange = function () {
-    var _state$flowerSprites;
+    var _state$flowerList;
     state.currentDivergence = +ctrlDivergence.value;
     // change most recent flower's divergence value
-    ((_state$flowerSprites = state.flowerSprites) === null || _state$flowerSprites === void 0 ? void 0 : _state$flowerSprites[state.flowerSprites.length - 1]).divergence = state.currentDivergence;
+    ((_state$flowerList = state.flowerList) === null || _state$flowerList === void 0 ? void 0 : _state$flowerList[state.flowerList.length - 1]).divergence = state.currentDivergence;
   };
 
   /** @type {!HTMLSelectElement} */
   var ctrlPetalSize = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
   ctrlPetalSize.onchange = function () {
-    var _state$flowerSprites2;
+    var _state$flowerList2;
     state.petalSize = +ctrlPetalSize.value;
     // change most recent flower's c value
-    ((_state$flowerSprites2 = state.flowerSprites) === null || _state$flowerSprites2 === void 0 ? void 0 : _state$flowerSprites2[state.flowerSprites.length - 1]).petalSize = state.petalSize;
+    ((_state$flowerList2 = state.flowerList) === null || _state$flowerList2 === void 0 ? void 0 : _state$flowerList2[state.flowerList.length - 1]).petalSize = state.petalSize;
   };
 
   /** @type {!HTMLSelectElement} */
   var ctrlC = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
   ctrlC.onchange = function () {
-    var _state$flowerSprites3;
+    var _state$flowerList3;
     state.currentC = +ctrlC.value;
     // change most recent flower's c value
-    ((_state$flowerSprites3 = state.flowerSprites) === null || _state$flowerSprites3 === void 0 ? void 0 : _state$flowerSprites3[state.flowerSprites.length - 1]).c = state.currentC;
+    ((_state$flowerList3 = state.flowerList) === null || _state$flowerList3 === void 0 ? void 0 : _state$flowerList3[state.flowerList.length - 1]).c = state.currentC;
   };
 
   /** @type {!HTMLInputElement} */
@@ -905,7 +922,15 @@ var init = function init() {
       addFlowerToList(createRandomFlower(x, y));
     }
   }, DEFAULTS.randomFlowerDelay);
+
+  // initialize starting flower
   initFlowerSprites();
+
+  // get canvas clicking working
+  canvas.onclick = function (e) {
+    var loc = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getXY)(e);
+    addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
+  };
 
   // IV. start up app
   loop();

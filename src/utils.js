@@ -46,3 +46,16 @@ export const randomArrayElement = arr => arr[Math.floor(Math.random() * arr.leng
  * @returns {number}
  */
 export const getRandomNumber = (min, max) => Math.random() * (max - min) + min;
+
+/**
+ * @function getXY
+ * @static
+ * @param {!MouseEvent} e
+ * @returns {Object}
+ */
+export const getXY = e =>  {
+  const x = e.offsetX;
+  const y = e.offsetY;
+  console.log(x,y);
+  return {x, y};
+};

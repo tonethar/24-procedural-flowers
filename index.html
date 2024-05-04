@@ -8,8 +8,9 @@
     body{ font-family: sans-serif; }
     canvas{ border: 1px solid lightgray; }
     label{ border: 1px solid lightgray; padding: .25em; margin-right: .25em; }
-    button{ font-size: 1.1em; margin-top: .5em; padding: .2em;}
-    #controls{ max-width: 800px; margin-top:.33em;}
+    button{ font-size: 1.1em; margin-top: .7em; padding: .2em; }
+    #controls{ max-width: 800px; margin-top:.33em; }
+    p{ border-top: 1px dashed darkgray; margin-top: .5em; padding: .2em; }
   </style>
   <!-- <script type="module" src="./src/main.js"></script> -->
 </head>
@@ -43,8 +44,8 @@
       <select id="ctrl-c">
         <option>2</option>
         <option>3</option>
-        <option selected>4</option>
-        <option>5</option>
+        <option >4</option>
+        <option selected>5</option>
         <option>8</option>
         <option>10</option>
       </select>
@@ -57,14 +58,9 @@
 
     <br>
 
-    <label title="New flowers will spawn periodically.">
-      Random flowers? 
+    <label title="New flowers with random parameters will spawn periodically.">
+      Spawn flowers? 
       <input id="cb-random-flowers" type="checkbox" checked>
-    </label>
-
-    <label title="Click to spawn a new flower using UI settings.">
-      Click to spawn flower? 
-      <input id="cb-click-new-flower" type="checkbox">
     </label>
 
     <button 
@@ -75,6 +71,8 @@
       id="btn-reset"
       title="Clears screen, resets controls to default values and restarts Flower animation"
     >Reset UI & Restart</button>
+
+    <p><b>Instructions:</b> Use above controls to change parameters of most recently created flower. Click on canvas to create new flowers.</p>
     
   </div>
 </body>
