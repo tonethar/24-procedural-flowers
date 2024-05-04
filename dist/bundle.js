@@ -736,30 +736,6 @@ var addFlowerToList = function addFlowerToList(flower) {
 };
 
 /**
- * @name createDefaultFlower
- * @desc Instantiates a new flower using default values.
- * @param {number} x 
- * @param {number} y 
- * @returns {Flower}
- */
-var createDefaultFlower = function createDefaultFlower(x, y) {
-  /** @type {FlowerParams} */
-  var params = {
-    c: DEFAULTS.c,
-    centerX: x,
-    centerY: y,
-    deltaC: DEFAULTS.deltaC,
-    deltaDivergence: DEFAULTS.deltaDivergence,
-    deltaPetalSize: DEFAULTS.deltaPetalSize,
-    deltaRotation: DEFAULTS.deltaRotation,
-    divergence: state.currentDivergence,
-    drawPetalFunction: _flower_helpers_js__WEBPACK_IMPORTED_MODULE_5__.petalFillCircle,
-    petalSize: DEFAULTS.petalSize
-  };
-  return new _RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
-};
-
-/**
  * @name createFlowerWithCurrentUISettings
  * @desc Instantiates a new flower using current UI values.
  * @param {number} x 
@@ -815,15 +791,10 @@ var createRandomFlower = function createRandomFlower(x, y) {
  */
 var initFlowerSprites = function initFlowerSprites() {
   var useCurrentSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-  // clear array
+  // clear list
   state.flowerList.length = 0;
-
-  // add new default Flowersprite
-  if (useCurrentSettings) {
-    addFlowerToList(createFlowerWithCurrentUISettings(DEFAULTS.canvasWidth / 2, DEFAULTS.canvasHeight / 2));
-  } else {
-    addFlowerToList(createDefaultFlower(DEFAULTS.canvasWidth / 2, DEFAULTS.canvasHeight / 2));
-  }
+  // add flower to list
+  addFlowerToList(createFlowerWithCurrentUISettings(DEFAULTS.canvasWidth / 2, DEFAULTS.canvasHeight / 2));
 };
 
 /**
