@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-check
 /*global window, document*/
 
 /**
@@ -9,12 +9,14 @@
 
 /* IMPORTS */
 import "./types/AppDefaults.js";
-//import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
+import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
 import Flower from "./Flower.js";
 import RotatingFlower from "./RotatingFlower.js";
 import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils.js";
-import { fillRect } from "./utils-canvas.js";
-import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-helpers.js";
+// @ts-ignore
+import { fillRect } from "./utils-canvas.js";  // FIXME - import of utils-canvas.js not working for JSDoc
+// @ts-ignore
+import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-helpers.js"; // FIXME - ditto
 
 /* CONSTANTS */
 
@@ -63,13 +65,15 @@ const petalFunctions = [petalFillCircle, petalFillCircle, petalFillCircle, petal
 /**
  * @name state
  * @type {AppState}
- * @desc App state variables. Most of these could be saved to localStorage.
+ * @desc App state variables that can change over time. Most of these could be saved to localStorage.
  */
 const state = Object.seal({
   clearEveryFrame:    DEFAULTS.clearEveryFrame,
-  currentC:           DEFAULTS.c,
-  currentDivergence:  DEFAULTS.divergence,
-  currentPetalSize:   DEFAULTS.petalSize,
+  c:                  DEFAULTS.c,
+  deltaC:             DEFAULTS.deltaC,
+  deltaDivergence:    DEFAULTS.deltaDivergence,
+  divergence:         DEFAULTS.divergence,
+  petalSize:          DEFAULTS.petalSize,
   flowerList:         [],
   randomFlowers:      DEFAULTS.randomFlowers,
 });
@@ -102,16 +106,16 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
   // add new default Flowersprite
    /** @type {FlowerParams} */
    const params =  {
-    c: state.currentC,
+    c: state.c,
     centerX: x, 
     centerY: y, 
-    deltaC: DEFAULTS.deltaC,
-    deltaDivergence: DEFAULTS.deltaDivergence,
+    deltaC: state.deltaC,
+    deltaDivergence: state.deltaDivergence,
     deltaPetalSize: DEFAULTS.deltaPetalSize,
     deltaRotation: DEFAULTS.deltaRotation,
-    divergence: state.currentDivergence, 
+    divergence: state.divergence, 
     drawPetalFunction: petalFillCircle,
-    petalSize: state.currentPetalSize, 
+    petalSize: state.petalSize, 
   };
   return new RotatingFlower(params);
 }
@@ -194,29 +198,39 @@ const init = () => {
 
   /** @type {!HTMLSelectElement} */
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
-  ctrlDivergence.value = DEFAULTS.divergence;
+  ctrlDivergence.value = `${DEFAULTS.divergence}`;
   ctrlDivergence.onchange = () => {
-    state.currentDivergence = +ctrlDivergence.value;
+    state.divergence = +ctrlDivergence.value;
     // change most recent flower's divergence value
-    (state.flowerList?.[state.flowerList.length-1]).divergence = state.currentDivergence;
+    (state.flowerList?.[state.flowerList.length-1]).divergence = state.divergence;
   };
 
    /** @type {!HTMLSelectElement} */
    const ctrlPetalSize = assertNonNull(document.querySelector("#ctrl-petal-size"));
-   ctrlPetalSize.value = DEFAULTS.petalSize;
+   ctrlPetalSize.value = `${DEFAULTS.petalSize}`;
    ctrlPetalSize.onchange = () => {
-     state.currentPetalSize = +ctrlPetalSize.value;
+     state.petalSize = +ctrlPetalSize.value;
      // change most recent flower's petalSize value
      (state.flowerList?.[state.flowerList.length-1]).petalSize = state.petalSize;
    };
 
   /** @type {!HTMLSelectElement} */
   const ctrlC = assertNonNull(document.querySelector("#ctrl-c"));
-  ctrlC.value = DEFAULTS.c;
+  ctrlC.value = `${DEFAULTS.c}`;
   ctrlC.onchange = () => {
-    state.currentC = +ctrlC.value;
+    state.c = +ctrlC.value;
     // change most recent flower's c value
-    (state.flowerList?.[state.flowerList.length-1]).c = state.currentC;
+    (state.flowerList?.[state.flowerList.length-1]).c = state.c;
+  };
+
+  /** @type {!HTMLSelectElement} */
+  const ctrlDeltaC = assertNonNull(document.querySelector("#ctrl-delta-c"));
+  ctrlDeltaC.value = ".005";
+  //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
+  ctrlDeltaC.onchange = () => {
+    state.deltaC = +ctrlDeltaC.value;
+    // change most recent flower's c value
+    (state.flowerList?.[state.flowerList.length-1]).deltaC = state.deltaC;
   };
 
   /** @type {!HTMLInputElement} */
@@ -228,21 +242,19 @@ const init = () => {
   /** @type {!HTMLInputElement} */
   const cbRandomFlowers = assertNonNull(document.querySelector("#cb-random-flowers"));
   cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
-  cbRandomFlowers.onchange = () => {
-    state.randomFlowers = cbRandomFlowers.checked;
-  };
+  cbRandomFlowers.onchange = () => state.randomFlowers = cbRandomFlowers.checked;
 
 
   // III. Set up flower sprites
   RotatingFlower.maxPetals = DEFAULTS.maxPetals;
 
   // Interval to create random flowers
-  setInterval(()=> {
+  setInterval(() => {
     if(state.randomFlowers){
       const padding = DEFAULTS.randomFlowerPadding;
       const x = getRandomNumber(padding, DEFAULTS.canvasWidth-padding);
       const y = getRandomNumber(padding, DEFAULTS.canvasHeight-padding);
-      addFlowerToList(createRandomFlower(x,y));
+      addFlowerToList(createRandomFlower(x, y));
     }
   }, DEFAULTS.randomFlowerDelay);
 

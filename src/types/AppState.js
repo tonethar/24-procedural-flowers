@@ -7,9 +7,11 @@ import Flower from "../Flower.js";
  * @author TJ
  * @typedef {Object} AppState
  * @prop {boolean} clearEveryFrame - Clear screen every frame? Toggled by checkbox.
- * @prop {number} currentC - Current value of `c`. Set by &lt;select>.
- * @prop {number} currentDivergence - Current value of `divergence`. Set by &lt;select>.
- * @prop {number} currentPetalSize - Current `petalSize`. Set by &lt;select>.
+ * @prop {number} c - Current value of `c`. Set by &lt;select>.
+ * @prop {number} deltaC - Current value of `deltaC`. Set by &lt;select>.
+ * @prop {number} deltaDivergence - Current value of `deltaDivergence`. Set by &lt;select>.
+ * @prop {number} divergence - Current value of `divergence`. Set by &lt;select>.
  * @prop {Flower[]} flowerList - Array of current flowers to draw.
+ * @prop {number} petalSize - Current `petalSize`. Set by &lt;select>.
  * @prop {boolean} randomFlowers - Periodically show random flowers? Toggled by checkbox.
  */
