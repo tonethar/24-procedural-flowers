@@ -1,8 +1,8 @@
 // @ts-check
 
 /* IMPORTS */
-import "./types/FlowerParams.js";
-import { dtr } from "./utils.js";
+import "../types/FlowerParams.js";
+import { dtr } from "../utils.js";
 
 /** 
  * @class Flower

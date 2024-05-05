@@ -19,8 +19,13 @@
 <body>
   <canvas id="canvas"></canvas>
   <div id="controls">
-    <label>Divergence angle:
+    <label title="Amount of rotation in degrees between successive petals.">Divergence angle:
       <select id="ctrl-divergence">
+        <option>30</option>
+        <option>60</option>
+        <option>72</option>
+        <option>90</option>
+        <option>120</option>
         <option>137.1</option>
         <option>137.3</option>
         <option>137.5</option>
@@ -28,16 +33,20 @@
         <option>137.9</option>
         <option>139</option>
         <option>140</option>
+        
       </select>
     </label>
 
     <label title="Divergence angle increase per frame.">Divergence angle delta:
       <select id="ctrl-delta-divergence">
-        <option>-.002</option>
         <option>-.005</option>
+        <option>-.002</option>
+        <option>-.001</option>
         <option>0</option>
+        <option>.001</option>
         <option>.002</option>
         <option>.005</option>
+        
       </select>
     </label>
 
@@ -58,6 +67,7 @@
         <option>.01</option>
         <option>.02</option>
         <option>.05</option>
+        <option>.25</option>
       </select>
     </label>
 
@@ -76,11 +86,21 @@
 
     <label title="Petal spacing increase per frame.">Petal spacing delta:
       <select id="ctrl-delta-c">
+        <option>-.001</option>
         <option>0</option>
         <option>.002</option>
         <option>.005</option>
         <option>.01</option>
         <option>.02</option>
+      </select>
+    </label>
+
+    <label title="How each petal is drawn">Petal Style:
+      <select id="ctrl-petal-style">
+        <option>Circle</option>
+        <option>Disc</option>
+        <option>Oval</option>
+        <option>Square</option>
       </select>
     </label>
    
@@ -110,7 +130,7 @@
 
     <button 
       id="btn-fs"
-      title="Put the canvas in full screen. Hit escape key to exit."
+      title="Put the canvas in full screen. Press escape key to exit."
     >Go Full Screen</button>
 
     <div>
@@ -118,7 +138,7 @@
       <ul>
         <li>Click on canvas to create new flowers.</li>
         <li>Use above controls to change parameters of most recently created flower and any new flowers.</li>
-        <li>For "Kiosk Mode", check "Spawn Flowers" and then click "Go Full Screen" - enjoy!</li>
+        <li>For a "Kiosk Mode" that does not require any user interaction, check "Spawn Flowers" and then click "Go Full Screen" - enjoy!</li>
       </ul>
     </div>
     

@@ -8,41 +8,15 @@
  */
 
 /* IMPORTS */
-import "./types/AppDefaults.js";
-import "./types/AppState.js"; // FIXME - import of AppState type not working for JSDoc
-import Flower from "./Flower.js";
-import RotatingFlower from "./RotatingFlower.js";
+import DEFAULTS from "./app-defaults.js";
+import state from "./app-state.js";
+import RotatingFlower from "./classes/RotatingFlower.js";
 import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils.js";
 // @ts-ignore
 import { fillRect } from "./utils-canvas.js";  // FIXME - import of utils-canvas.js not working for JSDoc
-// @ts-ignore
-import { petalFillCircle, petalFillSquare, petalStrokeCircle } from "./flower-helpers.js"; // FIXME - ditto
+import { getPetalFunction, randomPetalFunction } from "./petal-functions.js";
 
 /* CONSTANTS */
-
-/** @type {AppDefaults} */
-const DEFAULTS = Object.freeze({
-  c:                      5,
-  canvasWidth:            800,
-  canvasHeight:           600,
-  clearColor:             "#000",
-  clearEveryFrame:        true,
-  deltaC:                 .005,
-  deltaDivergence:        0,
-  deltaPetalSize:         .01,
-  deltaRotation:          .01,
-  divergence:             137.5,
-  fps:                    60,
-  maxFlowers:             10,
-  maxPetals:              1000,
-  minFlowerOpacity:       .5,
-  petalSize:              2,
-  randomDivergenceValues: [137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
-  randomFlowerDelay:      5000,
-  randomFlowerPadding:    100,
-  randomFlowers:          false,
-});
-
 
 /**
  * @name canvas
@@ -58,33 +32,13 @@ const canvas = assertNonNull(document.querySelector("#canvas"));
  */
 const ctx = assertNonNull(canvas.getContext("2d"));
 
-const petalFunctions = [petalFillCircle, petalFillCircle, petalFillCircle, petalStrokeCircle, petalFillSquare];
-
-// PROPERTIES
-
-/**
- * @name state
- * @type {AppState}
- * @desc App state variables that can change over time. Most of these could be saved to localStorage.
- */
-const state = Object.seal({
-  clearEveryFrame:    DEFAULTS.clearEveryFrame,
-  c:                  DEFAULTS.c,
-  deltaC:             DEFAULTS.deltaC,
-  deltaDivergence:    DEFAULTS.deltaDivergence,
-  divergence:         DEFAULTS.divergence,
-  petalSize:          DEFAULTS.petalSize,
-  flowerList:         [],
-  randomFlowers:      DEFAULTS.randomFlowers,
-});
-
 
 /* METHODS */
 
 /**
  * @name addFlowerToList
  * @desc Adds a new flower to the end of the list.
- * @param {Flower} flower
+ * @param {RotatingFlower} flower
  */
 const addFlowerToList = flower => {
   // if too many flowers, remove oldest one
@@ -100,10 +54,10 @@ const addFlowerToList = flower => {
  * @desc Instantiates a new flower using current UI values.
  * @param {number} x 
  * @param {number} y 
- * @returns {Flower}
+ * @returns {RotatingFlower}
  */
 const createFlowerWithCurrentUISettings = (x, y) =>{
-  // add new default Flowersprite
+  // params for new RotatingFlower
    /** @type {FlowerParams} */
    const params =  {
     c: state.c,
@@ -111,10 +65,10 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
     centerY: y, 
     deltaC: state.deltaC,
     deltaDivergence: state.deltaDivergence,
-    deltaPetalSize: DEFAULTS.deltaPetalSize,
+    deltaPetalSize: state.deltaPetalSize,
     deltaRotation: DEFAULTS.deltaRotation,
     divergence: state.divergence, 
-    drawPetalFunction: petalFillCircle,
+    drawPetalFunction: getPetalFunction(state.petalStyle),
     petalSize: state.petalSize, 
   };
   return new RotatingFlower(params);
@@ -125,7 +79,7 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
  * @desc Instantiates a new flower using random values.
  * @param {number} x - the `x` position of the new flower
  * @param {number} y - the `y` position of the new flower
- * @returns {Flower}
+ * @returns {RotatingFlower}
  */
 const createRandomFlower = (x, y) => {
     /** @type {FlowerParams} */
@@ -139,7 +93,7 @@ const createRandomFlower = (x, y) => {
       deltaPetalSize: getRandomNumber(.01,.04),
       deltaRotation: Math.random() < .5 ? getRandomNumber(-.002, -.02) : getRandomNumber(.002, .02),
       divergence: randomArrayElement(DEFAULTS.randomDivergenceValues), 
-      drawPetalFunction: randomArrayElement(petalFunctions),
+      drawPetalFunction: randomPetalFunction(),
       petalSize: getRandomNumber(1, 5), 
     };
     return new RotatingFlower(params);
@@ -196,6 +150,7 @@ const init = () => {
   const btnFS =  assertNonNull(document.querySelector("#btn-fs"));
   btnFS.onclick = () => goFullScreen(canvas);
 
+  // Inputs
   /** @type {!HTMLSelectElement} */
   const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.value = `${DEFAULTS.divergence}`;
@@ -206,6 +161,15 @@ const init = () => {
   };
 
    /** @type {!HTMLSelectElement} */
+  const ctrlDeltaDivergence = assertNonNull(document.querySelector("#ctrl-delta-divergence"));
+  ctrlDeltaDivergence.value = `${DEFAULTS.deltaDivergence}`;
+  ctrlDeltaDivergence.onchange = () => {
+    state.deltaDivergence = +ctrlDeltaDivergence.value;
+    // change most recent flower's divergence value
+    (state.flowerList?.[state.flowerList.length-1]).deltaDivergence = state.deltaDivergence;
+  };
+
+   /** @type {!HTMLSelectElement} */
    const ctrlPetalSize = assertNonNull(document.querySelector("#ctrl-petal-size"));
    ctrlPetalSize.value = `${DEFAULTS.petalSize}`;
    ctrlPetalSize.onchange = () => {
@@ -213,6 +177,15 @@ const init = () => {
      // change most recent flower's petalSize value
      (state.flowerList?.[state.flowerList.length-1]).petalSize = state.petalSize;
    };
+
+  /** @type {!HTMLSelectElement} */
+  const ctrlDeltaPetalSize = assertNonNull(document.querySelector("#ctrl-delta-petal-size"));
+  ctrlDeltaPetalSize.value = ".01";//`${DEFAULTS.deltaPetalSize}`;
+  ctrlDeltaPetalSize.onchange = () => {
+    state.deltaPetalSize = +ctrlDeltaPetalSize.value;
+    // change most recent flower's petalSize value
+    (state.flowerList?.[state.flowerList.length-1]).deltaPetalSize = state.deltaPetalSize;
+  };
 
   /** @type {!HTMLSelectElement} */
   const ctrlC = assertNonNull(document.querySelector("#ctrl-c"));
@@ -229,8 +202,18 @@ const init = () => {
   //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
   ctrlDeltaC.onchange = () => {
     state.deltaC = +ctrlDeltaC.value;
-    // change most recent flower's c value
+    // change most recent flower's deltaC value
     (state.flowerList?.[state.flowerList.length-1]).deltaC = state.deltaC;
+  };
+
+  /** @type {!HTMLSelectElement} */
+  const ctrlPetalStyle = assertNonNull(document.querySelector("#ctrl-petal-style"));
+  //ctrlPetalStyle.selectedIndex = 1;
+  ctrlPetalStyle.value = `${DEFAULTS.petalStyle}`; // FIXME: does not work, had to hard-code above
+  ctrlPetalStyle.onchange = () => {
+    state.petalStyle = ctrlPetalStyle.value;
+    // change most recent flower's c value
+    (state.flowerList?.[state.flowerList.length-1]).drawPetalFunction = getPetalFunction(state.petalStyle);
   };
 
   /** @type {!HTMLInputElement} */

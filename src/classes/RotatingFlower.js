@@ -1,10 +1,10 @@
 // @ts-check
 
 /* IMPORTS */
-import "./types/FlowerParams.js";
-import "./types/FlowerPetal.js";
+import "../types/FlowerParams.js";
+import "../types/FlowerPetal.js";
 import Flower from "./Flower.js";
-import { dtr } from "./utils.js";
+import { dtr } from "../utils.js";
 
 /** 
  * @class RotatingFlower

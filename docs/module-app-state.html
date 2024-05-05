@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: utils-canvas</title>
+    <title>JSDoc: Module: app-state</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: utils-canvas</h1>
+    <h1 class="page-title">Module: app-state</h1>
 
     
 
@@ -38,7 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Utility functions</p></div>
+            <div class="description"><p>Contains current state of app.</p></div>
         
 
         
@@ -94,7 +94,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils-canvas.js.html">utils-canvas.js</a>, <a href="utils-canvas.js.html#line4">line 4</a>
+        <a href="app-state.js.html">app-state.js</a>, <a href="app-state.js.html#line6">line 6</a>
     </li></ul></dd>
     
 
@@ -141,175 +141,30 @@
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
             
+<h4 class="name" id=".state"><span class="type-signature">(static) </span>state<span class="type-signature"> :IAppState</span></h4>
 
-    
-
-    
-    <h4 class="name" id=".fillCircle"><span class="type-signature">(static) </span>fillCircle<span class="signature">(ctx, x, y, radius, color)</span><span class="type-signature"></span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    <p>Fills a circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd></p>
+    <p>App state variables that can change over time. Most of these could be saved to localStorage.</p>
 </div>
 
 
 
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
+    <h5>Type:</h5>
+    <ul>
+        <li>
             
-                <td class="name"><code>ctx</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">CanvasRenderingContext2D</span>
+<span class="param-type">IAppState</span>
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>color</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
+        </li>
+    </ul>
 
 
 
@@ -344,7 +199,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils-canvas.js.html">utils-canvas.js</a>, <a href="utils-canvas.js.html#line10">line 10</a>
+        <a href="app-state.js.html">app-state.js</a>, <a href="app-state.js.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -360,49 +215,46 @@
 
 
 
+        
+    
 
+    
 
-
-
-
-
-
-
-
-
-
-
-
+    
+        <h3 class="subsection-title">Type Definitions</h3>
 
         
-            
+                
+<h4 class="name" id="~IAppState">IAppState</h4>
 
-    
-
-    
-    <h4 class="name" id=".fillRect"><span class="type-signature">(static) </span>fillRect<span class="signature">(ctx, x, y, width, height, color)</span><span class="type-signature"></span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    <p>Fills a rectangle in the provided <kbd>ctx</kbd>. The rectangle's upper-left corner begins at <kbd>x,y</kbd></p>
+    <p>JSDoc type definition.</p>
 </div>
 
 
 
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
 
 
 
 
 
+    <h5 class="subsection-title">Properties:</h5>
 
-    <h5>Parameters:</h5>
     
 
-<table class="params">
+<table class="props">
     <thead>
     <tr>
         
@@ -424,13 +276,13 @@
 
         <tr>
             
-                <td class="name"><code>ctx</code></td>
+                <td class="name"><code>clearEveryFrame</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">CanvasRenderingContext2D</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -440,37 +292,14 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Clear screen every frame? Toggled by checkbox.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
+                <td class="name"><code>c</code></td>
             
 
             <td class="type">
@@ -486,14 +315,14 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Current value of <code>c</code>. Set by &lt;select&gt;.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>width</code></td>
+                <td class="name"><code>deltaC</code></td>
             
 
             <td class="type">
@@ -509,14 +338,14 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Current value of <code>deltaC</code>. Set by &lt;select&gt;.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>height</code></td>
+                <td class="name"><code>deltaDivergence</code></td>
             
 
             <td class="type">
@@ -532,14 +361,106 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Current value of <code>deltaDivergence</code>. Set by &lt;select&gt;.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>color</code></td>
+                <td class="name"><code>deltaPetalSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Current value of <code>deltaPetalSize</code>. Set by &lt;select&gt;.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>divergence</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Current value of <code>divergence</code>. Set by &lt;select&gt;.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>flowerList</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="RotatingFlower.html">RotatingFlower</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Array of current flowers to draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>petalSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Current <code>petalSize</code>. Set by &lt;select&gt;.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>petalStyle</code></td>
             
 
             <td class="type">
@@ -555,14 +476,35 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Current <code>petalStyle</code>. Set by &lt;select&gt;.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>randomFlowers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Periodically show random flowers? Toggled by checkbox.</p></td>
         </tr>
 
     
     </tbody>
 </table>
-
-
 
 
 
@@ -586,6 +528,13 @@
     
 
     
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>TJ</li>
+        </ul>
+    </dd>
+    
 
     
 
@@ -596,7 +545,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils-canvas.js.html">utils-canvas.js</a>, <a href="utils-canvas.js.html#line30">line 30</a>
+        <a href="app-state.js.html">app-state.js</a>, <a href="app-state.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -612,23 +561,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
+            
     
 
     
