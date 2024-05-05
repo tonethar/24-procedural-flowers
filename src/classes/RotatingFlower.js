@@ -30,7 +30,8 @@ class RotatingFlower extends Flower{
 
     // Optional properties from FlowerParams, which are required for RotatingFlower
     this.alpha = params.alpha || 1;
-    this.colorFunction = params.colorFunction || "TODO: need a function ref!!";
+    this.colorFunction = params.colorFunction || function(){}; // TODO - need a default color function here
+    //this.drawPetalFunction = ... // TODO - need assignment and default value
     this.deltaC = params.deltaC || 0;
     this.deltaDivergence = params.deltaDivergence || 0;
     this.deltaPetalSize = params.deltaPetalSize || 0;
@@ -47,8 +48,9 @@ class RotatingFlower extends Flower{
     const r = this.c * Math.sqrt(this.n);
     const x = r * Math.cos(a);// + this.centerX;
     const y = r * Math.sin(a); //+ this.centerY;
-    const color = `hsl(${this.n/5 % 361},100%,50%)`; // 4
+    //const color = `hsl(${this.n/5 % 361},100%,50%)`; // 4
 
+    const color = this.colorFunction(this.n, this.divergence);
     // If there's room, create a new petal
     if(this._petals.length < RotatingFlower.maxPetals){
       this._petals.push({x, y, color, petalSize: this.petalSize});

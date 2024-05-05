@@ -1,6 +1,123 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/app-color-functions.js":
+/*!************************************!*\
+  !*** ./src/app-color-functions.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   petalColorFunc1: () => (/* binding */ petalColorFunc1),
+/* harmony export */   petalColorFunc2: () => (/* binding */ petalColorFunc2),
+/* harmony export */   petalColorFunc3: () => (/* binding */ petalColorFunc3),
+/* harmony export */   petalColorFunc4: () => (/* binding */ petalColorFunc4),
+/* harmony export */   petalColorFunc5: () => (/* binding */ petalColorFunc5),
+/* harmony export */   randomPetalColorFunction: () => (/* binding */ randomPetalColorFunction)
+/* harmony export */ });
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/utils */ "./src/utils/utils.js");
+// @ts-check
+
+
+
+/**
+ * @module app-color-functions
+ * @desc Functions for determining color of petal.
+ * @author TJ
+ */
+
+/* INTERFACE */
+/**
+ * @name FlowerPetalColorFunc
+ * @desc JSDoc type definition
+ * @author TJ
+ * @typedef {Function} FlowerPetalColorFunc
+ * @prop {number} n - generation
+ * @prop {number} divergence - rotation of petal.
+ * @returns {string} - a CSS color
+ */
+
+/* FUNCTIONS */
+/**
+ * @name petalColorFunc1
+ * @desc RGB red value increases with age (`n`) of petal.
+ * @function {FlowerPetalColorFunc}
+ * @param {number} n 
+ * @param {number} divergence 
+ * @returns {string}
+ */
+var petalColorFunc1 = function petalColorFunc1(n, divergence) {
+  return "rgb(".concat(n % 256, ",").concat(n % 256 / 2, ",").concat(128 - n % 256 / 2, ")");
+};
+
+/**
+ * @name petalColorFunc2
+ * @desc RGB `red` value increases with accumulated rotation of petal.
+ * @function {FlowerPetalColorFunc}
+ * @param {number} n 
+ * @param {number} divergence 
+ * @returns {string}
+ */
+var petalColorFunc2 = function petalColorFunc2(n, divergence) {
+  var aDegrees = n * divergence % 256;
+  return "rgb(".concat(aDegrees, ",0,255)");
+};
+
+/**
+ * @name petalColorFunc3
+ * @desc HSL `hue` value increases with accumulated rotation of petal.
+ * @function {FlowerPetalColorFunc}
+ * @param {number} n 
+ * @param {number} divergence 
+ * @returns {string}
+ */
+var petalColorFunc3 = function petalColorFunc3(n, divergence) {
+  var aDegrees = n * divergence % 361;
+  return "hsl(".concat(aDegrees / 2, ",100%,").concat(80 - aDegrees % 30, "%)");
+};
+
+/**
+ * @name petalColorFunc4
+ * @desc HSL `hue` value increases with age (`n`) of petal.
+ * @function {FlowerPetalColorFunc}
+ * @param {number} n 
+ * @param {number} divergence 
+ * @returns {string}
+ */
+var petalColorFunc4 = function petalColorFunc4(n, divergence) {
+  return "hsl(".concat(n / 5 % 361, ",100%,50%)");
+};
+
+/**
+ * @name petalColorFunc5
+ * @desc HSL `hue` value increases with age (`n`) of petal.
+ * @function {FlowerPetalColorFunc}
+ * @param {number} n 
+ * @param {number} divergence 
+ * @returns {string}
+ */
+var petalColorFunc5 = function petalColorFunc5(n, divergence) {
+  return "hsl(".concat(360 - n / 5 % 361, ",100%,50%)");
+};
+
+/**
+ * @name weightedPetalColorFunctions
+ * @type {FlowerPetalColorFunc[]}
+ */
+var weightedPetalColorFunctions = [petalColorFunc3, petalColorFunc4, petalColorFunc4, petalColorFunc5];
+
+/**
+ * @function randomPetalColorFunction
+ * @returns {FlowerPetalColorFunc}
+ */
+var randomPetalColorFunction = function randomPetalColorFunction() {
+  return (0,_utils_utils__WEBPACK_IMPORTED_MODULE_0__.randomArrayElement)(weightedPetalColorFunctions);
+};
+
+/***/ }),
+
 /***/ "./src/app-defaults.js":
 /*!*****************************!*\
   !*** ./src/app-defaults.js ***!
@@ -88,8 +205,8 @@ var DEFAULTS = Object.freeze({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getPetalFunction: () => (/* binding */ getPetalFunction),
-/* harmony export */   randomPetalFunction: () => (/* binding */ randomPetalFunction)
+/* harmony export */   getPetalDrawFunction: () => (/* binding */ getPetalDrawFunction),
+/* harmony export */   randomPetalDrawFunction: () => (/* binding */ randomPetalDrawFunction)
 /* harmony export */ });
 /* harmony import */ var _types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types/FlowerPetalDrawFunc.js */ "./src/types/FlowerPetalDrawFunc.js");
 /* harmony import */ var _types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0__);
@@ -205,11 +322,11 @@ var petalFunctionList = {
 };
 
 /**
- * @function getPetalFunction
+ * @function getPetalDrawFunction
  * @param {string} funcName 
  * @returns {FlowerPetalDrawFunc}
  */
-var getPetalFunction = function getPetalFunction(funcName) {
+var getPetalDrawFunction = function getPetalDrawFunction(funcName) {
   return petalFunctionList[funcName];
 };
 
@@ -220,10 +337,10 @@ var getPetalFunction = function getPetalFunction(funcName) {
 var weightedPetalFunctions = [petalFillDisc, petalFillDisc, petalFillDisc, petalStrokeCircle, petalFillSquare, petalFillOval];
 
 /**
- * @function randomPetalFunction
+ * @function randomPetalDrawFunction
  * @returns {FlowerPetalDrawFunc}
  */
-var randomPetalFunction = function randomPetalFunction() {
+var randomPetalDrawFunction = function randomPetalDrawFunction() {
   return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.randomArrayElement)(weightedPetalFunctions);
 };
 
@@ -445,7 +562,8 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
 
     // Optional properties from FlowerParams, which are required for RotatingFlower
     _this.alpha = params.alpha || 1;
-    _this.colorFunction = params.colorFunction || "TODO: need a function ref!!";
+    _this.colorFunction = params.colorFunction || function () {}; // TODO - need a default color function here
+    //this.drawPetalFunction = ... // TODO - need assignment and default value
     _this.deltaC = params.deltaC || 0;
     _this.deltaDivergence = params.deltaDivergence || 0;
     _this.deltaPetalSize = params.deltaPetalSize || 0;
@@ -466,8 +584,9 @@ var RotatingFlower = /*#__PURE__*/function (_Flower) {
       var r = this.c * Math.sqrt(this.n);
       var x = r * Math.cos(a); // + this.centerX;
       var y = r * Math.sin(a); //+ this.centerY;
-      var color = "hsl(".concat(this.n / 5 % 361, ",100%,50%)"); // 4
+      //const color = `hsl(${this.n/5 % 361},100%,50%)`; // 4
 
+      var color = this.colorFunction(this.n, this.divergence);
       // If there's room, create a new petal
       if (this._petals.length < RotatingFlower.maxPetals) {
         this._petals.push({
@@ -844,9 +963,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults.js */ "./src/app-defaults.js");
 /* harmony import */ var _app_state_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-state.js */ "./src/app-state.js");
 /* harmony import */ var _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./classes/RotatingFlower.js */ "./src/classes/RotatingFlower.js");
-/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
-/* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
-/* harmony import */ var _app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app-petal-functions.js */ "./src/app-petal-functions.js");
+/* harmony import */ var _app_petal_functions_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app-petal-functions.js */ "./src/app-petal-functions.js");
+/* harmony import */ var _app_color_functions_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app-color-functions.js */ "./src/app-color-functions.js");
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
+/* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
@@ -864,8 +984,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
-// @ts-ignore
- // FIXME - import of utils-canvas.js not working for JSDoc
+
+
 
 
 /* CONSTANTS */
@@ -875,14 +995,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @desc Reference to `canvas` element.
  * @type {!HTMLCanvasElement} 
  */
-var canvas = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#canvas"));
+var canvas = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#canvas"));
 
 /**
  * @name ctx
  * @desc Reference to drawing context of `canvas`.
  * @type {!CanvasRenderingContext2D}
  */
-var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(canvas.getContext("2d"));
+var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(canvas.getContext("2d"));
 
 /* METHODS */
 
@@ -914,12 +1034,13 @@ var createFlowerWithCurrentUISettings = function createFlowerWithCurrentUISettin
     c: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].c,
     centerX: x,
     centerY: y,
+    colorFunction: _app_color_functions_js__WEBPACK_IMPORTED_MODULE_4__.petalColorFunc4,
     deltaC: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].deltaC,
     deltaDivergence: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].deltaDivergence,
     deltaPetalSize: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].deltaPetalSize,
     deltaRotation: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].deltaRotation,
     divergence: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].divergence,
-    drawPetalFunction: (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.getPetalFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle),
+    drawPetalFunction: (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_3__.getPetalDrawFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle),
     petalSize: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalSize
   };
   return new _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
@@ -936,16 +1057,17 @@ var createRandomFlower = function createRandomFlower(x, y) {
   /** @type {FlowerParams} */
   var params = {
     alpha: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].minFlowerOpacity + Math.random() / 2,
-    c: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(2, 6),
+    c: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(2, 6),
     centerX: x,
     centerY: y,
-    deltaC: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .01),
-    deltaDivergence: Math.random() < 0 ? 0 : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.005, .005),
-    deltaPetalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.01, .04),
-    deltaRotation: Math.random() < .5 ? (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.002, -.02) : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .02),
-    divergence: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.randomArrayElement)(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomDivergenceValues),
-    drawPetalFunction: (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.randomPetalFunction)(),
-    petalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(1, 5)
+    colorFunction: (0,_app_color_functions_js__WEBPACK_IMPORTED_MODULE_4__.randomPetalColorFunction)(),
+    deltaC: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(.002, .01),
+    deltaDivergence: Math.random() < 0 ? 0 : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(-.005, .005),
+    deltaPetalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(.01, .04),
+    deltaRotation: Math.random() < .5 ? (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(-.002, -.02) : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(.002, .02),
+    divergence: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomArrayElement)(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomDivergenceValues),
+    drawPetalFunction: (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_3__.randomPetalDrawFunction)(),
+    petalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(1, 5)
   };
   return new _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
 };
@@ -967,7 +1089,7 @@ var initFlowerSprites = function initFlowerSprites() {
 var loop = function loop() {
   window.setTimeout(loop, 1000 / _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].fps);
   if (_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearEveryFrame) {
-    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].clearColor);
+    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_6__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].clearColor);
   }
   var _iterator = _createForOfIteratorHelper(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList),
     _step;
@@ -996,27 +1118,27 @@ var init = function init() {
 
   // Buttons
   /**  @type {!HTMLButtonElement}  */
-  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
+  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
-    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, "black");
+    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_6__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, "black");
     initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-reset"));
+  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#btn-reset"));
   btnReset.onclick = function () {
     return window.location.reload();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-fs"));
+  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#btn-fs"));
   btnFS.onclick = function () {
-    return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.goFullScreen)(canvas);
+    return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.goFullScreen)(canvas);
   };
 
   // Inputs
   /** @type {!HTMLSelectElement} */
-  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
+  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].divergence);
   ctrlDivergence.onchange = function () {
     var _state$flowerList;
@@ -1026,7 +1148,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-divergence"));
+  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-delta-divergence"));
   ctrlDeltaDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence);
   ctrlDeltaDivergence.onchange = function () {
     var _state$flowerList2;
@@ -1036,7 +1158,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
+  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
   ctrlPetalSize.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize);
   ctrlPetalSize.onchange = function () {
     var _state$flowerList3;
@@ -1046,7 +1168,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-petal-size"));
+  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-delta-petal-size"));
   ctrlDeltaPetalSize.value = ".01"; //`${DEFAULTS.deltaPetalSize}`;
   ctrlDeltaPetalSize.onchange = function () {
     var _state$flowerList4;
@@ -1056,7 +1178,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
+  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-c"));
   ctrlC.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].c);
   ctrlC.onchange = function () {
     var _state$flowerList5;
@@ -1066,7 +1188,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-c"));
+  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-delta-c"));
   ctrlDeltaC.value = ".005";
   //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
   ctrlDeltaC.onchange = function () {
@@ -1077,24 +1199,24 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-style"));
+  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-petal-style"));
   //ctrlPetalStyle.selectedIndex = 1;
   ctrlPetalStyle.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle); // FIXME: does not work, had to hard-code above
   ctrlPetalStyle.onchange = function () {
     var _state$flowerList7;
     _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle = ctrlPetalStyle.value;
     // change most recent flower's c value
-    ((_state$flowerList7 = _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList) === null || _state$flowerList7 === void 0 ? void 0 : _state$flowerList7[_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList.length - 1]).drawPetalFunction = (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.getPetalFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle);
+    ((_state$flowerList7 = _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList) === null || _state$flowerList7 === void 0 ? void 0 : _state$flowerList7[_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList.length - 1]).drawPetalFunction = (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_3__.getPetalDrawFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle);
   };
 
   /** @type {!HTMLInputElement} */
-  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
+  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
     _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearEveryFrame = cbClearEveryFrame.checked;
   };
 
   /** @type {!HTMLInputElement} */
-  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-random-flowers"));
+  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#cb-random-flowers"));
   cbRandomFlowers.checked = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers ? true : false;
   cbRandomFlowers.onchange = function () {
     return _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].randomFlowers = cbRandomFlowers.checked;
@@ -1107,8 +1229,8 @@ var init = function init() {
   setInterval(function () {
     if (_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].randomFlowers) {
       var padding = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowerPadding;
-      var x = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth - padding);
-      var y = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight - padding);
+      var x = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth - padding);
+      var y = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight - padding);
       addFlowerToList(createRandomFlower(x, y));
     }
   }, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowerDelay);
@@ -1119,7 +1241,7 @@ var init = function init() {
   // enable canvas clicking
   canvas.onclick = function (e) {
     /** @type {Point} */
-    var loc = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getXY)(e);
+    var loc = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.getXY)(e);
     addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
   };
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: types/FlowerPetalDrawFunc.js</title>
+    <title>JSDoc: Source: utils/utils-canvas.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: types/FlowerPetalDrawFunc.js</h1>
+    <h1 class="page-title">Source: utils/utils-canvas.js</h1>
 
     
 
@@ -27,17 +27,51 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-check
+/* eslint max-params: 0 */
+
 /**
- * @name FlowerPetalDrawFunc
- * @desc JSDoc type definition
+ * @module utils-canvas
+ * @desc Utility functions
  * @author TJ
- * @typedef {Function} FlowerPetalDrawFunc
- * @prop {CanvasRenderingContext2D} ctx - drawing context where the petal will be rendered.
- * @prop {number} x - 'x' of petal.
- * @prop {number} y - 'y' of petal.
- * @prop {number} radius - 1/2 width of each petal in pixels.
- * @prop {string} color - CSS color of petal.
  */
+
+/**
+ * @function fillCircle
+ * @static
+ * @desc Fills a circle in the provided &lt;kbd>ctx&lt;/kbd>. The circle is centered on  &lt;kbd>x,y&lt;/kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} radius 
+ * @param {string} color 
+ */
+export const fillCircle = (ctx, x, y, radius, color) => {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+};
+
+/**
+ * @function fillRect
+ * @static
+ * @desc Fills a rectangle in the provided &lt;kbd>ctx&lt;/kbd>. The rectangle's upper-left corner begins at &lt;kbd>x,y&lt;/kbd>
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} width 
+ * @param {number} height 
+ * @param {string} color 
+ */
+export const fillRect = (ctx, x, y, width, height, color) => {
+  ctx.save();
+  ctx.fillStyle=color;
+  ctx.fillRect(x, y, width, height);
+  ctx.restore();
+};
 </code></pre>
         </article>
     </section>
