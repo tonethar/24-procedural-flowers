@@ -5,7 +5,7 @@ import RotatingFlower from "./classes/RotatingFlower.js"
 
 /**
  * @module app-state
- * @description Contains current state of app.
+ * @description Current state variables of app. Contains `IAppState` interface and `state` object literal.
  * @author TJ
  */
 

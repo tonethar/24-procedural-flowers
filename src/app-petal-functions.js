@@ -2,7 +2,7 @@
 /* eslint max-params: 0 */
 
 import "./types/FlowerPetalDrawFunc.js";
-import { randomArrayElement } from "./utils.js";
+import { randomArrayElement } from "./utils/utils.js";
 
 /**
  * @module petal-functions

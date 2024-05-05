@@ -2,7 +2,7 @@
 
 /* IMPORTS */
 import "../types/FlowerParams.js";
-import { dtr } from "../utils.js";
+import { dtr } from "../utils/utils.js";
 
 /** 
  * @class Flower

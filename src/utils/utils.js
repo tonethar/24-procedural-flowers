@@ -1,7 +1,7 @@
 // @ts-check
 /* eslint max-params: 0 */
 
-import "./types/Point.js";
+import "../types/Point.js";
 
 /**
  * @module utils

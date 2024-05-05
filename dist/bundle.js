@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * @module app-defaults
- * @desc Contains default values for app.
+ * @desc Default values for app. Contains `IAppDefaults` interface and `DEFAULTS` object literal.
  * @author TJ
  */
 
@@ -79,295 +79,10 @@ var DEFAULTS = Object.freeze({
 
 /***/ }),
 
-/***/ "./src/app-state.js":
-/*!**************************!*\
-  !*** ./src/app-state.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _app_defaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults */ "./src/app-defaults.js");
-/* harmony import */ var _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/RotatingFlower.js */ "./src/classes/RotatingFlower.js");
-// @ts-check
-
-
-
-
-/**
- * @module app-state
- * @description Contains current state of app.
- * @author TJ
- */
-
-/**
- * @name IAppState
- * @desc JSDoc type definition.
- * @author TJ
- * @typedef {Object} IAppState
- * @prop {boolean} clearEveryFrame - Clear screen every frame? Toggled by checkbox.
- * @prop {number} c - Current value of `c`. Set by &lt;select>.
- * @prop {number} deltaC - Current value of `deltaC`. Set by &lt;select>.
- * @prop {number} deltaDivergence - Current value of `deltaDivergence`. Set by &lt;select>.
- * @prop {number} deltaPetalSize - Current value of `deltaPetalSize`. Set by &lt;select>.
- * @prop {number} divergence - Current value of `divergence`. Set by &lt;select>.
- * @prop {RotatingFlower[]} flowerList - Array of current flowers to draw.
- * @prop {number} petalSize - Current `petalSize`. Set by &lt;select>.
- * @prop {string} petalStyle - Current `petalStyle`. Set by &lt;select>.
- * @prop {boolean} randomFlowers - Periodically show random flowers? Toggled by checkbox.
- */
-
-/**
- * @name state
- * @type {IAppState}
- * @static
- * @desc Mutable app state variables that can change over time. Most of these could be saved to localStorage.
- */
-var state = Object.seal({
-  clearEveryFrame: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].clearEveryFrame,
-  c: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].c,
-  deltaC: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaC,
-  deltaDivergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence,
-  deltaPetalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaPetalSize,
-  divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].divergence,
-  petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize,
-  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle,
-  flowerList: [],
-  randomFlowers: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers
-});
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
-
-/***/ }),
-
-/***/ "./src/classes/Flower.js":
-/*!*******************************!*\
-  !*** ./src/classes/Flower.js ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/FlowerParams.js */ "./src/types/FlowerParams.js");
-/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-// @ts-check
-
-/* IMPORTS */
-
-
-
-/** 
- * @class Flower
- * @prop {number} n - current petal generation.
- * @desc Represents a procedurally drawn flower. 
- * @author TJ
- * */
-var Flower = /*#__PURE__*/function () {
-  /**
-   * @desc Creates an instance of Flower.
-   * @param {FlowerParams} params
-   */
-  function Flower(params) {
-    _classCallCheck(this, Flower);
-    //Object.assign(this, { centerX, centerY, divergence, c, petalSize, drawPetalFunction }); //:-(
-
-    /** @type {number} */
-    this.n = 0;
-
-    // Required properies from FlowerParams
-    /** @type {number} */
-    this.centerX = params.centerX;
-
-    /** @type {number} */
-    this.centerY = params.centerY;
-
-    /** @type {number} */
-    this.divergence = params.divergence;
-
-    /** @type {number} */
-    this.c = params.c;
-
-    /** @type {number} */
-    this.petalSize = params.petalSize;
-
-    /** @type {function} */
-    this.drawPetalFunction = params.drawPetalFunction;
-  }
-
-  /**
-   * Draws the next petal.
-   * 
-   * @param {CanvasRenderingContext2D} ctx - drawing context where the flower will be rendered.
-   */
-  return _createClass(Flower, [{
-    key: "update",
-    value: function update(ctx) {
-      var a = this.n * (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.dtr)(this.divergence);
-      var r = this.c * Math.sqrt(this.n);
-      var x = r * Math.cos(a) + this.centerX;
-      var y = r * Math.sin(a) + this.centerY;
-      var color = "hsl(".concat(this.n / 5 % 361, ",100%,50%)"); // 4
-      this.drawPetalFunction(ctx, x, y, this.petalSize, color);
-      this.n++;
-      this.c += .005;
-      this.petalSize += .01;
-    }
-  }]);
-}();
-;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Flower);
-
-/***/ }),
-
-/***/ "./src/classes/RotatingFlower.js":
-/*!***************************************!*\
-  !*** ./src/classes/RotatingFlower.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/FlowerParams.js */ "./src/types/FlowerParams.js");
-/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _types_FlowerPetal_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types/FlowerPetal.js */ "./src/types/FlowerPetal.js");
-/* harmony import */ var _types_FlowerPetal_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerPetal_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Flower_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Flower.js */ "./src/classes/Flower.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-// @ts-check
-
-/* IMPORTS */
-
-
-
-
-
-/** 
- * @class RotatingFlower
- * @extends Flower
- * @prop {FlowerPetal[]} _petals
- * @desc Represents a pre-rendered rotating flower.
- * @author TJ
- * @private
- */
-var RotatingFlower = /*#__PURE__*/function (_Flower) {
-  /**
-   * @desc Creates an instance of RotatingFlower
-   * @param {FlowerParams} params 
-   */
-  function RotatingFlower(params) {
-    var _this;
-    _classCallCheck(this, RotatingFlower);
-    _this = _callSuper(this, RotatingFlower, [params]);
-    /** @type {FlowerPetal[]}*/
-    _this._petals = [];
-
-    // Optional properties from FlowerParams, which are required for RotatingFlower
-    _this.alpha = params.alpha || 1;
-    _this.colorFunction = params.colorFunction || "TODO: need a function ref!!";
-    _this.deltaC = params.deltaC || 0;
-    _this.deltaDivergence = params.deltaDivergence || 0;
-    _this.deltaPetalSize = params.deltaPetalSize || 0;
-    _this.deltaRotation = params.deltaRotation || 0;
-    _this.rotation = params.rotation || 0;
-    return _this;
-  }
-
-  /**
-   * Draws the next petal.
-   * @param {CanvasRenderingContext2D} ctx - drawing context where the flower will be rendered.
-   */
-  _inherits(RotatingFlower, _Flower);
-  return _createClass(RotatingFlower, [{
-    key: "update",
-    value: function update(ctx) {
-      var a = this.n * (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.dtr)(this.divergence);
-      var r = this.c * Math.sqrt(this.n);
-      var x = r * Math.cos(a); // + this.centerX;
-      var y = r * Math.sin(a); //+ this.centerY;
-      var color = "hsl(".concat(this.n / 5 % 361, ",100%,50%)"); // 4
-
-      // If there's room, create a new petal
-      if (this._petals.length < RotatingFlower.maxPetals) {
-        this._petals.push({
-          x: x,
-          y: y,
-          color: color,
-          petalSize: this.petalSize
-        });
-      }
-
-      // Draw all petals
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.translate(this.centerX, this.centerY);
-      ctx.rotate(this.rotation);
-      var _iterator = _createForOfIteratorHelper(this._petals),
-        _step;
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var p = _step.value;
-          // let aDegrees = (n * divergence) % 256; // 2
-          // let color = `rgb(${aDegrees},0,255)`;
-          this.drawPetalFunction(ctx, p.x, p.y, this.petalSize, p.color);
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-      ctx.restore();
-      this.n++;
-      this.c += this.deltaC;
-      this.divergence += this.deltaDivergence;
-      this.petalSize += this.deltaPetalSize;
-      this.rotation += this.deltaRotation;
-    }
-  }]);
-}(_Flower_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
-/**
- * @type {number}
- */
-_defineProperty(RotatingFlower, "maxPetals", 50);
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RotatingFlower);
-
-/***/ }),
-
-/***/ "./src/petal-functions.js":
-/*!********************************!*\
-  !*** ./src/petal-functions.js ***!
-  \********************************/
+/***/ "./src/app-petal-functions.js":
+/*!************************************!*\
+  !*** ./src/app-petal-functions.js ***!
+  \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -378,7 +93,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types/FlowerPetalDrawFunc.js */ "./src/types/FlowerPetalDrawFunc.js");
 /* harmony import */ var _types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerPetalDrawFunc_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
 // @ts-check
 /* eslint max-params: 0 */
 
@@ -509,8 +224,293 @@ var weightedPetalFunctions = [petalFillDisc, petalFillDisc, petalFillDisc, petal
  * @returns {FlowerPetalDrawFunc}
  */
 var randomPetalFunction = function randomPetalFunction() {
-  return (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.randomArrayElement)(weightedPetalFunctions);
+  return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.randomArrayElement)(weightedPetalFunctions);
 };
+
+/***/ }),
+
+/***/ "./src/app-state.js":
+/*!**************************!*\
+  !*** ./src/app-state.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _app_defaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults */ "./src/app-defaults.js");
+/* harmony import */ var _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/RotatingFlower.js */ "./src/classes/RotatingFlower.js");
+// @ts-check
+
+
+
+
+/**
+ * @module app-state
+ * @description Current state variables of app. Contains `IAppState` interface and `state` object literal.
+ * @author TJ
+ */
+
+/**
+ * @name IAppState
+ * @desc JSDoc type definition.
+ * @author TJ
+ * @typedef {Object} IAppState
+ * @prop {boolean} clearEveryFrame - Clear screen every frame? Toggled by checkbox.
+ * @prop {number} c - Current value of `c`. Set by &lt;select>.
+ * @prop {number} deltaC - Current value of `deltaC`. Set by &lt;select>.
+ * @prop {number} deltaDivergence - Current value of `deltaDivergence`. Set by &lt;select>.
+ * @prop {number} deltaPetalSize - Current value of `deltaPetalSize`. Set by &lt;select>.
+ * @prop {number} divergence - Current value of `divergence`. Set by &lt;select>.
+ * @prop {RotatingFlower[]} flowerList - Array of current flowers to draw.
+ * @prop {number} petalSize - Current `petalSize`. Set by &lt;select>.
+ * @prop {string} petalStyle - Current `petalStyle`. Set by &lt;select>.
+ * @prop {boolean} randomFlowers - Periodically show random flowers? Toggled by checkbox.
+ */
+
+/**
+ * @name state
+ * @type {IAppState}
+ * @static
+ * @desc Mutable app state variables that can change over time. Most of these could be saved to localStorage.
+ */
+var state = Object.seal({
+  clearEveryFrame: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].clearEveryFrame,
+  c: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].c,
+  deltaC: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaC,
+  deltaDivergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence,
+  deltaPetalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaPetalSize,
+  divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].divergence,
+  petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize,
+  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle,
+  flowerList: [],
+  randomFlowers: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
+
+/***/ }),
+
+/***/ "./src/classes/Flower.js":
+/*!*******************************!*\
+  !*** ./src/classes/Flower.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/FlowerParams.js */ "./src/types/FlowerParams.js");
+/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/utils.js */ "./src/utils/utils.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+// @ts-check
+
+/* IMPORTS */
+
+
+
+/** 
+ * @class Flower
+ * @prop {number} n - current petal generation.
+ * @desc Represents a procedurally drawn flower. 
+ * @author TJ
+ * */
+var Flower = /*#__PURE__*/function () {
+  /**
+   * @desc Creates an instance of Flower.
+   * @param {FlowerParams} params
+   */
+  function Flower(params) {
+    _classCallCheck(this, Flower);
+    //Object.assign(this, { centerX, centerY, divergence, c, petalSize, drawPetalFunction }); //:-(
+
+    /** @type {number} */
+    this.n = 0;
+
+    // Required properies from FlowerParams
+    /** @type {number} */
+    this.centerX = params.centerX;
+
+    /** @type {number} */
+    this.centerY = params.centerY;
+
+    /** @type {number} */
+    this.divergence = params.divergence;
+
+    /** @type {number} */
+    this.c = params.c;
+
+    /** @type {number} */
+    this.petalSize = params.petalSize;
+
+    /** @type {function} */
+    this.drawPetalFunction = params.drawPetalFunction;
+  }
+
+  /**
+   * Draws the next petal.
+   * 
+   * @param {CanvasRenderingContext2D} ctx - drawing context where the flower will be rendered.
+   */
+  return _createClass(Flower, [{
+    key: "update",
+    value: function update(ctx) {
+      var a = this.n * (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.dtr)(this.divergence);
+      var r = this.c * Math.sqrt(this.n);
+      var x = r * Math.cos(a) + this.centerX;
+      var y = r * Math.sin(a) + this.centerY;
+      var color = "hsl(".concat(this.n / 5 % 361, ",100%,50%)"); // 4
+      this.drawPetalFunction(ctx, x, y, this.petalSize, color);
+      this.n++;
+      this.c += .005;
+      this.petalSize += .01;
+    }
+  }]);
+}();
+;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Flower);
+
+/***/ }),
+
+/***/ "./src/classes/RotatingFlower.js":
+/*!***************************************!*\
+  !*** ./src/classes/RotatingFlower.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/FlowerParams.js */ "./src/types/FlowerParams.js");
+/* harmony import */ var _types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerParams_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types_FlowerPetal_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types/FlowerPetal.js */ "./src/types/FlowerPetal.js");
+/* harmony import */ var _types_FlowerPetal_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_types_FlowerPetal_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Flower_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Flower.js */ "./src/classes/Flower.js");
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/utils.js */ "./src/utils/utils.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+// @ts-check
+
+/* IMPORTS */
+
+
+
+
+
+/** 
+ * @class RotatingFlower
+ * @extends Flower
+ * @prop {FlowerPetal[]} _petals
+ * @desc Represents a pre-rendered rotating flower.
+ * @author TJ
+ * @private
+ */
+var RotatingFlower = /*#__PURE__*/function (_Flower) {
+  /**
+   * @desc Creates an instance of RotatingFlower
+   * @param {FlowerParams} params 
+   */
+  function RotatingFlower(params) {
+    var _this;
+    _classCallCheck(this, RotatingFlower);
+    _this = _callSuper(this, RotatingFlower, [params]);
+    /** @type {FlowerPetal[]}*/
+    _this._petals = [];
+
+    // Optional properties from FlowerParams, which are required for RotatingFlower
+    _this.alpha = params.alpha || 1;
+    _this.colorFunction = params.colorFunction || "TODO: need a function ref!!";
+    _this.deltaC = params.deltaC || 0;
+    _this.deltaDivergence = params.deltaDivergence || 0;
+    _this.deltaPetalSize = params.deltaPetalSize || 0;
+    _this.deltaRotation = params.deltaRotation || 0;
+    _this.rotation = params.rotation || 0;
+    return _this;
+  }
+
+  /**
+   * Draws the next petal.
+   * @param {CanvasRenderingContext2D} ctx - drawing context where the flower will be rendered.
+   */
+  _inherits(RotatingFlower, _Flower);
+  return _createClass(RotatingFlower, [{
+    key: "update",
+    value: function update(ctx) {
+      var a = this.n * (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.dtr)(this.divergence);
+      var r = this.c * Math.sqrt(this.n);
+      var x = r * Math.cos(a); // + this.centerX;
+      var y = r * Math.sin(a); //+ this.centerY;
+      var color = "hsl(".concat(this.n / 5 % 361, ",100%,50%)"); // 4
+
+      // If there's room, create a new petal
+      if (this._petals.length < RotatingFlower.maxPetals) {
+        this._petals.push({
+          x: x,
+          y: y,
+          color: color,
+          petalSize: this.petalSize
+        });
+      }
+
+      // Draw all petals
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.translate(this.centerX, this.centerY);
+      ctx.rotate(this.rotation);
+      var _iterator = _createForOfIteratorHelper(this._petals),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var p = _step.value;
+          // let aDegrees = (n * divergence) % 256; // 2
+          // let color = `rgb(${aDegrees},0,255)`;
+          this.drawPetalFunction(ctx, p.x, p.y, this.petalSize, p.color);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      ctx.restore();
+      this.n++;
+      this.c += this.deltaC;
+      this.divergence += this.deltaDivergence;
+      this.petalSize += this.deltaPetalSize;
+      this.rotation += this.deltaRotation;
+    }
+  }]);
+}(_Flower_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+/**
+ * @type {number}
+ */
+_defineProperty(RotatingFlower, "maxPetals", 50);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RotatingFlower);
 
 /***/ }),
 
@@ -602,10 +602,10 @@ var randomPetalFunction = function randomPetalFunction() {
 
 /***/ }),
 
-/***/ "./src/utils-canvas.js":
-/*!*****************************!*\
-  !*** ./src/utils-canvas.js ***!
-  \*****************************/
+/***/ "./src/utils/utils-canvas.js":
+/*!***********************************!*\
+  !*** ./src/utils/utils-canvas.js ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -663,10 +663,10 @@ var fillRect = function fillRect(ctx, x, y, width, height, color) {
 
 /***/ }),
 
-/***/ "./src/utils.js":
-/*!**********************!*\
-  !*** ./src/utils.js ***!
-  \**********************/
+/***/ "./src/utils/utils.js":
+/*!****************************!*\
+  !*** ./src/utils/utils.js ***!
+  \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -679,7 +679,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   goFullScreen: () => (/* binding */ goFullScreen),
 /* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
 /* harmony export */ });
-/* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types/Point.js */ "./src/types/Point.js");
+/* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/Point.js */ "./src/types/Point.js");
 /* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_types_Point_js__WEBPACK_IMPORTED_MODULE_0__);
 // @ts-check
 /* eslint max-params: 0 */
@@ -837,16 +837,16 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!*********************!*\
-  !*** ./src/main.js ***!
-  \*********************/
+/*!*************************!*\
+  !*** ./src/app-main.js ***!
+  \*************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults.js */ "./src/app-defaults.js");
 /* harmony import */ var _app_state_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-state.js */ "./src/app-state.js");
 /* harmony import */ var _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./classes/RotatingFlower.js */ "./src/classes/RotatingFlower.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-/* harmony import */ var _utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils-canvas.js */ "./src/utils-canvas.js");
-/* harmony import */ var _petal_functions_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./petal-functions.js */ "./src/petal-functions.js");
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
+/* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
+/* harmony import */ var _app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app-petal-functions.js */ "./src/app-petal-functions.js");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
@@ -875,14 +875,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @desc Reference to `canvas` element.
  * @type {!HTMLCanvasElement} 
  */
-var canvas = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#canvas"));
+var canvas = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#canvas"));
 
 /**
  * @name ctx
  * @desc Reference to drawing context of `canvas`.
  * @type {!CanvasRenderingContext2D}
  */
-var ctx = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(canvas.getContext("2d"));
+var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(canvas.getContext("2d"));
 
 /* METHODS */
 
@@ -919,7 +919,7 @@ var createFlowerWithCurrentUISettings = function createFlowerWithCurrentUISettin
     deltaPetalSize: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].deltaPetalSize,
     deltaRotation: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].deltaRotation,
     divergence: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].divergence,
-    drawPetalFunction: (0,_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.getPetalFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle),
+    drawPetalFunction: (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.getPetalFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle),
     petalSize: _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalSize
   };
   return new _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
@@ -936,16 +936,16 @@ var createRandomFlower = function createRandomFlower(x, y) {
   /** @type {FlowerParams} */
   var params = {
     alpha: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].minFlowerOpacity + Math.random() / 2,
-    c: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(2, 6),
+    c: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(2, 6),
     centerX: x,
     centerY: y,
-    deltaC: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .01),
-    deltaDivergence: Math.random() < 0 ? 0 : (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.005, .005),
-    deltaPetalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.01, .04),
-    deltaRotation: Math.random() < .5 ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.002, -.02) : (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .02),
-    divergence: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.randomArrayElement)(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomDivergenceValues),
-    drawPetalFunction: (0,_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.randomPetalFunction)(),
-    petalSize: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(1, 5)
+    deltaC: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .01),
+    deltaDivergence: Math.random() < 0 ? 0 : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.005, .005),
+    deltaPetalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.01, .04),
+    deltaRotation: Math.random() < .5 ? (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(-.002, -.02) : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(.002, .02),
+    divergence: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.randomArrayElement)(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomDivergenceValues),
+    drawPetalFunction: (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.randomPetalFunction)(),
+    petalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(1, 5)
   };
   return new _classes_RotatingFlower_js__WEBPACK_IMPORTED_MODULE_2__["default"](params);
 };
@@ -967,7 +967,7 @@ var initFlowerSprites = function initFlowerSprites() {
 var loop = function loop() {
   window.setTimeout(loop, 1000 / _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].fps);
   if (_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearEveryFrame) {
-    (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].clearColor);
+    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].clearColor);
   }
   var _iterator = _createForOfIteratorHelper(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList),
     _step;
@@ -996,27 +996,27 @@ var init = function init() {
 
   // Buttons
   /**  @type {!HTMLButtonElement}  */
-  var btnRestart = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
+  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
-    (0,_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, "black");
+    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_4__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, "black");
     initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  var btnReset = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-reset"));
+  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-reset"));
   btnReset.onclick = function () {
     return window.location.reload();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  var btnFS = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-fs"));
+  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#btn-fs"));
   btnFS.onclick = function () {
-    return (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.goFullScreen)(canvas);
+    return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.goFullScreen)(canvas);
   };
 
   // Inputs
   /** @type {!HTMLSelectElement} */
-  var ctrlDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
+  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].divergence);
   ctrlDivergence.onchange = function () {
     var _state$flowerList;
@@ -1026,7 +1026,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaDivergence = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-divergence"));
+  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-divergence"));
   ctrlDeltaDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence);
   ctrlDeltaDivergence.onchange = function () {
     var _state$flowerList2;
@@ -1036,7 +1036,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlPetalSize = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
+  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
   ctrlPetalSize.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize);
   ctrlPetalSize.onchange = function () {
     var _state$flowerList3;
@@ -1046,7 +1046,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaPetalSize = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-petal-size"));
+  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-petal-size"));
   ctrlDeltaPetalSize.value = ".01"; //`${DEFAULTS.deltaPetalSize}`;
   ctrlDeltaPetalSize.onchange = function () {
     var _state$flowerList4;
@@ -1056,7 +1056,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlC = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
+  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-c"));
   ctrlC.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].c);
   ctrlC.onchange = function () {
     var _state$flowerList5;
@@ -1066,7 +1066,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaC = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-c"));
+  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-delta-c"));
   ctrlDeltaC.value = ".005";
   //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
   ctrlDeltaC.onchange = function () {
@@ -1077,24 +1077,24 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlPetalStyle = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-style"));
+  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#ctrl-petal-style"));
   //ctrlPetalStyle.selectedIndex = 1;
   ctrlPetalStyle.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle); // FIXME: does not work, had to hard-code above
   ctrlPetalStyle.onchange = function () {
     var _state$flowerList7;
     _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle = ctrlPetalStyle.value;
     // change most recent flower's c value
-    ((_state$flowerList7 = _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList) === null || _state$flowerList7 === void 0 ? void 0 : _state$flowerList7[_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList.length - 1]).drawPetalFunction = (0,_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.getPetalFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle);
+    ((_state$flowerList7 = _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList) === null || _state$flowerList7 === void 0 ? void 0 : _state$flowerList7[_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].flowerList.length - 1]).drawPetalFunction = (0,_app_petal_functions_js__WEBPACK_IMPORTED_MODULE_5__.getPetalFunction)(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].petalStyle);
   };
 
   /** @type {!HTMLInputElement} */
-  var cbClearEveryFrame = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
+  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
     _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearEveryFrame = cbClearEveryFrame.checked;
   };
 
   /** @type {!HTMLInputElement} */
-  var cbRandomFlowers = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-random-flowers"));
+  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.assertNonNull)(document.querySelector("#cb-random-flowers"));
   cbRandomFlowers.checked = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers ? true : false;
   cbRandomFlowers.onchange = function () {
     return _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].randomFlowers = cbRandomFlowers.checked;
@@ -1107,8 +1107,8 @@ var init = function init() {
   setInterval(function () {
     if (_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].randomFlowers) {
       var padding = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowerPadding;
-      var x = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth - padding);
-      var y = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight - padding);
+      var x = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth - padding);
+      var y = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getRandomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight - padding);
       addFlowerToList(createRandomFlower(x, y));
     }
   }, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowerDelay);
@@ -1119,7 +1119,7 @@ var init = function init() {
   // enable canvas clicking
   canvas.onclick = function (e) {
     /** @type {Point} */
-    var loc = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getXY)(e);
+    var loc = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_3__.getXY)(e);
     addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
   };
 

@@ -11,10 +11,10 @@
 import DEFAULTS from "./app-defaults.js";
 import state from "./app-state.js";
 import RotatingFlower from "./classes/RotatingFlower.js";
-import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils.js";
+import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
 // @ts-ignore
-import { fillRect } from "./utils-canvas.js";  // FIXME - import of utils-canvas.js not working for JSDoc
-import { getPetalFunction, randomPetalFunction } from "./petal-functions.js";
+import { fillRect } from "./utils/utils-canvas.js";  // FIXME - import of utils-canvas.js not working for JSDoc
+import { getPetalFunction, randomPetalFunction } from "./app-petal-functions.js";
 
 /* CONSTANTS */
 

@@ -12,6 +12,7 @@
 - `git clone https://github.com/tonethar/24-procedural-flowers.git`
 - `cd 24-procedural-flowers`
 - `npm start`
+- optionally, `npm run docs` to generate updated documentation
 
 ***OR***
 
@@ -45,6 +46,7 @@
 - `FlowerPetal` interface
 
 ### v5
-- Periodically spawned flowers with random starting values
+- Multiple flowers
+  - option for periodically spawned flowers with random starting values
 - Click on canvas to create a new flower
 

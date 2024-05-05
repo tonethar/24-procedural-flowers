@@ -2,7 +2,7 @@
 
 /**
  * @module app-defaults
- * @desc Contains default values for app.
+ * @desc Default values for app. Contains `IAppDefaults` interface and `DEFAULTS` object literal.
  * @author TJ
  */
 
