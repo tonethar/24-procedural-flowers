@@ -16,6 +16,8 @@ import { petalColorFunc1, petalColorFunc2, petalColorFunc3, petalColorFunc4, ran
 import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
 import { fillRect } from "./utils/utils-canvas.js";
 
+import "./types/UICallbacks.js";
+
 /* CONSTANTS */
 
 /**
@@ -28,10 +30,11 @@ const canvas = assertNonNull(document.querySelector("#canvas"));
 /**
  * @name ctx
  * @desc Reference to drawing context of `canvas`.
- * @type {!CanvasRenderingContext2D}
+ * @type {CanvasRenderingContext2D}
  */
 const ctx = assertNonNull(canvas.getContext("2d"));
-
+state.ctx = ctx;
+Object.seal(state);
 
 /* METHODS */
 
@@ -135,6 +138,13 @@ const init = () => {
   ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
 
   // II. setup UI
+  /**
+   * @type {UICallbacks}
+   */
+  const uiCallbacks = {
+    restartFunction: ()=>{},
+    getPetalDrawFunction: ()=>{}
+  };
 
   // Buttons
   /**  @type {!HTMLButtonElement}  */

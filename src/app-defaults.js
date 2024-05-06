@@ -25,12 +25,14 @@
  * @prop {number} maxFlowers - maximum number of flowers to render.
  * @prop {number} maxPetals - maximum number of petals each flower will contain.
  * @prop {number} minFlowerOpacity - minimum opacity of randomly generated flowers.
+ * @prop {string} petalColor - color function used for petals. 
  * @prop {number} petalSize - radius of petals in pixels.
- * @prop {String} petalStyle
+ * @prop {string} petalStyle - drawing function used for petals. 
  * @prop {number[]} randomDivergenceValues - an array of divergence values.
  * @prop {number} randomFlowerDelay - time between randomly spawned flowers in milliseconds.
  * @prop {number} randomFlowerPadding - offset in pixels of randomly spawned flowers.
- * @prop {boolean} randomFlowers 
+ * @prop {boolean} randomFlowers - periodically display random flowers?
+ * @prop {number[]} uiDivergenceValues
  */
 
 /** 
@@ -54,12 +56,14 @@ const DEFAULTS = Object.freeze({
   maxFlowers:             10,
   maxPetals:              1200,
   minFlowerOpacity:       .5,
-  petalSize:              2,
+  petalColor:             "colorFunc1",
+  petalSize:              3,
   petalStyle:             "Disc",
   randomDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
   randomFlowerDelay:      5000,
   randomFlowerPadding:    100,
   randomFlowers:          false,
+  uiDivergenceValues:     [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
 });
 
 export default DEFAULTS;

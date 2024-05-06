@@ -156,12 +156,14 @@ __webpack_require__.r(__webpack_exports__);
  * @prop {number} maxFlowers - maximum number of flowers to render.
  * @prop {number} maxPetals - maximum number of petals each flower will contain.
  * @prop {number} minFlowerOpacity - minimum opacity of randomly generated flowers.
+ * @prop {string} petalColor - color function used for petals. 
  * @prop {number} petalSize - radius of petals in pixels.
- * @prop {String} petalStyle
+ * @prop {string} petalStyle - drawing function used for petals. 
  * @prop {number[]} randomDivergenceValues - an array of divergence values.
  * @prop {number} randomFlowerDelay - time between randomly spawned flowers in milliseconds.
  * @prop {number} randomFlowerPadding - offset in pixels of randomly spawned flowers.
- * @prop {boolean} randomFlowers 
+ * @prop {boolean} randomFlowers - periodically display random flowers?
+ * @prop {number[]} uiDivergenceValues
  */
 
 /** 
@@ -185,12 +187,14 @@ var DEFAULTS = Object.freeze({
   maxFlowers: 10,
   maxPetals: 1200,
   minFlowerOpacity: .5,
-  petalSize: 2,
+  petalColor: "colorFunc1",
+  petalSize: 3,
   petalStyle: "Disc",
   randomDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
   randomFlowerDelay: 5000,
   randomFlowerPadding: 100,
-  randomFlowers: false
+  randomFlowers: false,
+  uiDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140]
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DEFAULTS);
 
@@ -377,11 +381,13 @@ __webpack_require__.r(__webpack_exports__);
  * @typedef {Object} IAppState
  * @prop {boolean} clearEveryFrame - Clear screen every frame? Toggled by checkbox.
  * @prop {number} c - Current value of `c`. Set by &lt;select>.
+ * @prop {CanvasRenderingContext2D | null} ctx
  * @prop {number} deltaC - Current value of `deltaC`. Set by &lt;select>.
  * @prop {number} deltaDivergence - Current value of `deltaDivergence`. Set by &lt;select>.
  * @prop {number} deltaPetalSize - Current value of `deltaPetalSize`. Set by &lt;select>.
  * @prop {number} divergence - Current value of `divergence`. Set by &lt;select>.
  * @prop {RotatingFlower[]} flowerList - Array of current flowers to draw.
+ * @prop {string} petalColor - Current `petalColor`. Set by &lt;select>.
  * @prop {number} petalSize - Current `petalSize`. Set by &lt;select>.
  * @prop {string} petalStyle - Current `petalStyle`. Set by &lt;select>.
  * @prop {boolean} randomFlowers - Periodically show random flowers? Toggled by checkbox.
@@ -396,10 +402,12 @@ __webpack_require__.r(__webpack_exports__);
 var state = Object.seal({
   clearEveryFrame: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].clearEveryFrame,
   c: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].c,
+  ctx: null,
   deltaC: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaC,
   deltaDivergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence,
   deltaPetalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaPetalSize,
   divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].divergence,
+  petalColor: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalColor,
   petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize,
   petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle,
   flowerList: [],
@@ -721,6 +729,24 @@ _defineProperty(RotatingFlower, "maxPetals", 50);
 
 /***/ }),
 
+/***/ "./src/types/UICallbacks.js":
+/*!**********************************!*\
+  !*** ./src/types/UICallbacks.js ***!
+  \**********************************/
+/***/ (() => {
+
+// @ts-check
+/**
+ * @name UICallbacks
+ * @desc JSDoc type definition.
+ * @author TJ
+ * @typedef {Object} UICallbacks
+ * @property {function} restartFunction
+ * @property {function} getPetalDrawFunction
+ */
+
+/***/ }),
+
 /***/ "./src/utils/utils-canvas.js":
 /*!***********************************!*\
   !*** ./src/utils/utils-canvas.js ***!
@@ -796,6 +822,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber),
 /* harmony export */   getXY: () => (/* binding */ getXY),
 /* harmony export */   goFullScreen: () => (/* binding */ goFullScreen),
+/* harmony export */   isNonNull: () => (/* binding */ isNonNull),
 /* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
 /* harmony export */ });
 /* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/Point.js */ "./src/types/Point.js");
@@ -880,6 +907,21 @@ var getXY = function getXY(e) {
  */
 var goFullScreen = function goFullScreen(element) {
   return element.requestFullscreen();
+};
+
+/**
+ * @name isNonNull
+ * @author https://stackoverflow.com/questions/74383150/jsdoc-non-null-assertion
+ * In lieu of writing in TypeScript and having the convenient non-null assertion
+ * operator (!), this helper function allows asserting that something is not
+ * null or undefined without having to write a JSDoc type cast that has to
+ * explicitly know the non-null type (which is error prone).
+ * @template {any} T
+ * @param {T} item
+ */
+var isNonNull = function isNonNull(item) {
+  if (item === null || item === undefined) throw 'item is null or undefined';
+  return item;
 };
 
 /***/ })
@@ -967,6 +1009,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_color_functions_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app-color-functions.js */ "./src/app-color-functions.js");
 /* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
 /* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
+/* harmony import */ var _types_UICallbacks_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./types/UICallbacks.js */ "./src/types/UICallbacks.js");
+/* harmony import */ var _types_UICallbacks_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_types_UICallbacks_js__WEBPACK_IMPORTED_MODULE_7__);
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
@@ -988,6 +1032,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
+
 /* CONSTANTS */
 
 /**
@@ -1000,9 +1045,11 @@ var canvas = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(docu
 /**
  * @name ctx
  * @desc Reference to drawing context of `canvas`.
- * @type {!CanvasRenderingContext2D}
+ * @type {CanvasRenderingContext2D}
  */
 var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(canvas.getContext("2d"));
+_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].ctx = ctx;
+Object.seal(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 /* METHODS */
 
@@ -1115,6 +1162,13 @@ var init = function init() {
   ctx.fillRect(0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight);
 
   // II. setup UI
+  /**
+   * @type {UICallbacks}
+   */
+  var uiCallbacks = {
+    restartFunction: function restartFunction() {},
+    getPetalDrawFunction: function getPetalDrawFunction() {}
+  };
 
   // Buttons
   /**  @type {!HTMLButtonElement}  */

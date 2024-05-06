@@ -68,3 +68,18 @@ export const getXY = e =>  {
  * @param {HTMLElement} element 
  */
 export const goFullScreen = element => element.requestFullscreen();
+
+/**
+ * @name isNonNull
+ * @author https://stackoverflow.com/questions/74383150/jsdoc-non-null-assertion
+ * In lieu of writing in TypeScript and having the convenient non-null assertion
+ * operator (!), this helper function allows asserting that something is not
+ * null or undefined without having to write a JSDoc type cast that has to
+ * explicitly know the non-null type (which is error prone).
+ * @template {any} T
+ * @param {T} item
+ */
+export const isNonNull = (item) => {
+  if (item === null || item === undefined) throw 'item is null or undefined';
+  return item;
+};

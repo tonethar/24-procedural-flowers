@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: app-main.js</title>
+    <title>JSDoc: Source: app-ui.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: app-main.js</h1>
+    <h1 class="page-title">Source: app-ui.js</h1>
 
     
 
@@ -26,151 +26,31 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>//@ts-check
-/*global window, document*/
-
-/**
- * @module main
- * @description Main module of the application.
- * @author TJ
- */
-
-/* IMPORTS */
+            <pre class="prettyprint source linenums"><code>// @ts-check
 import DEFAULTS from "./app-defaults.js";
-import state from "./app-state.js";
-import RotatingFlower from "./classes/RotatingFlower.js";
-import { getPetalDrawFunction, randomPetalDrawFunction } from "./app-petal-functions.js";
-import { petalColorFunc1, petalColorFunc2, petalColorFunc3, petalColorFunc4, randomPetalColorFunction } from "./app-color-functions.js";
 import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
 import { fillRect } from "./utils/utils-canvas.js";
 
-/* CONSTANTS */
+// JSDoc interface
+import "./types/UICallbacks.js";
 
 /**
- * @name canvas
- * @desc Reference to `canvas` element.
- * @type {!HTMLCanvasElement} 
+ * 
+ * @param {import("./app-defaults.js").IAppDefaults} defaults 
+ * @param {import("./app-state.js").IAppState} state 
+ * @param {UICallbacks} callbacks 
  */
-const canvas = assertNonNull(document.querySelector("#canvas"));
 
-/**
- * @name ctx
- * @desc Reference to drawing context of `canvas`.
- * @type {CanvasRenderingContext2D}
- */
-const ctx = assertNonNull(canvas.getContext("2d"));
-state.ctx = ctx;
-Object.seal(state);
+export const setupUI = (defaults, state, callbacks) => {
+  const ctx = assertNonNull(state.ctx);
 
-/* METHODS */
-
-/**
- * @name addFlowerToList
- * @desc Adds a new flower to the end of the list.
- * @param {RotatingFlower} flower
- */
-const addFlowerToList = flower => {
-  // if too many flowers, remove oldest one
-  if(state.flowerList.length > DEFAULTS.maxFlowers-1){
-    state.flowerList.shift();
-  }
-  // add new flower to end of list
-  state.flowerList.push(flower);
-}
-
-/**
- * @name createFlowerWithCurrentUISettings
- * @desc Instantiates a new flower using current UI values.
- * @param {number} x 
- * @param {number} y 
- * @returns {RotatingFlower}
- */
-const createFlowerWithCurrentUISettings = (x, y) =>{
-  // params for new RotatingFlower
-   /** @type {FlowerParams} */
-   const params =  {
-    c: state.c,
-    centerX: x, 
-    centerY: y, 
-    colorFunction: petalColorFunc4,
-    deltaC: state.deltaC,
-    deltaDivergence: state.deltaDivergence,
-    deltaPetalSize: state.deltaPetalSize,
-    deltaRotation: DEFAULTS.deltaRotation,
-    divergence: state.divergence, 
-    drawPetalFunction: getPetalDrawFunction(state.petalStyle),
-    petalSize: state.petalSize, 
-  };
-  return new RotatingFlower(params);
-}
-
-/**
- * @name createRandomFlower
- * @desc Instantiates a new flower using random values.
- * @param {number} x - the `x` position of the new flower
- * @param {number} y - the `y` position of the new flower
- * @returns {RotatingFlower}
- */
-const createRandomFlower = (x, y) => {
-    /** @type {FlowerParams} */
-    const params =  {
-      alpha: DEFAULTS.minFlowerOpacity + Math.random()/2,
-      c: getRandomNumber(2, 6),
-      centerX: x, 
-      centerY: y, 
-      colorFunction: randomPetalColorFunction(),
-      deltaC: getRandomNumber(.002, .01),
-      deltaDivergence: Math.random() &lt; 0 ? 0 : getRandomNumber(-.005,.005),
-      deltaPetalSize: getRandomNumber(.01,.04),
-      deltaRotation: Math.random() &lt; .5 ? getRandomNumber(-.002, -.02) : getRandomNumber(.002, .02),
-      divergence: randomArrayElement(DEFAULTS.randomDivergenceValues), 
-      drawPetalFunction: randomPetalDrawFunction(),
-      petalSize: getRandomNumber(1, 5), 
-    };
-    return new RotatingFlower(params);
-};
-
-/**
- * @name initFlowerSprites
- * @desc instantiates initial flower using defaults and adds it to flowers list.
- */
-const initFlowerSprites = () => {
-  // clear list
-  state.flowerList.length = 0;
-  // add flower to list
-  addFlowerToList(createFlowerWithCurrentUISettings(DEFAULTS.canvasWidth/2, DEFAULTS.canvasHeight/2));
-};
-
-/**
- * Called every frame.
- */
-const loop = () => {
-  window.setTimeout(loop, 1000/DEFAULTS.fps);
-  if(state.clearEveryFrame){
-    fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
-  }
-  for(const f of state.flowerList){
-    f.update(ctx);
-  }
-};
-
-/**
- * Handles app initialization.
- */
-const init = () => {
-  // I. Setup canvas &amp; drawing context
-  canvas.width = DEFAULTS.canvasWidth;
-  canvas.height = DEFAULTS.canvasHeight;
-  ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
-
-  // II. setup UI
-
-  // Buttons
+  const canvas = ctx.canvas;
+   // Buttons
   /**  @type {!HTMLButtonElement}  */
   const btnRestart =  assertNonNull(document.querySelector("#btn-restart"));
   btnRestart.onclick = () => {
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
-    initFlowerSprites();
+    callbacks.initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
@@ -244,7 +124,7 @@ const init = () => {
   ctrlPetalStyle.onchange = () => {
     state.petalStyle = ctrlPetalStyle.value;
     // change most recent flower's c value
-    (state.flowerList?.[state.flowerList.length-1]).drawPetalFunction = getPetalDrawFunction(state.petalStyle);
+    (state.flowerList?.[state.flowerList.length-1]).drawPetalFunction = callbacks.getPetalDrawFunction(state.petalStyle);
   };
 
   /** @type {!HTMLInputElement} */
@@ -258,36 +138,9 @@ const init = () => {
   cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
   cbRandomFlowers.onchange = () => state.randomFlowers = cbRandomFlowers.checked;
 
-
-  // III. Set up flower sprites
-  RotatingFlower.maxPetals = DEFAULTS.maxPetals;
-
-  // Interval to create random flowers
-  setInterval(() => {
-    if(state.randomFlowers){
-      const padding = DEFAULTS.randomFlowerPadding;
-      const x = getRandomNumber(padding, DEFAULTS.canvasWidth-padding);
-      const y = getRandomNumber(padding, DEFAULTS.canvasHeight-padding);
-      addFlowerToList(createRandomFlower(x, y));
-    }
-  }, DEFAULTS.randomFlowerDelay);
-
-  // initialize starting flower
-  initFlowerSprites();
-
-  // enable canvas clicking
-  canvas.onclick = e => {
-    /** @type {Point} */
-    const loc = getXY(e);
-    addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
-  }
-
-  // IV. start up app
-  loop();
 };
 
-init();
-</code></pre>
+export default setupUI;</code></pre>
         </article>
     </section>
 
