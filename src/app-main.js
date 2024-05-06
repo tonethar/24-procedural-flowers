@@ -13,7 +13,7 @@ import state from "./app-state.js";
 import RotatingFlower from "./classes/RotatingFlower.js";
 import { getPetalDrawFunction, randomPetalDrawFunction } from "./app-petal-functions.js";
 import { petalColorFunc1, petalColorFunc2, petalColorFunc3, petalColorFunc4, randomPetalColorFunction } from "./app-color-functions.js";
-import { assertNonNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
+import { assertIsNotNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
 import { fillRect } from "./utils/utils-canvas.js";
 
 import "./types/UICallbacks.js";
@@ -25,14 +25,14 @@ import "./types/UICallbacks.js";
  * @desc Reference to `canvas` element.
  * @type {!HTMLCanvasElement} 
  */
-const canvas = assertNonNull(document.querySelector("#canvas"));
+const canvas = assertIsNotNull(document.querySelector("#canvas"));
 
 /**
  * @name ctx
  * @desc Reference to drawing context of `canvas`.
  * @type {CanvasRenderingContext2D}
  */
-const ctx = assertNonNull(canvas.getContext("2d"));
+const ctx = assertIsNotNull(canvas.getContext("2d"));
 state.ctx = ctx;
 Object.seal(state);
 
@@ -142,29 +142,29 @@ const init = () => {
    * @type {UICallbacks}
    */
   const uiCallbacks = {
-    restartFunction: ()=>{},
-    getPetalDrawFunction: ()=>{}
+    restartFunction: initFlowerSprites,
+    getPetalDrawFunction: getPetalDrawFunction
   };
 
   // Buttons
   /**  @type {!HTMLButtonElement}  */
-  const btnRestart =  assertNonNull(document.querySelector("#btn-restart"));
+  const btnRestart =  assertIsNotNull(document.querySelector("#btn-restart"));
   btnRestart.onclick = () => {
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
     initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  const btnReset =  assertNonNull(document.querySelector("#btn-reset"));
+  const btnReset =  assertIsNotNull(document.querySelector("#btn-reset"));
   btnReset.onclick = () => window.location.reload();
 
   /**  @type {!HTMLButtonElement}  */
-  const btnFS =  assertNonNull(document.querySelector("#btn-fs"));
+  const btnFS =  assertIsNotNull(document.querySelector("#btn-fs"));
   btnFS.onclick = () => goFullScreen(canvas);
 
   // Inputs
   /** @type {!HTMLSelectElement} */
-  const ctrlDivergence = assertNonNull(document.querySelector("#ctrl-divergence"));
+  const ctrlDivergence = assertIsNotNull(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.value = `${DEFAULTS.divergence}`;
   ctrlDivergence.onchange = () => {
     state.divergence = +ctrlDivergence.value;
@@ -173,7 +173,7 @@ const init = () => {
   };
 
    /** @type {!HTMLSelectElement} */
-  const ctrlDeltaDivergence = assertNonNull(document.querySelector("#ctrl-delta-divergence"));
+  const ctrlDeltaDivergence = assertIsNotNull(document.querySelector("#ctrl-delta-divergence"));
   ctrlDeltaDivergence.value = `${DEFAULTS.deltaDivergence}`;
   ctrlDeltaDivergence.onchange = () => {
     state.deltaDivergence = +ctrlDeltaDivergence.value;
@@ -182,7 +182,7 @@ const init = () => {
   };
 
    /** @type {!HTMLSelectElement} */
-   const ctrlPetalSize = assertNonNull(document.querySelector("#ctrl-petal-size"));
+   const ctrlPetalSize = assertIsNotNull(document.querySelector("#ctrl-petal-size"));
    ctrlPetalSize.value = `${DEFAULTS.petalSize}`;
    ctrlPetalSize.onchange = () => {
      state.petalSize = +ctrlPetalSize.value;
@@ -191,7 +191,7 @@ const init = () => {
    };
 
   /** @type {!HTMLSelectElement} */
-  const ctrlDeltaPetalSize = assertNonNull(document.querySelector("#ctrl-delta-petal-size"));
+  const ctrlDeltaPetalSize = assertIsNotNull(document.querySelector("#ctrl-delta-petal-size"));
   ctrlDeltaPetalSize.value = ".01";//`${DEFAULTS.deltaPetalSize}`;
   ctrlDeltaPetalSize.onchange = () => {
     state.deltaPetalSize = +ctrlDeltaPetalSize.value;
@@ -200,7 +200,7 @@ const init = () => {
   };
 
   /** @type {!HTMLSelectElement} */
-  const ctrlC = assertNonNull(document.querySelector("#ctrl-c"));
+  const ctrlC = assertIsNotNull(document.querySelector("#ctrl-c"));
   ctrlC.value = `${DEFAULTS.c}`;
   ctrlC.onchange = () => {
     state.c = +ctrlC.value;
@@ -209,7 +209,7 @@ const init = () => {
   };
 
   /** @type {!HTMLSelectElement} */
-  const ctrlDeltaC = assertNonNull(document.querySelector("#ctrl-delta-c"));
+  const ctrlDeltaC = assertIsNotNull(document.querySelector("#ctrl-delta-c"));
   ctrlDeltaC.value = ".005";
   //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
   ctrlDeltaC.onchange = () => {
@@ -219,7 +219,7 @@ const init = () => {
   };
 
   /** @type {!HTMLSelectElement} */
-  const ctrlPetalStyle = assertNonNull(document.querySelector("#ctrl-petal-style"));
+  const ctrlPetalStyle = assertIsNotNull(document.querySelector("#ctrl-petal-style"));
   //ctrlPetalStyle.selectedIndex = 1;
   ctrlPetalStyle.value = `${DEFAULTS.petalStyle}`; // FIXME: does not work, had to hard-code above
   ctrlPetalStyle.onchange = () => {
@@ -229,13 +229,13 @@ const init = () => {
   };
 
   /** @type {!HTMLInputElement} */
-  const cbClearEveryFrame = assertNonNull(document.querySelector("#cb-clear-every-frame"));
+  const cbClearEveryFrame = assertIsNotNull(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = () => {
     state.clearEveryFrame = cbClearEveryFrame.checked;
   };
 
   /** @type {!HTMLInputElement} */
-  const cbRandomFlowers = assertNonNull(document.querySelector("#cb-random-flowers"));
+  const cbRandomFlowers = assertIsNotNull(document.querySelector("#cb-random-flowers"));
   cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
   cbRandomFlowers.onchange = () => state.randomFlowers = cbRandomFlowers.checked;
 

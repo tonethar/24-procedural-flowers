@@ -49,7 +49,7 @@ const DEFAULTS = Object.freeze({
   clearEveryFrame:        true,
   deltaC:                 .005,
   deltaDivergence:        0,
-  deltaPetalSize:         .01,
+  deltaPetalSize:         0,
   deltaRotation:          .01,
   divergence:             137.5,
   fps:                    60,

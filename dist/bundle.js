@@ -180,7 +180,7 @@ var DEFAULTS = Object.freeze({
   clearEveryFrame: true,
   deltaC: .005,
   deltaDivergence: 0,
-  deltaPetalSize: .01,
+  deltaPetalSize: 0,
   deltaRotation: .01,
   divergence: 137.5,
   fps: 60,
@@ -817,12 +817,12 @@ var fillRect = function fillRect(ctx, x, y, width, height, color) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   assertIsNotNull: () => (/* binding */ assertIsNotNull),
 /* harmony export */   assertNonNull: () => (/* binding */ assertNonNull),
 /* harmony export */   dtr: () => (/* binding */ dtr),
 /* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber),
 /* harmony export */   getXY: () => (/* binding */ getXY),
 /* harmony export */   goFullScreen: () => (/* binding */ goFullScreen),
-/* harmony export */   isNonNull: () => (/* binding */ isNonNull),
 /* harmony export */   randomArrayElement: () => (/* binding */ randomArrayElement)
 /* harmony export */ });
 /* harmony import */ var _types_Point_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/Point.js */ "./src/types/Point.js");
@@ -850,6 +850,21 @@ __webpack_require__.r(__webpack_exports__);
 */
 var assertNonNull = function assertNonNull(thing) {
   return /** @type {Exclude<T, null>} */thing;
+};
+
+/**
+ * @name assertIsNonNull
+ * @author https://stackoverflow.com/questions/74383150/jsdoc-non-null-assertion
+ * In lieu of writing in TypeScript and having the convenient non-null assertion
+ * operator (!), this helper function allows asserting that something is not
+ * null or undefined without having to write a JSDoc type cast that has to
+ * explicitly know the non-null type (which is error prone).
+ * @template {any} T
+ * @param {T} item
+ */
+var assertIsNotNull = function assertIsNotNull(item) {
+  if (item === null || item === undefined) throw 'item is null or undefined';
+  return item;
 };
 
 /**
@@ -907,21 +922,6 @@ var getXY = function getXY(e) {
  */
 var goFullScreen = function goFullScreen(element) {
   return element.requestFullscreen();
-};
-
-/**
- * @name isNonNull
- * @author https://stackoverflow.com/questions/74383150/jsdoc-non-null-assertion
- * In lieu of writing in TypeScript and having the convenient non-null assertion
- * operator (!), this helper function allows asserting that something is not
- * null or undefined without having to write a JSDoc type cast that has to
- * explicitly know the non-null type (which is error prone).
- * @template {any} T
- * @param {T} item
- */
-var isNonNull = function isNonNull(item) {
-  if (item === null || item === undefined) throw 'item is null or undefined';
-  return item;
 };
 
 /***/ })
@@ -1040,14 +1040,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @desc Reference to `canvas` element.
  * @type {!HTMLCanvasElement} 
  */
-var canvas = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#canvas"));
+var canvas = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#canvas"));
 
 /**
  * @name ctx
  * @desc Reference to drawing context of `canvas`.
  * @type {CanvasRenderingContext2D}
  */
-var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(canvas.getContext("2d"));
+var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(canvas.getContext("2d"));
 _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].ctx = ctx;
 Object.seal(_app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
@@ -1166,33 +1166,33 @@ var init = function init() {
    * @type {UICallbacks}
    */
   var uiCallbacks = {
-    restartFunction: function restartFunction() {},
-    getPetalDrawFunction: function getPetalDrawFunction() {}
+    restartFunction: initFlowerSprites,
+    getPetalDrawFunction: _app_petal_functions_js__WEBPACK_IMPORTED_MODULE_3__.getPetalDrawFunction
   };
 
   // Buttons
   /**  @type {!HTMLButtonElement}  */
-  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#btn-restart"));
+  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
     (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_6__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, "black");
     initFlowerSprites();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#btn-reset"));
+  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#btn-reset"));
   btnReset.onclick = function () {
     return window.location.reload();
   };
 
   /**  @type {!HTMLButtonElement}  */
-  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#btn-fs"));
+  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#btn-fs"));
   btnFS.onclick = function () {
     return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.goFullScreen)(canvas);
   };
 
   // Inputs
   /** @type {!HTMLSelectElement} */
-  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-divergence"));
+  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-divergence"));
   ctrlDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].divergence);
   ctrlDivergence.onchange = function () {
     var _state$flowerList;
@@ -1202,7 +1202,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-delta-divergence"));
+  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-delta-divergence"));
   ctrlDeltaDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence);
   ctrlDeltaDivergence.onchange = function () {
     var _state$flowerList2;
@@ -1212,7 +1212,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-petal-size"));
+  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-petal-size"));
   ctrlPetalSize.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize);
   ctrlPetalSize.onchange = function () {
     var _state$flowerList3;
@@ -1222,7 +1222,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-delta-petal-size"));
+  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-delta-petal-size"));
   ctrlDeltaPetalSize.value = ".01"; //`${DEFAULTS.deltaPetalSize}`;
   ctrlDeltaPetalSize.onchange = function () {
     var _state$flowerList4;
@@ -1232,7 +1232,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-c"));
+  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-c"));
   ctrlC.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].c);
   ctrlC.onchange = function () {
     var _state$flowerList5;
@@ -1242,7 +1242,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-delta-c"));
+  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-delta-c"));
   ctrlDeltaC.value = ".005";
   //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
   ctrlDeltaC.onchange = function () {
@@ -1253,7 +1253,7 @@ var init = function init() {
   };
 
   /** @type {!HTMLSelectElement} */
-  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#ctrl-petal-style"));
+  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#ctrl-petal-style"));
   //ctrlPetalStyle.selectedIndex = 1;
   ctrlPetalStyle.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle); // FIXME: does not work, had to hard-code above
   ctrlPetalStyle.onchange = function () {
@@ -1264,13 +1264,13 @@ var init = function init() {
   };
 
   /** @type {!HTMLInputElement} */
-  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#cb-clear-every-frame"));
+  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
     _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearEveryFrame = cbClearEveryFrame.checked;
   };
 
   /** @type {!HTMLInputElement} */
-  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertNonNull)(document.querySelector("#cb-random-flowers"));
+  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.assertIsNotNull)(document.querySelector("#cb-random-flowers"));
   cbRandomFlowers.checked = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers ? true : false;
   cbRandomFlowers.onchange = function () {
     return _app_state_js__WEBPACK_IMPORTED_MODULE_1__["default"].randomFlowers = cbRandomFlowers.checked;
