@@ -1,9 +1,9 @@
 // @ts-check
 /**
- * @name FlowerPetal
+ * @name IFlowerPetal
  * @desc JSDoc type definition
  * @author TJ
- * @typedef {Object} FlowerPetal
+ * @typedef {Object} IFlowerPetal
  * @prop {number} x - 'x' of petal.
  * @prop {number} y - 'y' of petal.
  * @prop {number} petalSize - width of each petal in pixels.

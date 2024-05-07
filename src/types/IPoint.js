@@ -1,9 +1,9 @@
 // @ts-check
 /**
- * @name Point
+ * @name IPoint
  * @desc JSDoc type definition.
  * @author TJ
- * @typedef {Object} Point
+ * @typedef {Object} IPoint
  * @property {number} x 
  * @property {number} y
  */

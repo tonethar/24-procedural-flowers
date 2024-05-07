@@ -1,8 +1,8 @@
 // @ts-check
 
 /* IMPORTS */
-import "../types/FlowerParams.js";
-import "../types/FlowerPetal.js";
+import "../types/IFlowerParams.js";
+import "../types/IFlowerPetal.js";
 import Flower from "./Flower.js";
 import { dtr } from "../utils/utils.js";
 
@@ -21,11 +21,11 @@ class RotatingFlower extends Flower{
   static maxPetals = 50;
   /**
    * @desc Creates an instance of RotatingFlower
-   * @param {FlowerParams} params 
+   * @param {IFlowerParams} params 
    */
   constructor(params){
     super(params);
-    /** @type {FlowerPetal[]}*/
+    /** @type {IFlowerPetal[]} */
     this._petals = [];
 
     // Optional properties from FlowerParams, which are required for RotatingFlower

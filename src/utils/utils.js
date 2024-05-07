@@ -1,7 +1,7 @@
 // @ts-check
 /* eslint max-params: 0 */
 
-import "../types/Point.js";
+import "../types/IPoint.js";
 
 /**
  * @module utils
@@ -56,30 +56,29 @@ export const dtr = degrees => degrees * (Math.PI/180);
 export const randomArrayElement = arr => arr[Math.floor(Math.random() * arr.length)];
 
 /**
- * @function getRandomNumber
+ * @function randomNumber
  * @static
  * @param {number} min 
  * @param {number} max 
  * @returns {number}
  */
-export const getRandomNumber = (min, max) => Math.random() * (max - min) + min;
+export const randomNumber = (min, max) => Math.random() * (max - min) + min;
 
 /**
  * @function getXY
  * @static
- * @param {!MouseEvent} e
- * @returns {Point}
+ * @param {!MouseEvent} evt
+ * @returns {IPoint}
  */
-export const getXY = e =>  {
-  const x = e.offsetX;
-  const y = e.offsetY;
-  console.log(x,y);
+export const getXY = evt =>  {
+  const x = evt.offsetX;
+  const y = evt.offsetY;
   return {x, y};
 };
 
 /**
  * @function goFullScreen
  * @static
- * @param {HTMLElement} element 
+ * @param {HTMLElement} element
  */
 export const goFullScreen = element => element.requestFullscreen();

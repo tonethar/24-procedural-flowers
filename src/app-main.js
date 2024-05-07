@@ -9,35 +9,15 @@
 
 /* IMPORTS */
 import DEFAULTS from "./app-defaults.js";
+import { getPetalColorFunction, randomPetalColorFunction } from "./app-petal-color-functions.js";
+import { getPetalDrawFunction, randomPetalDrawFunction } from "./app-petal-draw-functions.js";
 import state from "./app-state.js";
+import setupUI from "./app-ui.js";
+import { assertIsNotNull, randomNumber, getXY, randomArrayElement } from "./utils/utils.js";
 import RotatingFlower from "./classes/RotatingFlower.js";
-import { getPetalDrawFunction, randomPetalDrawFunction } from "./app-petal-functions.js";
-import { petalColorFunc1, petalColorFunc2, petalColorFunc3, petalColorFunc4, randomPetalColorFunction } from "./app-color-functions.js";
-import { assertIsNotNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
 import { fillRect } from "./utils/utils-canvas.js";
 
-import "./types/UICallbacks.js";
-
-/* CONSTANTS */
-
-/**
- * @name canvas
- * @desc Reference to `canvas` element.
- * @type {!HTMLCanvasElement} 
- */
-const canvas = assertIsNotNull(document.querySelector("#canvas"));
-
-/**
- * @name ctx
- * @desc Reference to drawing context of `canvas`.
- * @type {CanvasRenderingContext2D}
- */
-const ctx = assertIsNotNull(canvas.getContext("2d"));
-state.ctx = ctx;
-Object.seal(state);
-
 /* METHODS */
-
 /**
  * @name addFlowerToList
  * @desc Adds a new flower to the end of the list.
@@ -61,12 +41,12 @@ const addFlowerToList = flower => {
  */
 const createFlowerWithCurrentUISettings = (x, y) =>{
   // params for new RotatingFlower
-   /** @type {FlowerParams} */
+   /** @type {IFlowerParams} */
    const params =  {
     c: state.c,
     centerX: x, 
     centerY: y, 
-    colorFunction: petalColorFunc4,
+    colorFunction: getPetalColorFunction(state.petalColorFunctionName),
     deltaC: state.deltaC,
     deltaDivergence: state.deltaDivergence,
     deltaPetalSize: state.deltaPetalSize,
@@ -86,20 +66,20 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
  * @returns {RotatingFlower}
  */
 const createRandomFlower = (x, y) => {
-    /** @type {FlowerParams} */
+    /** @type {IFlowerParams} */
     const params =  {
       alpha: DEFAULTS.minFlowerOpacity + Math.random()/2,
-      c: getRandomNumber(2, 6),
+      c: randomNumber(2, 6),
       centerX: x, 
       centerY: y, 
       colorFunction: randomPetalColorFunction(),
-      deltaC: getRandomNumber(.002, .01),
-      deltaDivergence: Math.random() < 0 ? 0 : getRandomNumber(-.005,.005),
-      deltaPetalSize: getRandomNumber(.01,.04),
-      deltaRotation: Math.random() < .5 ? getRandomNumber(-.002, -.02) : getRandomNumber(.002, .02),
+      deltaC: randomNumber(.002, .01),
+      deltaDivergence: Math.random() < 0 ? 0 : randomNumber(-.005,.005),
+      deltaPetalSize: randomNumber(0, .04),
+      deltaRotation: Math.random() < .5 ? randomNumber(-.002, -.02) : randomNumber(.002, .02),
       divergence: randomArrayElement(DEFAULTS.randomDivergenceValues), 
       drawPetalFunction: randomPetalDrawFunction(),
-      petalSize: getRandomNumber(1, 5), 
+      petalSize: randomNumber(1, 5), 
     };
     return new RotatingFlower(params);
 };
@@ -116,10 +96,11 @@ const initFlowerSprites = () => {
 };
 
 /**
- * Called every frame.
+ * Called every frame
+ * @param {CanvasRenderingContext2D} ctx 
  */
-const loop = () => {
-  window.setTimeout(loop, 1000/DEFAULTS.fps);
+const loop = (ctx) => {
+  window.setTimeout(() => loop(ctx), 1000/DEFAULTS.fps);
   if(state.clearEveryFrame){
     fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
   }
@@ -129,115 +110,51 @@ const loop = () => {
 };
 
 /**
- * Handles app initialization.
+ * @name init
+ * @desc Handles app initialization.
  */
 const init = () => {
   // I. Setup canvas & drawing context
+  // get ref to <canvas>
+  /** @type {HTMLCanvasElement} */
+  const canvas = assertIsNotNull(document.querySelector("#canvas"));
+
+  // create drawing context and assign to `state.ctx` property
+  state.ctx = assertIsNotNull(canvas.getContext("2d"));
+
+  // seal `state` object - no new properties
+  Object.seal(state);
+
+  // set width and height of canvas
   canvas.width = DEFAULTS.canvasWidth;
   canvas.height = DEFAULTS.canvasHeight;
-  ctx.fillRect(0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight);
+
+  // fill canvas with default clear color
+  fillRect(state.ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
+
 
   // II. setup UI
   /**
-   * @type {UICallbacks}
+   * @name canvasClickFunction
+   * @param {MouseEvent} e 
+   */
+  const canvasClickFunction = e => {
+    /** @type {IPoint} */
+    const loc = getXY(e);
+    addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
+  }
+
+  /**
+   * @name uiCallbacks
+   * @type {IUICallbacks}
    */
   const uiCallbacks = {
+    canvasClickFunction: canvasClickFunction,
+    getPetalDrawFunction: getPetalDrawFunction,
+    getPetalColorFunction: getPetalColorFunction,
     restartFunction: initFlowerSprites,
-    getPetalDrawFunction: getPetalDrawFunction
   };
-
-  // Buttons
-  /**  @type {!HTMLButtonElement}  */
-  const btnRestart =  assertIsNotNull(document.querySelector("#btn-restart"));
-  btnRestart.onclick = () => {
-    fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, "black");
-    initFlowerSprites();
-  };
-
-  /**  @type {!HTMLButtonElement}  */
-  const btnReset =  assertIsNotNull(document.querySelector("#btn-reset"));
-  btnReset.onclick = () => window.location.reload();
-
-  /**  @type {!HTMLButtonElement}  */
-  const btnFS =  assertIsNotNull(document.querySelector("#btn-fs"));
-  btnFS.onclick = () => goFullScreen(canvas);
-
-  // Inputs
-  /** @type {!HTMLSelectElement} */
-  const ctrlDivergence = assertIsNotNull(document.querySelector("#ctrl-divergence"));
-  ctrlDivergence.value = `${DEFAULTS.divergence}`;
-  ctrlDivergence.onchange = () => {
-    state.divergence = +ctrlDivergence.value;
-    // change most recent flower's divergence value
-    (state.flowerList?.[state.flowerList.length-1]).divergence = state.divergence;
-  };
-
-   /** @type {!HTMLSelectElement} */
-  const ctrlDeltaDivergence = assertIsNotNull(document.querySelector("#ctrl-delta-divergence"));
-  ctrlDeltaDivergence.value = `${DEFAULTS.deltaDivergence}`;
-  ctrlDeltaDivergence.onchange = () => {
-    state.deltaDivergence = +ctrlDeltaDivergence.value;
-    // change most recent flower's divergence value
-    (state.flowerList?.[state.flowerList.length-1]).deltaDivergence = state.deltaDivergence;
-  };
-
-   /** @type {!HTMLSelectElement} */
-   const ctrlPetalSize = assertIsNotNull(document.querySelector("#ctrl-petal-size"));
-   ctrlPetalSize.value = `${DEFAULTS.petalSize}`;
-   ctrlPetalSize.onchange = () => {
-     state.petalSize = +ctrlPetalSize.value;
-     // change most recent flower's petalSize value
-     (state.flowerList?.[state.flowerList.length-1]).petalSize = state.petalSize;
-   };
-
-  /** @type {!HTMLSelectElement} */
-  const ctrlDeltaPetalSize = assertIsNotNull(document.querySelector("#ctrl-delta-petal-size"));
-  ctrlDeltaPetalSize.value = ".01";//`${DEFAULTS.deltaPetalSize}`;
-  ctrlDeltaPetalSize.onchange = () => {
-    state.deltaPetalSize = +ctrlDeltaPetalSize.value;
-    // change most recent flower's petalSize value
-    (state.flowerList?.[state.flowerList.length-1]).deltaPetalSize = state.deltaPetalSize;
-  };
-
-  /** @type {!HTMLSelectElement} */
-  const ctrlC = assertIsNotNull(document.querySelector("#ctrl-c"));
-  ctrlC.value = `${DEFAULTS.c}`;
-  ctrlC.onchange = () => {
-    state.c = +ctrlC.value;
-    // change most recent flower's c value
-    (state.flowerList?.[state.flowerList.length-1]).c = state.c;
-  };
-
-  /** @type {!HTMLSelectElement} */
-  const ctrlDeltaC = assertIsNotNull(document.querySelector("#ctrl-delta-c"));
-  ctrlDeltaC.value = ".005";
-  //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
-  ctrlDeltaC.onchange = () => {
-    state.deltaC = +ctrlDeltaC.value;
-    // change most recent flower's deltaC value
-    (state.flowerList?.[state.flowerList.length-1]).deltaC = state.deltaC;
-  };
-
-  /** @type {!HTMLSelectElement} */
-  const ctrlPetalStyle = assertIsNotNull(document.querySelector("#ctrl-petal-style"));
-  //ctrlPetalStyle.selectedIndex = 1;
-  ctrlPetalStyle.value = `${DEFAULTS.petalStyle}`; // FIXME: does not work, had to hard-code above
-  ctrlPetalStyle.onchange = () => {
-    state.petalStyle = ctrlPetalStyle.value;
-    // change most recent flower's c value
-    (state.flowerList?.[state.flowerList.length-1]).drawPetalFunction = getPetalDrawFunction(state.petalStyle);
-  };
-
-  /** @type {!HTMLInputElement} */
-  const cbClearEveryFrame = assertIsNotNull(document.querySelector("#cb-clear-every-frame"));
-  cbClearEveryFrame.onchange = () => {
-    state.clearEveryFrame = cbClearEveryFrame.checked;
-  };
-
-  /** @type {!HTMLInputElement} */
-  const cbRandomFlowers = assertIsNotNull(document.querySelector("#cb-random-flowers"));
-  cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
-  cbRandomFlowers.onchange = () => state.randomFlowers = cbRandomFlowers.checked;
+  setupUI(DEFAULTS, state, uiCallbacks);
 
 
   // III. Set up flower sprites
@@ -247,8 +164,8 @@ const init = () => {
   setInterval(() => {
     if(state.randomFlowers){
       const padding = DEFAULTS.randomFlowerPadding;
-      const x = getRandomNumber(padding, DEFAULTS.canvasWidth-padding);
-      const y = getRandomNumber(padding, DEFAULTS.canvasHeight-padding);
+      const x = randomNumber(padding, DEFAULTS.canvasWidth-padding);
+      const y = randomNumber(padding, DEFAULTS.canvasHeight-padding);
       addFlowerToList(createRandomFlower(x, y));
     }
   }, DEFAULTS.randomFlowerDelay);
@@ -256,15 +173,8 @@ const init = () => {
   // initialize starting flower
   initFlowerSprites();
 
-  // enable canvas clicking
-  canvas.onclick = e => {
-    /** @type {Point} */
-    const loc = getXY(e);
-    addFlowerToList(createFlowerWithCurrentUISettings(loc.x, loc.y));
-  }
-
   // IV. start up app
-  loop();
+  loop(state.ctx);
 };
 
 init();

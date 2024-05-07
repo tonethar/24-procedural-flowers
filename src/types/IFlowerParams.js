@@ -1,9 +1,9 @@
 // @ts-check
 /**
- * @name FlowerParams
+ * @name IFlowerParams
  * @desc JSDoc type definition. These are also properties of the Flower class.
  * @author TJ
- * @typedef {Object} FlowerParams
+ * @typedef {Object} IFlowerParams
  * @prop {number} c - spacing between petals.
  * @prop {number} centerX - center `x` of Flower around which petals are drawn.
  * @prop {number} centerY - center `y` of Flower around which petals are drawn.

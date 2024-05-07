@@ -8,18 +8,7 @@ import { randomArrayElement } from "./utils/utils";
  * @author TJ
  */
 
-/* INTERFACE */
-/**
- * @name FlowerPetalColorFunc
- * @desc JSDoc type definition
- * @author TJ
- * @typedef {Function} FlowerPetalColorFunc
- * @prop {number} n - generation
- * @prop {number} divergence - rotation of petal.
- * @returns {string} - a CSS color
- */
-
-/* FUNCTIONS */
+/* PETAL COLOR FUNCTION DEFINITIONS */
 /**
  * @name petalColorFunc1
  * @desc RGB red value increases with age (`n`) of petal.
@@ -28,7 +17,7 @@ import { randomArrayElement } from "./utils/utils";
  * @param {number} divergence 
  * @returns {string}
  */
-export const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2},${128 - (n % 256)/2})`; 
+const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2},${128 - (n % 256)/2})`; 
 
 /**
  * @name petalColorFunc2
@@ -38,7 +27,7 @@ export const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2}
  * @param {number} divergence 
  * @returns {string}
  */
-export const petalColorFunc2 = (n, divergence) => {
+const petalColorFunc2 = (n, divergence) => {
   const aDegrees = (n * divergence) % 256;
   return `rgb(${aDegrees},0,255)`;
 };
@@ -51,7 +40,7 @@ export const petalColorFunc2 = (n, divergence) => {
  * @param {number} divergence 
  * @returns {string}
  */
-export const petalColorFunc3 = (n, divergence) => {
+const petalColorFunc3 = (n, divergence) => {
   const aDegrees = (n * divergence) % 361;
   return `hsl(${aDegrees/2},100%,${80 - aDegrees%30}%)`;
 };
@@ -64,7 +53,7 @@ export const petalColorFunc3 = (n, divergence) => {
  * @param {number} divergence 
  * @returns {string}
  */
-export const petalColorFunc4 = (n, divergence) => `hsl(${n/5 % 361},100%,50%)`;
+const petalColorFunc4 = (n, divergence) => `hsl(${n/5 % 361},100%,50%)`;
 
 /**
  * @name petalColorFunc5
@@ -74,16 +63,36 @@ export const petalColorFunc4 = (n, divergence) => `hsl(${n/5 % 361},100%,50%)`;
  * @param {number} divergence 
  * @returns {string}
  */
-export const petalColorFunc5 = (n, divergence) => `hsl(${360 - (n/5 % 361)},100%,50%)`;
+const petalColorFunc5 = (n, divergence) => `hsl(${360 - (n/5 % 361)},100%,50%)`;
+
+/* PUBLIC */
+/**
+ * @type {IPetalColorFuncList}
+ */
+const colorFunctions = {
+  func1: petalColorFunc1,
+  func2: petalColorFunc2,
+  func3: petalColorFunc3,
+  func4: petalColorFunc4,
+  func5: petalColorFunc5,
+};
 
 /**
- * @name weightedPetalColorFunctions
- * @type {FlowerPetalColorFunc[]}
+ * @function getPetalColorFunction
+ * @desc Public interface for color functions
+ * @param {string} funcName 
+ * @returns {IFlowerPetalDrawFunc}
+ */
+export const getPetalColorFunction = funcName => colorFunctions[funcName];
+
+/**
+ * @type {IFlowerPetalColorFunc[]}
  */
 const weightedPetalColorFunctions = [  petalColorFunc3, petalColorFunc4, petalColorFunc4, petalColorFunc5 ];
 
 /**
  * @function randomPetalColorFunction
- * @returns {FlowerPetalColorFunc}
+ * @desc Returns a random petal color function.
+ * @returns {IFlowerPetalColorFunc}
  */
 export const randomPetalColorFunction = () => randomArrayElement(weightedPetalColorFunctions);

@@ -1,22 +1,32 @@
 // @ts-check
 import DEFAULTS from "./app-defaults.js";
-import { assertIsNotNull, getRandomNumber, getXY, goFullScreen, randomArrayElement } from "./utils/utils.js";
+import { assertIsNotNull, goFullScreen } from "./utils/utils.js";
 import { fillRect } from "./utils/utils-canvas.js";
 
 // JSDoc interface
-import "./types/UICallbacks.js";
+import "./types/IUICallbacks.js";
+
 
 /**
  * 
- * @param {import("./app-defaults.js").IAppDefaults} defaults 
- * @param {import("./app-state.js").IAppState} state 
- * @param {UICallbacks} callbacks 
+ * @param {HTMLSelectElement} ref 
+ * @param {string[] | number[]} dataArray 
  */
+const populateSelect = (ref, dataArray) => {
+  let html = dataArray.map(val => `<option>${val}</option>`).join("");
+  ref.innerHTML = html;
+};
 
+/**
+ * @function setupUI
+ * @param {IAppDefaults} defaults 
+ * @param {import("./types/IAppState.js").IAppState} state 
+ * @param {IUICallbacks} callbacks 
+ */
 export const setupUI = (defaults, state, callbacks) => {
   const ctx = assertIsNotNull(state.ctx);
-
   const canvas = ctx.canvas;
+
    // Buttons
   /**  @type {!HTMLButtonElement}  */
   const btnRestart =  assertIsNotNull(document.querySelector("#btn-restart"));
@@ -36,6 +46,7 @@ export const setupUI = (defaults, state, callbacks) => {
   // Inputs
   /** @type {!HTMLSelectElement} */
   const ctrlDivergence = assertIsNotNull(document.querySelector("#ctrl-divergence"));
+  populateSelect(ctrlDivergence, DEFAULTS.uiDivergenceValues);
   ctrlDivergence.value = `${DEFAULTS.divergence}`;
   ctrlDivergence.onchange = () => {
     state.divergence = +ctrlDivergence.value;
@@ -45,6 +56,7 @@ export const setupUI = (defaults, state, callbacks) => {
 
    /** @type {!HTMLSelectElement} */
   const ctrlDeltaDivergence = assertIsNotNull(document.querySelector("#ctrl-delta-divergence"));
+  populateSelect(ctrlDeltaDivergence, DEFAULTS.uiDivergenceDeltaValues);
   ctrlDeltaDivergence.value = `${DEFAULTS.deltaDivergence}`;
   ctrlDeltaDivergence.onchange = () => {
     state.deltaDivergence = +ctrlDeltaDivergence.value;
@@ -54,6 +66,7 @@ export const setupUI = (defaults, state, callbacks) => {
 
    /** @type {!HTMLSelectElement} */
    const ctrlPetalSize = assertIsNotNull(document.querySelector("#ctrl-petal-size"));
+   populateSelect(ctrlPetalSize, DEFAULTS.uiPetalSizeValues);
    ctrlPetalSize.value = `${DEFAULTS.petalSize}`;
    ctrlPetalSize.onchange = () => {
      state.petalSize = +ctrlPetalSize.value;
@@ -91,13 +104,23 @@ export const setupUI = (defaults, state, callbacks) => {
 
   /** @type {!HTMLSelectElement} */
   const ctrlPetalStyle = assertIsNotNull(document.querySelector("#ctrl-petal-style"));
-  //ctrlPetalStyle.selectedIndex = 1;
-  ctrlPetalStyle.value = `${DEFAULTS.petalStyle}`; // FIXME: does not work, had to hard-code above
+  ctrlPetalStyle.value = `${DEFAULTS.petalStyle}`;
   ctrlPetalStyle.onchange = () => {
     state.petalStyle = ctrlPetalStyle.value;
     // change most recent flower's c value
     (state.flowerList?.[state.flowerList.length-1]).drawPetalFunction = callbacks.getPetalDrawFunction(state.petalStyle);
   };
+
+   /** @type {!HTMLSelectElement} */
+   const ctrlPetalColor = assertIsNotNull(document.querySelector("#ctrl-petal-color"));
+   //ctrlPetalStyle.selectedIndex = 1;
+   ctrlPetalColor.value = `${DEFAULTS.petalColorFunctionName}`; // FIXME: does not work, had to hard-code above
+   ctrlPetalColor.onchange = () => {
+     state.petalColorFunctionName = ctrlPetalColor.value;
+     console.log(ctrlPetalColor.value);
+     //change most recent flower's .colorFunction property
+     (state.flowerList?.[state.flowerList.length-1]).colorFunction = callbacks.getPetalColorFunction(state.petalColorFunctionName);
+   };
 
   /** @type {!HTMLInputElement} */
   const cbClearEveryFrame = assertIsNotNull(document.querySelector("#cb-clear-every-frame"));
@@ -110,6 +133,7 @@ export const setupUI = (defaults, state, callbacks) => {
   cbRandomFlowers.checked = DEFAULTS.randomFlowers ? true : false;
   cbRandomFlowers.onchange = () => state.randomFlowers = cbRandomFlowers.checked;
 
+  canvas.onclick = (e) => callbacks.canvasClickFunction(e);
 };
 
 export default setupUI;

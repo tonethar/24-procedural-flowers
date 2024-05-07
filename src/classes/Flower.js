@@ -1,7 +1,7 @@
 // @ts-check
 
 /* IMPORTS */
-import "../types/FlowerParams.js";
+import "../types/IFlowerParams.js";
 import { dtr } from "../utils/utils.js";
 
 /** 
@@ -13,7 +13,7 @@ import { dtr } from "../utils/utils.js";
 class Flower{
   /**
    * @desc Creates an instance of Flower.
-   * @param {FlowerParams} params
+   * @param {IFlowerParams} params
    */
   constructor(params){
     //Object.assign(this, { centerX, centerY, divergence, c, petalSize, drawPetalFunction }); //:-(

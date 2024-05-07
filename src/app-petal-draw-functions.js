@@ -1,7 +1,7 @@
 // @ts-check
 /* eslint max-params: 0 */
 
-import "./types/FlowerPetalDrawFunc.js";
+import "./types/IFlowerPetalDrawFunc.js";
 import { randomArrayElement } from "./utils/utils.js";
 
 /**
@@ -10,8 +10,10 @@ import { randomArrayElement } from "./utils/utils.js";
  * @author TJ
  */
 
+/* PETAL DRAWING FUNCTION DEFINITIONS */
 /**
  * @name petalFillDisc
+ * @desc Draws a filled circle.
  * @function {FlowerPetalDrawFunc}
  * @prop {CanvasRenderingContext2D} ctx - drawing context where the petal will be rendered.
  * @prop {number} x - 'x' of petal.
@@ -32,7 +34,7 @@ const petalFillDisc = (ctx, x, y, radius, color) => {
 /**
  * @name petalFillOval
  * @function {FlowerPetalDrawFunc}
- * @desc fills a squashed circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
+ * @desc Draws a squashed filled circle in the provided <kbd>ctx</kbd>. The circle is centered on  <kbd>x,y</kbd>
  * @param {CanvasRenderingContext2D} ctx 
  * @param {number} x 
  * @param {number} y 
@@ -88,42 +90,33 @@ const petalFillSquare = (ctx, x, y, radius, color) => {
 };
 
 
+/* PUBLIC */
 /**
- * @name IPetalFunctionList
- * @desc JSDoc type definition that enumerates valid property names
- * @author TJ
- * @typedef {Object} IPetalFunctionList
- * @property {FlowerPetalDrawFunc} Circle
- * @property {FlowerPetalDrawFunc} Disc
- * @property {FlowerPetalDrawFunc} Oval
- * @property {FlowerPetalDrawFunc} Square
+ * @type {IPetalDrawFuncList}
  */
-
-/**
- * @type {IPetalFunctionList}
- */
-const petalFunctionList = {
+const drawFunctions = Object.freeze({
   Circle: petalStrokeCircle,
   Disc: petalFillDisc,
   Oval: petalFillOval,
   Square: petalFillSquare,
-};
+});
 
 /**
  * @function getPetalDrawFunction
+ * @desc Public interface for draw functions
  * @param {string} funcName 
- * @returns {FlowerPetalDrawFunc}
+ * @returns {IFlowerPetalDrawFunc}
  */
-export const getPetalDrawFunction = funcName => petalFunctionList[funcName];
+export const getPetalDrawFunction = funcName => drawFunctions[funcName];
 
 /**
- * @name weightedPetalFunctions
- * @type {FlowerPetalDrawFunc[]}
+ * @type {IFlowerPetalDrawFunc[]}
  */
-const weightedPetalFunctions = [petalFillDisc, petalFillDisc, petalFillDisc, petalStrokeCircle, petalFillSquare, petalFillOval];
+const weightedFunctions = [petalFillDisc, petalFillDisc, petalFillDisc, petalStrokeCircle, petalFillSquare, petalFillOval];
 
 /**
  * @function randomPetalDrawFunction
- * @returns {FlowerPetalDrawFunc}
+ * @desc Returns a random petal drawing function.
+ * @returns {IFlowerPetalDrawFunc}
  */
-export const randomPetalDrawFunction = () => randomArrayElement(weightedPetalFunctions);
+export const randomPetalDrawFunction = () => randomArrayElement(weightedFunctions);
