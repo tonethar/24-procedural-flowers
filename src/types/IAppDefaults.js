@@ -28,9 +28,9 @@
  * @prop {number[]} uiDivergenceValues
  * @prop {string[]} uiDrawFunctionValues
  * @prop {string} uiPetalColorFunctionName - name of color function used for petals. 
+ * @prop {string} uiPetalDrawFunctionName - drawing function used for petals. 
  * @prop {number} uiPetalSize - radius of petals in pixels.
  * @prop {number[]} uiPetalSizeDeltaValues 
  * @prop {number[]} uiPetalSizeValues
- * @prop {string} uiPetalStyleFunctionName - drawing function used for petals. 
  * @prop {boolean} uiRandomFlowers - periodically display random flowers?
  */

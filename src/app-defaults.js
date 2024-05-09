@@ -1,6 +1,6 @@
 // @ts-check
-import { colorFunctionValues} from "./app-petal-color-functions";
-import { drawFunctionValues } from "./app-petal-draw-functions";
+import { colorFunctionKeys} from "./app-petal-color-functions";
+import { drawFunctionKeys } from "./app-petal-draw-functions";
 
 
 /**
@@ -21,16 +21,16 @@ const appDefaults = Object.freeze({
   clearColor:               "#000",
   deltaRotation:            .01,
   fps:                      60,
-  maxFlowers:               10,
+  maxFlowers:               12,
   maxPetals:                1200,
-  minFlowerOpacity:         .5,
+  minFlowerOpacity:         .15,
   randomDivergenceValues:   [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140,],
-  randomFlowerDelay:        5000,
+  randomFlowerDelay:        8000,
   randomFlowerPadding:      100,
   uiC:                      5,
   uiCDeltaValues:           [-.001, 0, .002, .005, .01, .02,],
   uiClearEveryFrame:        true,
-  uiColorFunctionValues:    colorFunctionValues(),
+  uiColorFunctionValues:    colorFunctionKeys(),
   uiCValues:                [2, 3, 4, 5, 8, 10,],
   uiDeltaC:                 .002,
   uiDeltaDivergence:        0,
@@ -38,12 +38,12 @@ const appDefaults = Object.freeze({
   uiDivergence:             137.5,
   uiDivergenceDeltaValues:  [-.005, -.002, -.001, 0, .001, .002, .005,],
   uiDivergenceValues:       [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140,],
-  uiDrawFunctionValues:     drawFunctionValues(),
-  uiPetalColorFunctionName: "increase-hue",
+  uiDrawFunctionValues:     drawFunctionKeys(),
+  uiPetalColorFunctionName: "increase-hue-each-petal",
   uiPetalSize:              3,
   uiPetalSizeDeltaValues:   [0, .01, .02, .05, .25,],
   uiPetalSizeValues:        [1, 2, 3, 5, 8, 10,],
-  uiPetalStyleFunctionName: "Disc",
+  uiPetalDrawFunctionName:  "Disc",
   uiRandomFlowers:          true,
 });
 

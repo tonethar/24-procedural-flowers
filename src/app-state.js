@@ -23,7 +23,7 @@ const state = Object.seal({
   divergence:             appDefaults.uiDivergence,
   petalColorFunctionName: appDefaults.uiPetalColorFunctionName,
   petalSize:              appDefaults.uiPetalSize,
-  petalStyle:             appDefaults.uiPetalStyleFunctionName,
+  petalStyle:             appDefaults.uiPetalDrawFunctionName,
   flowerList:             [],
   randomFlowers:          appDefaults.uiRandomFlowers,
 });

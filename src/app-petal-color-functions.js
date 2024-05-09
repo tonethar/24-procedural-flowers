@@ -17,7 +17,8 @@ import { randomArrayElement } from "./utils/utils";
  * @param {number} divergence 
  * @returns {string}
  */
-const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2},${128 - (n % 256)/2})`; 
+//const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2},${128 - (n % 256)/2})`; 
+const petalColorFunc1 = (n, divergence) => `rgb(${255-(n % 256)},${255-(n % 256)/2},${128 - (n % 256)/2})`; 
 
 /**
  * @name petalColorFunc2
@@ -29,7 +30,7 @@ const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2},${128 
  */
 const petalColorFunc2 = (n, divergence) => {
   const aDegrees = (n * divergence) % 256;
-  return `rgb(${aDegrees},0,255)`;
+  return `rgb(${aDegrees},64,${(n%255)*2})`;
 };
 
 /**
@@ -65,41 +66,63 @@ const petalColorFunc4 = (n, divergence) => `hsl(${n/5 % 361},100%,50%)`;
  */
 const petalColorFunc5 = (n, divergence) => `hsl(${360 - (n/5 % 361)},100%,50%)`;
 
+const petalColorFunc6 = (n, divergence) => `hsl(${360 - (Math.random() * 360) % 361},100%,50%)`;
+
 /* PUBLIC */
 /**
  * @type {Object}
  */
 const colorFunctions = {
-  func1: petalColorFunc1,
-  func2: petalColorFunc2,
-  func3: petalColorFunc3,
-  "increase-hue": petalColorFunc4,
-  "decrease-hue": petalColorFunc5,
+  "adjust-rgb-red-green-blue":  petalColorFunc1,
+  "adjust-rgb-red-blue":        petalColorFunc2,
+  "increase-hue-rotation":      petalColorFunc3,
+  "increase-hue-each-petal":    petalColorFunc4,
+  "decrease-hue-each-petal":    petalColorFunc5,
+  "random-hue":                 petalColorFunc6, 
 };
 
 /**
- * @function colorFunctionValues
+ * @static colorFunctionKeys
  * @desc Returns an array of color function keys allowed by `getPetalColorFunction()`
  * @returns {string[]}
  */
-export const colorFunctionValues = () => Object.keys(colorFunctions);
+export const colorFunctionKeys = () => Object.keys(colorFunctions);
 
 /**
- * @function getPetalColorFunction
+ * @static getPetalColorFunction
  * @desc Public interface for color functions
  * @param {string} funcName 
  * @returns {IFlowerPetalDrawFunc}
  */
-export const getPetalColorFunction = funcName => colorFunctions[funcName];
+export const getPetalColorFunction = funcName => {
+  if (colorFunctions[funcName]){
+    return colorFunctions[funcName];
+  }else{
+    throw `Unknown petal color funcName of ${funcName}`;
+  }
+};
 
 /**
  * @type {IFlowerPetalColorFunc[]}
  */
-const weightedPetalColorFunctions = [  petalColorFunc3, petalColorFunc4, petalColorFunc4, petalColorFunc5 ];
+const weightedPetalColorFunctions = [  petalColorFunc1, petalColorFunc2, petalColorFunc3, petalColorFunc4, petalColorFunc5, ];
 
 /**
- * @function randomPetalColorFunction
+ * @static randomPetalColorFunction
  * @desc Returns a random petal color function.
  * @returns {IFlowerPetalColorFunc}
  */
 export const randomPetalColorFunction = () => randomArrayElement(weightedPetalColorFunctions);
+
+
+let petalIndex = 3;
+/**
+ * @static getNextPetalColorFunction
+ * @returns {IFlowerPetalColorFunc}
+ * @desc Returns the "next" petal color function in `weightedPetalColorFunctions`
+ */
+export const getNextPetalColorFunction = () => {
+  petalIndex++;
+  if(petalIndex >= weightedPetalColorFunctions.length) petalIndex=0;
+  return weightedPetalColorFunctions[petalIndex];
+};

@@ -36,16 +36,16 @@ var appDefaults = Object.freeze({
   clearColor: "#000",
   deltaRotation: .01,
   fps: 60,
-  maxFlowers: 10,
+  maxFlowers: 12,
   maxPetals: 1200,
-  minFlowerOpacity: .5,
+  minFlowerOpacity: .15,
   randomDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
-  randomFlowerDelay: 5000,
+  randomFlowerDelay: 8000,
   randomFlowerPadding: 100,
   uiC: 5,
   uiCDeltaValues: [-.001, 0, .002, .005, .01, .02],
   uiClearEveryFrame: true,
-  uiColorFunctionValues: (0,_app_petal_color_functions__WEBPACK_IMPORTED_MODULE_0__.colorFunctionValues)(),
+  uiColorFunctionValues: (0,_app_petal_color_functions__WEBPACK_IMPORTED_MODULE_0__.colorFunctionKeys)(),
   uiCValues: [2, 3, 4, 5, 8, 10],
   uiDeltaC: .002,
   uiDeltaDivergence: 0,
@@ -53,12 +53,12 @@ var appDefaults = Object.freeze({
   uiDivergence: 137.5,
   uiDivergenceDeltaValues: [-.005, -.002, -.001, 0, .001, .002, .005],
   uiDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
-  uiDrawFunctionValues: (0,_app_petal_draw_functions__WEBPACK_IMPORTED_MODULE_1__.drawFunctionValues)(),
-  uiPetalColorFunctionName: "increase-hue",
+  uiDrawFunctionValues: (0,_app_petal_draw_functions__WEBPACK_IMPORTED_MODULE_1__.drawFunctionKeys)(),
+  uiPetalColorFunctionName: "increase-hue-each-petal",
   uiPetalSize: 3,
   uiPetalSizeDeltaValues: [0, .01, .02, .05, .25],
   uiPetalSizeValues: [1, 2, 3, 5, 8, 10],
-  uiPetalStyleFunctionName: "Disc",
+  uiPetalDrawFunctionName: "Disc",
   uiRandomFlowers: true
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (appDefaults);
@@ -74,7 +74,8 @@ var appDefaults = Object.freeze({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   colorFunctionValues: () => (/* binding */ colorFunctionValues),
+/* harmony export */   colorFunctionKeys: () => (/* binding */ colorFunctionKeys),
+/* harmony export */   getNextPetalColorFunction: () => (/* binding */ getNextPetalColorFunction),
 /* harmony export */   getPetalColorFunction: () => (/* binding */ getPetalColorFunction),
 /* harmony export */   randomPetalColorFunction: () => (/* binding */ randomPetalColorFunction)
 /* harmony export */ });
@@ -98,8 +99,9 @@ __webpack_require__.r(__webpack_exports__);
  * @param {number} divergence 
  * @returns {string}
  */
+//const petalColorFunc1 = (n, divergence) => `rgb(${n % 256},${(n % 256)/2},${128 - (n % 256)/2})`; 
 var petalColorFunc1 = function petalColorFunc1(n, divergence) {
-  return "rgb(".concat(n % 256, ",").concat(n % 256 / 2, ",").concat(128 - n % 256 / 2, ")");
+  return "rgb(".concat(255 - n % 256, ",").concat(255 - n % 256 / 2, ",").concat(128 - n % 256 / 2, ")");
 };
 
 /**
@@ -112,7 +114,7 @@ var petalColorFunc1 = function petalColorFunc1(n, divergence) {
  */
 var petalColorFunc2 = function petalColorFunc2(n, divergence) {
   var aDegrees = n * divergence % 256;
-  return "rgb(".concat(aDegrees, ",0,255)");
+  return "rgb(".concat(aDegrees, ",64,").concat(n % 255 * 2, ")");
 };
 
 /**
@@ -151,50 +153,69 @@ var petalColorFunc4 = function petalColorFunc4(n, divergence) {
 var petalColorFunc5 = function petalColorFunc5(n, divergence) {
   return "hsl(".concat(360 - n / 5 % 361, ",100%,50%)");
 };
+var petalColorFunc6 = function petalColorFunc6(n, divergence) {
+  return "hsl(".concat(360 - Math.random() * 360 % 361, ",100%,50%)");
+};
 
 /* PUBLIC */
 /**
  * @type {Object}
  */
 var colorFunctions = {
-  func1: petalColorFunc1,
-  func2: petalColorFunc2,
-  func3: petalColorFunc3,
-  "increase-hue": petalColorFunc4,
-  "decrease-hue": petalColorFunc5
+  "adjust-rgb-red-green-blue": petalColorFunc1,
+  "adjust-rgb-red-blue": petalColorFunc2,
+  "increase-hue-rotation": petalColorFunc3,
+  "increase-hue-each-petal": petalColorFunc4,
+  "decrease-hue-each-petal": petalColorFunc5,
+  "random-hue": petalColorFunc6
 };
 
 /**
- * @function colorFunctionValues
+ * @static colorFunctionKeys
  * @desc Returns an array of color function keys allowed by `getPetalColorFunction()`
  * @returns {string[]}
  */
-var colorFunctionValues = function colorFunctionValues() {
+var colorFunctionKeys = function colorFunctionKeys() {
   return Object.keys(colorFunctions);
 };
 
 /**
- * @function getPetalColorFunction
+ * @static getPetalColorFunction
  * @desc Public interface for color functions
  * @param {string} funcName 
  * @returns {IFlowerPetalDrawFunc}
  */
 var getPetalColorFunction = function getPetalColorFunction(funcName) {
-  return colorFunctions[funcName];
+  if (colorFunctions[funcName]) {
+    return colorFunctions[funcName];
+  } else {
+    throw "Unknown petal color funcName of ".concat(funcName);
+  }
 };
 
 /**
  * @type {IFlowerPetalColorFunc[]}
  */
-var weightedPetalColorFunctions = [petalColorFunc3, petalColorFunc4, petalColorFunc4, petalColorFunc5];
+var weightedPetalColorFunctions = [petalColorFunc1, petalColorFunc2, petalColorFunc3, petalColorFunc4, petalColorFunc5];
 
 /**
- * @function randomPetalColorFunction
+ * @static randomPetalColorFunction
  * @desc Returns a random petal color function.
  * @returns {IFlowerPetalColorFunc}
  */
 var randomPetalColorFunction = function randomPetalColorFunction() {
   return (0,_utils_utils__WEBPACK_IMPORTED_MODULE_0__.randomArrayElement)(weightedPetalColorFunctions);
+};
+var petalIndex = 3;
+/**
+ * @static getNextPetalColorFunction
+ * @returns {IFlowerPetalColorFunc}
+ * @desc Returns the "next" petal color function in `weightedPetalColorFunctions`
+ */
+var getNextPetalColorFunction = function getNextPetalColorFunction() {
+  petalIndex++;
+  if (petalIndex >= weightedPetalColorFunctions.length) petalIndex = 0;
+  return weightedPetalColorFunctions[petalIndex];
 };
 
 /***/ }),
@@ -208,7 +229,7 @@ var randomPetalColorFunction = function randomPetalColorFunction() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   drawFunctionValues: () => (/* binding */ drawFunctionValues),
+/* harmony export */   drawFunctionKeys: () => (/* binding */ drawFunctionKeys),
 /* harmony export */   getPetalDrawFunction: () => (/* binding */ getPetalDrawFunction),
 /* harmony export */   randomPetalDrawFunction: () => (/* binding */ randomPetalDrawFunction)
 /* harmony export */ });
@@ -318,11 +339,11 @@ var drawFunctions = Object.freeze({
 });
 
 /**
- * @function drawFunctionValues
+ * @function drawFunctionKeys
  * @desc Returns an array of draw function keys allowed by `getPetalDrawFunction()`
  * @returns {string[]}
  */
-var drawFunctionValues = function drawFunctionValues() {
+var drawFunctionKeys = function drawFunctionKeys() {
   return Object.keys(drawFunctions);
 };
 
@@ -336,7 +357,7 @@ var getPetalDrawFunction = function getPetalDrawFunction(funcName) {
   if (drawFunctions[funcName]) {
     return drawFunctions[funcName];
   } else {
-    throw "Unknown funcName of ".concat(funcName);
+    throw "Unknown petal draw funcName of ".concat(funcName);
   }
 };
 /**
@@ -392,7 +413,7 @@ var state = Object.seal({
   divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDivergence,
   petalColorFunctionName: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalColorFunctionName,
   petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalSize,
-  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalStyleFunctionName,
+  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalDrawFunctionName,
   flowerList: [],
   randomFlowers: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiRandomFlowers
 });
@@ -453,7 +474,7 @@ var setupUI = function setupUI(defaults, state, callbacks) {
    * @param {number|function} newPropValue
    */
   var changePropMostRecentFlower = function changePropMostRecentFlower(propName, newPropValue) {
-    if (!state.flowerList.length) throw "state.flowerList is unexpectedly empty!";
+    if (!state.flowerList.length) throw "state.flowerList array is unexpectedly empty!";
     state.flowerList[state.flowerList.length - 1][propName] = newPropValue;
   };
 
@@ -609,7 +630,7 @@ var setupUI = function setupUI(defaults, state, callbacks) {
 
   // Initialize state of <select>
   populateSelect(ctrlPetalStyle, defaults.uiDrawFunctionValues);
-  ctrlPetalStyle.value = "".concat(defaults.uiPetalStyleFunctionName);
+  ctrlPetalStyle.value = "".concat(defaults.uiPetalDrawFunctionName);
 
   // Set .onchange handler
   ctrlPetalStyle.onchange = function () {
@@ -1301,6 +1322,15 @@ var addFlowerToList = function addFlowerToList(flower) {
   }
   // add new flower to end of list
   _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].flowerList.push(flower);
+
+  // adjust .alpha of all flowers, decreasing top to bottom
+  var newAlpha = .9;
+  for (var i = _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].flowerList.length - 1; i >= 0; i--) {
+    var _flower = _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].flowerList[i];
+    newAlpha = newAlpha < _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].minFlowerOpacity ? _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].minFlowerOpacity : newAlpha;
+    _flower.alpha = newAlpha;
+    newAlpha -= .1;
+  }
 };
 
 /**
@@ -1339,11 +1369,10 @@ var createFlowerWithCurrentUISettings = function createFlowerWithCurrentUISettin
 var createRandomFlower = function createRandomFlower(x, y) {
   /** @type {IFlowerParams} */
   var params = {
-    alpha: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].minFlowerOpacity + Math.random() / 2,
     c: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomNumber)(2, 6),
     centerX: x,
     centerY: y,
-    colorFunction: (0,_app_petal_color_functions_js__WEBPACK_IMPORTED_MODULE_1__.randomPetalColorFunction)(),
+    colorFunction: (0,_app_petal_color_functions_js__WEBPACK_IMPORTED_MODULE_1__.getNextPetalColorFunction)(),
     deltaC: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomNumber)(.002, .01),
     deltaDivergence: Math.random() < 0 ? 0 : (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomNumber)(-.005, .005),
     deltaPetalSize: (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomNumber)(0, .04),

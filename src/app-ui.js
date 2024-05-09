@@ -33,7 +33,7 @@ export const setupUI = (defaults, state, callbacks) => {
    * @param {number|function} newPropValue
    */
   const changePropMostRecentFlower = (propName, newPropValue) => {
-    if(!state.flowerList.length) throw "state.flowerList is unexpectedly empty!";
+    if(!state.flowerList.length) throw "state.flowerList array is unexpectedly empty!";
     (state.flowerList[state.flowerList.length-1])[propName] = newPropValue;
   };
 
@@ -193,7 +193,7 @@ export const setupUI = (defaults, state, callbacks) => {
 
   // Initialize state of <select>
   populateSelect(ctrlPetalStyle, defaults.uiDrawFunctionValues);
-  ctrlPetalStyle.value = `${defaults.uiPetalStyleFunctionName}`;
+  ctrlPetalStyle.value = `${defaults.uiPetalDrawFunctionName}`;
 
   // Set .onchange handler
   ctrlPetalStyle.onchange = () => {

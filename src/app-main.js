@@ -9,7 +9,7 @@
 
 /* IMPORTS */
 import appDefaults from "./app-defaults.js";
-import { getPetalColorFunction, randomPetalColorFunction } from "./app-petal-color-functions.js";
+import { getPetalColorFunction, getNextPetalColorFunction, randomPetalColorFunction } from "./app-petal-color-functions.js";
 import { getPetalDrawFunction, randomPetalDrawFunction } from "./app-petal-draw-functions.js";
 import state from "./app-state.js";
 import setupUI from "./app-ui.js";
@@ -30,6 +30,16 @@ const addFlowerToList = flower => {
   }
   // add new flower to end of list
   state.flowerList.push(flower);
+
+  // adjust .alpha of all flowers, decreasing top to bottom
+  let newAlpha = .9
+  for (let i = state.flowerList.length-1; i>=0; i--){
+    const flower = state.flowerList[i];
+    newAlpha = newAlpha < appDefaults.minFlowerOpacity ? appDefaults.minFlowerOpacity : newAlpha;
+    flower.alpha = newAlpha;
+    newAlpha -= .1;
+  }
+
 }
 
 /**
@@ -68,11 +78,10 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
 const createRandomFlower = (x, y) => {
     /** @type {IFlowerParams} */
     const params =  {
-      alpha: appDefaults.minFlowerOpacity + Math.random()/2,
       c: randomNumber(2, 6),
       centerX: x, 
       centerY: y, 
-      colorFunction: randomPetalColorFunction(),
+      colorFunction: getNextPetalColorFunction(),
       deltaC: randomNumber(.002, .01),
       deltaDivergence: Math.random() < 0 ? 0 : randomNumber(-.005,.005),
       deltaPetalSize: randomNumber(0, .04),
