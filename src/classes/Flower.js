@@ -6,8 +6,8 @@ import { dtr } from "../utils/utils.js";
 
 /** 
  * @class Flower
+ * @classdesc Represents a procedurally drawn flower. 
  * @prop {number} n - current petal generation.
- * @desc Represents a procedurally drawn flower. 
  * @author TJ
  * */
 class Flower{

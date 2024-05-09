@@ -8,12 +8,12 @@
  */
 
 /* IMPORTS */
-import DEFAULTS from "./app-defaults.js";
+import appDefaults from "./app-defaults.js";
 import { getPetalColorFunction, randomPetalColorFunction } from "./app-petal-color-functions.js";
 import { getPetalDrawFunction, randomPetalDrawFunction } from "./app-petal-draw-functions.js";
 import state from "./app-state.js";
 import setupUI from "./app-ui.js";
-import { assertIsNotNull, randomNumber, getXY, randomArrayElement } from "./utils/utils.js";
+import { assertIsNotNull, getXY, goFullScreen, randomArrayElement, randomNumber } from "./utils/utils.js";
 import RotatingFlower from "./classes/RotatingFlower.js";
 import { fillRect } from "./utils/utils-canvas.js";
 
@@ -25,7 +25,7 @@ import { fillRect } from "./utils/utils-canvas.js";
  */
 const addFlowerToList = flower => {
   // if too many flowers, remove oldest one
-  if(state.flowerList.length > DEFAULTS.maxFlowers-1){
+  if(state.flowerList.length > appDefaults.maxFlowers-1){
     state.flowerList.shift();
   }
   // add new flower to end of list
@@ -50,7 +50,7 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
     deltaC: state.deltaC,
     deltaDivergence: state.deltaDivergence,
     deltaPetalSize: state.deltaPetalSize,
-    deltaRotation: DEFAULTS.deltaRotation,
+    deltaRotation: appDefaults.deltaRotation,
     divergence: state.divergence, 
     drawPetalFunction: getPetalDrawFunction(state.petalStyle),
     petalSize: state.petalSize, 
@@ -68,7 +68,7 @@ const createFlowerWithCurrentUISettings = (x, y) =>{
 const createRandomFlower = (x, y) => {
     /** @type {IFlowerParams} */
     const params =  {
-      alpha: DEFAULTS.minFlowerOpacity + Math.random()/2,
+      alpha: appDefaults.minFlowerOpacity + Math.random()/2,
       c: randomNumber(2, 6),
       centerX: x, 
       centerY: y, 
@@ -77,7 +77,7 @@ const createRandomFlower = (x, y) => {
       deltaDivergence: Math.random() < 0 ? 0 : randomNumber(-.005,.005),
       deltaPetalSize: randomNumber(0, .04),
       deltaRotation: Math.random() < .5 ? randomNumber(-.002, -.02) : randomNumber(.002, .02),
-      divergence: randomArrayElement(DEFAULTS.randomDivergenceValues), 
+      divergence: randomArrayElement(appDefaults.randomDivergenceValues), 
       drawPetalFunction: randomPetalDrawFunction(),
       petalSize: randomNumber(1, 5), 
     };
@@ -92,7 +92,7 @@ const initFlowerSprites = () => {
   // clear list
   state.flowerList.length = 0;
   // add flower to list
-  addFlowerToList(createFlowerWithCurrentUISettings(DEFAULTS.canvasWidth/2, DEFAULTS.canvasHeight/2));
+  addFlowerToList(createFlowerWithCurrentUISettings(appDefaults.canvasWidth/2, appDefaults.canvasHeight/2));
 };
 
 /**
@@ -100,9 +100,9 @@ const initFlowerSprites = () => {
  * @param {CanvasRenderingContext2D} ctx 
  */
 const loop = (ctx) => {
-  window.setTimeout(() => loop(ctx), 1000/DEFAULTS.fps);
+  window.setTimeout(() => loop(ctx), 1000/appDefaults.fps);
   if(state.clearEveryFrame){
-    fillRect(ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
+    fillRect(ctx, 0, 0, appDefaults.canvasWidth, appDefaults.canvasHeight, appDefaults.clearColor);
   }
   for(const f of state.flowerList){
     f.update(ctx);
@@ -126,11 +126,11 @@ const init = () => {
   Object.seal(state);
 
   // set width and height of canvas
-  canvas.width = DEFAULTS.canvasWidth;
-  canvas.height = DEFAULTS.canvasHeight;
+  canvas.width = appDefaults.canvasWidth;
+  canvas.height = appDefaults.canvasHeight;
 
   // fill canvas with default clear color
-  fillRect(state.ctx, 0, 0, DEFAULTS.canvasWidth, DEFAULTS.canvasHeight, DEFAULTS.clearColor);
+  fillRect(state.ctx, 0, 0, appDefaults.canvasWidth, appDefaults.canvasHeight, appDefaults.clearColor);
 
 
   // II. setup UI
@@ -152,23 +152,25 @@ const init = () => {
     canvasClickFunction: canvasClickFunction,
     getPetalDrawFunction: getPetalDrawFunction,
     getPetalColorFunction: getPetalColorFunction,
+    goFullScreenFunction: () => goFullScreen(canvas),
+    resetFunction: () => window.location.reload(),
     restartFunction: initFlowerSprites,
   };
-  setupUI(DEFAULTS, state, uiCallbacks);
+  setupUI(appDefaults, state, uiCallbacks);
 
 
   // III. Set up flower sprites
-  RotatingFlower.maxPetals = DEFAULTS.maxPetals;
+  RotatingFlower.maxPetals = appDefaults.maxPetals;
 
   // Interval to create random flowers
   setInterval(() => {
     if(state.randomFlowers){
-      const padding = DEFAULTS.randomFlowerPadding;
-      const x = randomNumber(padding, DEFAULTS.canvasWidth-padding);
-      const y = randomNumber(padding, DEFAULTS.canvasHeight-padding);
+      const padding = appDefaults.randomFlowerPadding;
+      const x = randomNumber(padding, appDefaults.canvasWidth-padding);
+      const y = randomNumber(padding, appDefaults.canvasHeight-padding);
       addFlowerToList(createRandomFlower(x, y));
     }
-  }, DEFAULTS.randomFlowerDelay);
+  }, appDefaults.randomFlowerDelay);
 
   // initialize starting flower
   initFlowerSprites();

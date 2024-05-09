@@ -92,7 +92,7 @@ const petalFillSquare = (ctx, x, y, radius, color) => {
 
 /* PUBLIC */
 /**
- * @type {IPetalDrawFuncList}
+ * @type {Object}
  */
 const drawFunctions = Object.freeze({
   Circle: petalStrokeCircle,
@@ -102,13 +102,25 @@ const drawFunctions = Object.freeze({
 });
 
 /**
+ * @function drawFunctionValues
+ * @desc Returns an array of draw function keys allowed by `getPetalDrawFunction()`
+ * @returns {string[]}
+ */
+export const drawFunctionValues = () => Object.keys(drawFunctions);
+
+/**
  * @function getPetalDrawFunction
  * @desc Public interface for draw functions
  * @param {string} funcName 
  * @returns {IFlowerPetalDrawFunc}
  */
-export const getPetalDrawFunction = funcName => drawFunctions[funcName];
-
+export const getPetalDrawFunction = funcName => {
+  if (drawFunctions[funcName]){
+    return drawFunctions[funcName];
+  }else{
+    throw `Unknown funcName of ${funcName}`;
+  }
+}
 /**
  * @type {IFlowerPetalDrawFunc[]}
  */

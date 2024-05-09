@@ -8,9 +8,9 @@ import { dtr } from "../utils/utils.js";
 
 /** 
  * @class RotatingFlower
+ * @classdesc Represents a pre-rendered rotating flower.
  * @extends Flower
  * @prop {FlowerPetal[]} _petals
- * @desc Represents a pre-rendered rotating flower.
  * @author TJ
  * @private
  */

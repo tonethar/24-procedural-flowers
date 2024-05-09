@@ -1,5 +1,5 @@
 // @ts-check
-import DEFAULTS from "./app-defaults";
+import appDefaults from "./app-defaults";
 
 /**
  * @module app-state
@@ -14,18 +14,18 @@ import DEFAULTS from "./app-defaults";
  * @desc Mutable app state variables that can change over time. Most of these could be saved to localStorage.
  */
 const state = Object.seal({
-  clearEveryFrame:        DEFAULTS.clearEveryFrame,
-  c:                      DEFAULTS.c,
+  clearEveryFrame:        appDefaults.uiClearEveryFrame,
+  c:                      appDefaults.uiC,
   ctx:                    null,
-  deltaC:                 DEFAULTS.deltaC,
-  deltaDivergence:        DEFAULTS.deltaDivergence,
-  deltaPetalSize:         DEFAULTS.deltaPetalSize,
-  divergence:             DEFAULTS.divergence,
-  petalColorFunctionName: DEFAULTS.petalColorFunctionName,
-  petalSize:              DEFAULTS.petalSize,
-  petalStyle:             DEFAULTS.petalStyle,
+  deltaC:                 appDefaults.uiDeltaC,
+  deltaDivergence:        appDefaults.uiDeltaDivergence,
+  deltaPetalSize:         appDefaults.uiDeltaPetalSize,
+  divergence:             appDefaults.uiDivergence,
+  petalColorFunctionName: appDefaults.uiPetalColorFunctionName,
+  petalSize:              appDefaults.uiPetalSize,
+  petalStyle:             appDefaults.uiPetalStyleFunctionName,
   flowerList:             [],
-  randomFlowers:          DEFAULTS.randomFlowers,
+  randomFlowers:          appDefaults.uiRandomFlowers,
 });
 
 export default state;

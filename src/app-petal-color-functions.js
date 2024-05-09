@@ -67,15 +67,22 @@ const petalColorFunc5 = (n, divergence) => `hsl(${360 - (n/5 % 361)},100%,50%)`;
 
 /* PUBLIC */
 /**
- * @type {IPetalColorFuncList}
+ * @type {Object}
  */
 const colorFunctions = {
   func1: petalColorFunc1,
   func2: petalColorFunc2,
   func3: petalColorFunc3,
-  func4: petalColorFunc4,
-  func5: petalColorFunc5,
+  "increase-hue": petalColorFunc4,
+  "decrease-hue": petalColorFunc5,
 };
+
+/**
+ * @function colorFunctionValues
+ * @desc Returns an array of color function keys allowed by `getPetalColorFunction()`
+ * @returns {string[]}
+ */
+export const colorFunctionValues = () => Object.keys(colorFunctions);
 
 /**
  * @function getPetalColorFunction

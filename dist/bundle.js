@@ -12,8 +12,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _app_petal_color_functions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-petal-color-functions */ "./src/app-petal-color-functions.js");
+/* harmony import */ var _app_petal_draw_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-petal-draw-functions */ "./src/app-petal-draw-functions.js");
 // @ts-check
-/*eslint @stylistic/js/quote-props: ["error", "as-needed"]*/
+
+
 
 /**
  * @module app-defaults
@@ -22,38 +25,43 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /** 
- * @name DEFAULTS
+ * @name appDefaults
  * @type {IAppDefaults}
  * @desc The app's default values.
  * @static
  */
-var DEFAULTS = Object.freeze({
-  c: 5,
+var appDefaults = Object.freeze({
   canvasWidth: 800,
   canvasHeight: 600,
   clearColor: "#000",
-  clearEveryFrame: true,
-  deltaC: .005,
-  deltaDivergence: 0,
-  deltaPetalSize: 0,
   deltaRotation: .01,
-  divergence: 137.5,
   fps: 60,
   maxFlowers: 10,
   maxPetals: 1200,
   minFlowerOpacity: .5,
-  petalColorFunctionName: "func4",
-  petalSize: 3,
-  petalStyle: "Disc",
   randomDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
   randomFlowerDelay: 5000,
   randomFlowerPadding: 100,
-  randomFlowers: true,
-  uiDivergenceDeltaValues: [.005, .002, .001, 0, .001, .002, .005],
+  uiC: 5,
+  uiCDeltaValues: [-.001, 0, .002, .005, .01, .02],
+  uiClearEveryFrame: true,
+  uiColorFunctionValues: (0,_app_petal_color_functions__WEBPACK_IMPORTED_MODULE_0__.colorFunctionValues)(),
+  uiCValues: [2, 3, 4, 5, 8, 10],
+  uiDeltaC: .002,
+  uiDeltaDivergence: 0,
+  uiDeltaPetalSize: .01,
+  uiDivergence: 137.5,
+  uiDivergenceDeltaValues: [-.005, -.002, -.001, 0, .001, .002, .005],
   uiDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
-  uiPetalSizeValues: [1, 2, 3, 5, 8, 10]
+  uiDrawFunctionValues: (0,_app_petal_draw_functions__WEBPACK_IMPORTED_MODULE_1__.drawFunctionValues)(),
+  uiPetalColorFunctionName: "increase-hue",
+  uiPetalSize: 3,
+  uiPetalSizeDeltaValues: [0, .01, .02, .05, .25],
+  uiPetalSizeValues: [1, 2, 3, 5, 8, 10],
+  uiPetalStyleFunctionName: "Disc",
+  uiRandomFlowers: true
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DEFAULTS);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (appDefaults);
 
 /***/ }),
 
@@ -66,6 +74,7 @@ var DEFAULTS = Object.freeze({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   colorFunctionValues: () => (/* binding */ colorFunctionValues),
 /* harmony export */   getPetalColorFunction: () => (/* binding */ getPetalColorFunction),
 /* harmony export */   randomPetalColorFunction: () => (/* binding */ randomPetalColorFunction)
 /* harmony export */ });
@@ -145,14 +154,23 @@ var petalColorFunc5 = function petalColorFunc5(n, divergence) {
 
 /* PUBLIC */
 /**
- * @type {IPetalColorFuncList}
+ * @type {Object}
  */
 var colorFunctions = {
   func1: petalColorFunc1,
   func2: petalColorFunc2,
   func3: petalColorFunc3,
-  func4: petalColorFunc4,
-  func5: petalColorFunc5
+  "increase-hue": petalColorFunc4,
+  "decrease-hue": petalColorFunc5
+};
+
+/**
+ * @function colorFunctionValues
+ * @desc Returns an array of color function keys allowed by `getPetalColorFunction()`
+ * @returns {string[]}
+ */
+var colorFunctionValues = function colorFunctionValues() {
+  return Object.keys(colorFunctions);
 };
 
 /**
@@ -190,6 +208,7 @@ var randomPetalColorFunction = function randomPetalColorFunction() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   drawFunctionValues: () => (/* binding */ drawFunctionValues),
 /* harmony export */   getPetalDrawFunction: () => (/* binding */ getPetalDrawFunction),
 /* harmony export */   randomPetalDrawFunction: () => (/* binding */ randomPetalDrawFunction)
 /* harmony export */ });
@@ -289,7 +308,7 @@ var petalFillSquare = function petalFillSquare(ctx, x, y, radius, color) {
 
 /* PUBLIC */
 /**
- * @type {IPetalDrawFuncList}
+ * @type {Object}
  */
 var drawFunctions = Object.freeze({
   Circle: petalStrokeCircle,
@@ -299,15 +318,27 @@ var drawFunctions = Object.freeze({
 });
 
 /**
+ * @function drawFunctionValues
+ * @desc Returns an array of draw function keys allowed by `getPetalDrawFunction()`
+ * @returns {string[]}
+ */
+var drawFunctionValues = function drawFunctionValues() {
+  return Object.keys(drawFunctions);
+};
+
+/**
  * @function getPetalDrawFunction
  * @desc Public interface for draw functions
  * @param {string} funcName 
  * @returns {IFlowerPetalDrawFunc}
  */
 var getPetalDrawFunction = function getPetalDrawFunction(funcName) {
-  return drawFunctions[funcName];
+  if (drawFunctions[funcName]) {
+    return drawFunctions[funcName];
+  } else {
+    throw "Unknown funcName of ".concat(funcName);
+  }
 };
-
 /**
  * @type {IFlowerPetalDrawFunc[]}
  */
@@ -352,18 +383,18 @@ __webpack_require__.r(__webpack_exports__);
  * @desc Mutable app state variables that can change over time. Most of these could be saved to localStorage.
  */
 var state = Object.seal({
-  clearEveryFrame: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].clearEveryFrame,
-  c: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].c,
+  clearEveryFrame: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiClearEveryFrame,
+  c: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiC,
   ctx: null,
-  deltaC: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaC,
-  deltaDivergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence,
-  deltaPetalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].deltaPetalSize,
-  divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].divergence,
-  petalColorFunctionName: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalColorFunctionName,
-  petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize,
-  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle,
+  deltaC: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaC,
+  deltaDivergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaDivergence,
+  deltaPetalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaPetalSize,
+  divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDivergence,
+  petalColorFunctionName: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalColorFunctionName,
+  petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalSize,
+  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalStyleFunctionName,
   flowerList: [],
-  randomFlowers: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers
+  randomFlowers: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiRandomFlowers
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
 
@@ -381,13 +412,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   setupUI: () => (/* binding */ setupUI)
 /* harmony export */ });
-/* harmony import */ var _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults.js */ "./src/app-defaults.js");
-/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
-/* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
-/* harmony import */ var _types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./types/IUICallbacks.js */ "./src/types/IUICallbacks.js");
-/* harmony import */ var _types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
+/* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
+/* harmony import */ var _types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./types/IUICallbacks.js */ "./src/types/IUICallbacks.js");
+/* harmony import */ var _types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_2__);
 // @ts-check
-
 
 
 
@@ -395,146 +424,237 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * 
- * @param {HTMLSelectElement} ref 
- * @param {string[] | number[]} dataArray 
- */
-var populateSelect = function populateSelect(ref, dataArray) {
-  var html = dataArray.map(function (val) {
-    return "<option>".concat(val, "</option>");
-  }).join("");
-  ref.innerHTML = html;
-};
-
-/**
  * @function setupUI
- * @param {IAppDefaults} defaults 
  * @param {import("./types/IAppState.js").IAppState} state 
  * @param {IUICallbacks} callbacks 
  */
 var setupUI = function setupUI(defaults, state, callbacks) {
-  var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(state.ctx);
+  var ctx = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(state.ctx);
   var canvas = ctx.canvas;
 
-  // Buttons
-  /**  @type {!HTMLButtonElement}  */
-  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#btn-restart"));
+  /* PRIVATE HELPER FUNCTIONS */
+  /**
+   * @function populateSelect
+   * @desc Assigns the elements of a flat array to the provided <select>
+   * @param {HTMLSelectElement} ref 
+   * @param {string[] | number[]} dataArray 
+   */
+  var populateSelect = function populateSelect(ref, dataArray) {
+    var html = dataArray.map(function (val) {
+      return "<option value=\"".concat(val, "\">").concat(val, "</option>");
+    }).join("");
+    ref.innerHTML = html;
+  };
+
+  /**
+   * @function changePropMostRecentFlower
+   * @desc 
+   * @param {string} propName
+   * @param {number|function} newPropValue
+   */
+  var changePropMostRecentFlower = function changePropMostRecentFlower(propName, newPropValue) {
+    if (!state.flowerList.length) throw "state.flowerList is unexpectedly empty!";
+    state.flowerList[state.flowerList.length - 1][propName] = newPropValue;
+  };
+
+  /* INITIALIZE UI ELEMENTS */
+  // I. Buttons
+  /**
+   * @var btnRestart
+   * @type {!HTMLButtonElement}  
+   * @desc Restarts app and preserves changes user has made to UI.
+   */
+  var btnRestart = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#btn-restart"));
   btnRestart.onclick = function () {
-    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_2__.fillRect)(ctx, 0, 0, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight, "black");
+    (0,_utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_1__.fillRect)(ctx, 0, 0, defaults.canvasWidth, defaults.canvasHeight, "black");
     callbacks.restartFunction();
   };
 
-  /**  @type {!HTMLButtonElement}  */
-  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#btn-reset"));
+  /**  
+   * @var btnReset
+   * @type {!HTMLButtonElement}
+   * @desc Restarts app and resets UI to default starting state.
+   */
+  var btnReset = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#btn-reset"));
   btnReset.onclick = function () {
-    return window.location.reload();
+    return callbacks.resetFunction();
   };
 
-  /**  @type {!HTMLButtonElement}  */
-  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#btn-fs"));
+  /**  
+   * @var btnFS
+   * @type {!HTMLButtonElement}
+   * @desc Causes <canvas> to go into full screen mode
+   */
+  var btnFS = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#btn-fs"));
   btnFS.onclick = function () {
-    return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.goFullScreen)(canvas);
+    return callbacks.goFullScreenFunction();
   };
 
-  // Inputs
-  /** @type {!HTMLSelectElement} */
-  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-divergence"));
-  populateSelect(ctrlDivergence, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiDivergenceValues);
-  ctrlDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].divergence);
+  // II. <select> inputs
+  /**
+   * @var ctrlDivergence
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.divergence` value
+   */
+  var ctrlDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-divergence"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlDivergence, defaults.uiDivergenceValues);
+  ctrlDivergence.value = "".concat(defaults.uiDivergence);
+
+  // Set .onchange handler
   ctrlDivergence.onchange = function () {
-    var _state$flowerList;
     state.divergence = +ctrlDivergence.value;
-    // change most recent flower's divergence value
-    ((_state$flowerList = state.flowerList) === null || _state$flowerList === void 0 ? void 0 : _state$flowerList[state.flowerList.length - 1]).divergence = state.divergence;
+    // change most recent flower's `.divergence` value
+    changePropMostRecentFlower("divergence", state.divergence);
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-delta-divergence"));
-  populateSelect(ctrlDeltaDivergence, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiDivergenceDeltaValues);
-  ctrlDeltaDivergence.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].deltaDivergence);
+  /** 
+   * @var ctrlDeltaDivergence
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.deltaDivergence` value
+   */
+  var ctrlDeltaDivergence = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-delta-divergence"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlDeltaDivergence, defaults.uiDivergenceDeltaValues);
+  ctrlDeltaDivergence.value = "".concat(defaults.uiDeltaDivergence);
+
+  // Set .onchange handler
   ctrlDeltaDivergence.onchange = function () {
-    var _state$flowerList2;
     state.deltaDivergence = +ctrlDeltaDivergence.value;
-    // change most recent flower's divergence value
-    ((_state$flowerList2 = state.flowerList) === null || _state$flowerList2 === void 0 ? void 0 : _state$flowerList2[state.flowerList.length - 1]).deltaDivergence = state.deltaDivergence;
+    // change most recent flower's `.deltaDivergence` value
+    changePropMostRecentFlower("deltaDivergence", state.deltaDivergence);
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-petal-size"));
-  populateSelect(ctrlPetalSize, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalSizeValues);
-  ctrlPetalSize.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalSize);
+  /**
+  * @name ctrlPetalSize
+  * @type {!HTMLSelectElement}
+  * @desc Sets `state.petalSize` value
+  */
+  var ctrlPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-petal-size"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlPetalSize, defaults.uiPetalSizeValues);
+  ctrlPetalSize.value = "".concat(defaults.uiPetalSize);
+
+  // Set .onchange handler
   ctrlPetalSize.onchange = function () {
-    var _state$flowerList3;
     state.petalSize = +ctrlPetalSize.value;
-    // change most recent flower's petalSize value
-    ((_state$flowerList3 = state.flowerList) === null || _state$flowerList3 === void 0 ? void 0 : _state$flowerList3[state.flowerList.length - 1]).petalSize = state.petalSize;
+    // change most recent flower's `.petalSize` value
+    changePropMostRecentFlower("petalSize", state.petalSize);
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-delta-petal-size"));
-  ctrlDeltaPetalSize.value = ".01"; //`${DEFAULTS.deltaPetalSize}`;
+  /** 
+   * @var ctrlDeltaPetalSize
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.deltaPetalSize` value
+   */
+  var ctrlDeltaPetalSize = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-delta-petal-size"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlDeltaPetalSize, defaults.uiPetalSizeDeltaValues);
+  ctrlDeltaPetalSize.value = "".concat(defaults.uiDeltaPetalSize);
+
+  // Set .onchange handler
   ctrlDeltaPetalSize.onchange = function () {
-    var _state$flowerList4;
     state.deltaPetalSize = +ctrlDeltaPetalSize.value;
-    // change most recent flower's petalSize value
-    ((_state$flowerList4 = state.flowerList) === null || _state$flowerList4 === void 0 ? void 0 : _state$flowerList4[state.flowerList.length - 1]).deltaPetalSize = state.deltaPetalSize;
+    // change most recent flower's `.deltaPetalSize` value
+    changePropMostRecentFlower("deltaPetalSize", state.deltaPetalSize);
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-c"));
-  ctrlC.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].c);
+  /**
+   * @name ctrlC
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.c` ("padding") value
+   */
+  var ctrlC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-c"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlC, defaults.uiCValues);
+  ctrlC.value = "".concat(defaults.uiC);
+
+  // Set .onchange handler
   ctrlC.onchange = function () {
-    var _state$flowerList5;
     state.c = +ctrlC.value;
-    // change most recent flower's c value
-    ((_state$flowerList5 = state.flowerList) === null || _state$flowerList5 === void 0 ? void 0 : _state$flowerList5[state.flowerList.length - 1]).c = state.c;
+    // change most recent flower's `.c` ("padding") value
+    changePropMostRecentFlower("c", state.c);
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-delta-c"));
-  ctrlDeltaC.value = ".005";
-  //ctrlDeltaC.value = `${DEFAULTS.deltaC}`; // FIXME: does not work, had to hard-code above
+  /**
+   * @var ctrlDeltaC
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.deltaC` ("change in padding") value
+   */
+  var ctrlDeltaC = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-delta-c"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlDeltaC, defaults.uiCDeltaValues);
+  ctrlDeltaC.value = "".concat(defaults.uiDeltaC);
+
+  // Set .onchange handler
   ctrlDeltaC.onchange = function () {
-    var _state$flowerList6;
     state.deltaC = +ctrlDeltaC.value;
-    // change most recent flower's deltaC value
-    ((_state$flowerList6 = state.flowerList) === null || _state$flowerList6 === void 0 ? void 0 : _state$flowerList6[state.flowerList.length - 1]).deltaC = state.deltaC;
+    // Change most recent flower's `.deltaC` value
+    //(state.flowerList?.[state.flowerList.length-1]).deltaC = state.deltaC;
+    changePropMostRecentFlower("deltaC", state.deltaC);
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-petal-style"));
-  ctrlPetalStyle.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalStyle);
+  /** 
+   * @var ctrlPetalStyle
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.drawPetalFunction` value
+   */
+  var ctrlPetalStyle = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-petal-style"));
+
+  // Initialize state of <select>
+  populateSelect(ctrlPetalStyle, defaults.uiDrawFunctionValues);
+  ctrlPetalStyle.value = "".concat(defaults.uiPetalStyleFunctionName);
+
+  // Set .onchange handler
   ctrlPetalStyle.onchange = function () {
-    var _state$flowerList7;
     state.petalStyle = ctrlPetalStyle.value;
-    // change most recent flower's c value
-    ((_state$flowerList7 = state.flowerList) === null || _state$flowerList7 === void 0 ? void 0 : _state$flowerList7[state.flowerList.length - 1]).drawPetalFunction = callbacks.getPetalDrawFunction(state.petalStyle);
+    // Change most recent flower's `.drawPetalFunction` value
+    changePropMostRecentFlower("drawPetalFunction", callbacks.getPetalDrawFunction(state.petalStyle));
   };
 
-  /** @type {!HTMLSelectElement} */
-  var ctrlPetalColor = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#ctrl-petal-color"));
-  //ctrlPetalStyle.selectedIndex = 1;
-  ctrlPetalColor.value = "".concat(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].petalColorFunctionName); // FIXME: does not work, had to hard-code above
+  /** 
+   * @var ctrlPetalColor
+   * @type {!HTMLSelectElement}
+   * @desc Sets `state.colorFunction` value
+   */
+  var ctrlPetalColor = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#ctrl-petal-color"));
+  populateSelect(ctrlPetalColor, defaults.uiColorFunctionValues);
+  ctrlPetalColor.value = "".concat(defaults.uiPetalColorFunctionName);
   ctrlPetalColor.onchange = function () {
-    var _state$flowerList8;
     state.petalColorFunctionName = ctrlPetalColor.value;
-    console.log(ctrlPetalColor.value);
-    //change most recent flower's .colorFunction property
-    ((_state$flowerList8 = state.flowerList) === null || _state$flowerList8 === void 0 ? void 0 : _state$flowerList8[state.flowerList.length - 1]).colorFunction = callbacks.getPetalColorFunction(state.petalColorFunctionName);
+    // Change most recent flower's .colorFunction property
+    changePropMostRecentFlower("colorFunction", callbacks.getPetalColorFunction(state.petalColorFunctionName));
   };
 
-  /** @type {!HTMLInputElement} */
-  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#cb-clear-every-frame"));
+  // III. type="checkbox" inputs
+  /**
+   * @var cbClearEveryFrame
+   * @type {!HTMLInputElement}
+   * @desc Checkbox for "Clear every frame?" user preference.
+   */
+  var cbClearEveryFrame = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#cb-clear-every-frame"));
   cbClearEveryFrame.onchange = function () {
     state.clearEveryFrame = cbClearEveryFrame.checked;
   };
 
-  /** @type {!HTMLInputElement} */
-  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__.assertIsNotNull)(document.querySelector("#cb-random-flowers"));
-  cbRandomFlowers.checked = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowers ? true : false;
+  /**
+   * @var cbRandomFlowers
+   * @type {!HTMLInputElement}
+   * @desc Checkbox for "Spawn random flowers?" user preference.  
+   */
+  var cbRandomFlowers = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#cb-random-flowers"));
+  cbRandomFlowers.checked = defaults.uiRandomFlowers ? true : false;
   cbRandomFlowers.onchange = function () {
     return state.randomFlowers = cbRandomFlowers.checked;
   };
+
+  // IV. Mouse interaction
   canvas.onclick = function (e) {
     return callbacks.canvasClickFunction(e);
   };
@@ -571,8 +691,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 /** 
  * @class Flower
+ * @classdesc Represents a procedurally drawn flower. 
  * @prop {number} n - current petal generation.
- * @desc Represents a procedurally drawn flower. 
  * @author TJ
  * */
 var Flower = /*#__PURE__*/function () {
@@ -676,9 +796,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 /** 
  * @class RotatingFlower
+ * @classdesc Represents a pre-rendered rotating flower.
  * @extends Flower
  * @prop {FlowerPetal[]} _petals
- * @desc Represents a pre-rendered rotating flower.
  * @author TJ
  * @private
  */
@@ -870,6 +990,8 @@ _defineProperty(RotatingFlower, "maxPetals", 50);
  * @property {function} canvasClickFunction
  * @property {function} getPetalDrawFunction
  * @property {function} getPetalColorFunction
+ * @property {function} goFullScreenFunction
+ * @property {function} resetFunction
  * @property {function} restartFunction
  */
 
@@ -1311,6 +1433,12 @@ var init = function init() {
     canvasClickFunction: canvasClickFunction,
     getPetalDrawFunction: _app_petal_draw_functions_js__WEBPACK_IMPORTED_MODULE_2__.getPetalDrawFunction,
     getPetalColorFunction: _app_petal_color_functions_js__WEBPACK_IMPORTED_MODULE_1__.getPetalColorFunction,
+    goFullScreenFunction: function goFullScreenFunction() {
+      return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.goFullScreen)(canvas);
+    },
+    resetFunction: function resetFunction() {
+      return window.location.reload();
+    },
     restartFunction: initFlowerSprites
   };
   (0,_app_ui_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"], _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"], uiCallbacks);
