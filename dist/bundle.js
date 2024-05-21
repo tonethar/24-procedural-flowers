@@ -12,8 +12,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _app_petal_color_functions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-petal-color-functions */ "./src/app-petal-color-functions.js");
-/* harmony import */ var _app_petal_draw_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-petal-draw-functions */ "./src/app-petal-draw-functions.js");
+/* harmony import */ var _app_petal_color_functions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-petal-color-functions.js */ "./src/app-petal-color-functions.js");
+/* harmony import */ var _app_petal_draw_functions_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-petal-draw-functions.js */ "./src/app-petal-draw-functions.js");
 // @ts-check
 
 
@@ -45,7 +45,7 @@ var appDefaults = Object.freeze({
   uiC: 5,
   uiCDeltaValues: [-.001, 0, .002, .005, .01, .02],
   uiClearEveryFrame: true,
-  uiColorFunctionValues: (0,_app_petal_color_functions__WEBPACK_IMPORTED_MODULE_0__.colorFunctionKeys)(),
+  uiColorFunctionValues: (0,_app_petal_color_functions_js__WEBPACK_IMPORTED_MODULE_0__.colorFunctionKeys)(),
   uiCValues: [2, 3, 4, 5, 8, 10],
   uiDeltaC: .002,
   uiDeltaDivergence: 0,
@@ -53,7 +53,7 @@ var appDefaults = Object.freeze({
   uiDivergence: 137.5,
   uiDivergenceDeltaValues: [-.005, -.002, -.001, 0, .001, .002, .005],
   uiDivergenceValues: [30, 60, 72, 90, 120, 137.1, 137.3, 137.5, 137.7, 137.9, 139, 140],
-  uiDrawFunctionValues: (0,_app_petal_draw_functions__WEBPACK_IMPORTED_MODULE_1__.drawFunctionKeys)(),
+  uiDrawFunctionValues: (0,_app_petal_draw_functions_js__WEBPACK_IMPORTED_MODULE_1__.drawFunctionKeys)(),
   uiPetalColorFunctionName: "increase-hue-each-petal",
   uiPetalSize: 3,
   uiPetalSizeDeltaValues: [0, .01, .02, .05, .25],
@@ -79,7 +79,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getPetalColorFunction: () => (/* binding */ getPetalColorFunction),
 /* harmony export */   randomPetalColorFunction: () => (/* binding */ randomPetalColorFunction)
 /* harmony export */ });
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/utils */ "./src/utils/utils.js");
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
 // @ts-check
 
 
@@ -204,7 +204,7 @@ var weightedPetalColorFunctions = [petalColorFunc1, petalColorFunc2, petalColorF
  * @returns {IFlowerPetalColorFunc}
  */
 var randomPetalColorFunction = function randomPetalColorFunction() {
-  return (0,_utils_utils__WEBPACK_IMPORTED_MODULE_0__.randomArrayElement)(weightedPetalColorFunctions);
+  return (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.randomArrayElement)(weightedPetalColorFunctions);
 };
 var petalIndex = 3;
 /**
@@ -387,7 +387,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _app_defaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults */ "./src/app-defaults.js");
+/* harmony import */ var _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-defaults.js */ "./src/app-defaults.js");
 // @ts-check
 
 
@@ -404,18 +404,18 @@ __webpack_require__.r(__webpack_exports__);
  * @desc Mutable app state variables that can change over time. Most of these could be saved to localStorage.
  */
 var state = Object.seal({
-  clearEveryFrame: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiClearEveryFrame,
-  c: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiC,
+  clearEveryFrame: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiClearEveryFrame,
+  c: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiC,
   ctx: null,
-  deltaC: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaC,
-  deltaDivergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaDivergence,
-  deltaPetalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaPetalSize,
-  divergence: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiDivergence,
-  petalColorFunctionName: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalColorFunctionName,
-  petalSize: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalSize,
-  petalStyle: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalDrawFunctionName,
+  deltaC: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaC,
+  deltaDivergence: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaDivergence,
+  deltaPetalSize: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiDeltaPetalSize,
+  divergence: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiDivergence,
+  petalColorFunctionName: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalColorFunctionName,
+  petalSize: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalSize,
+  petalStyle: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiPetalDrawFunctionName,
   flowerList: [],
-  randomFlowers: _app_defaults__WEBPACK_IMPORTED_MODULE_0__["default"].uiRandomFlowers
+  randomFlowers: _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].uiRandomFlowers
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
 

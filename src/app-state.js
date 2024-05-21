@@ -1,5 +1,5 @@
 // @ts-check
-import appDefaults from "./app-defaults";
+import appDefaults from "./app-defaults.js";
 
 /**
  * @module app-state

@@ -1,6 +1,6 @@
 // @ts-check
-import { colorFunctionKeys} from "./app-petal-color-functions";
-import { drawFunctionKeys } from "./app-petal-draw-functions";
+import { colorFunctionKeys} from "./app-petal-color-functions.js";
+import { drawFunctionKeys } from "./app-petal-draw-functions.js";
 
 
 /**

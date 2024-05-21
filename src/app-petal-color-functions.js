@@ -1,6 +1,6 @@
 // @ts-check
 
-import { randomArrayElement } from "./utils/utils";
+import { randomArrayElement } from "./utils/utils.js";
 
 /**
  * @module app-color-functions

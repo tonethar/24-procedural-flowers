@@ -5,8 +5,11 @@
 - Wanted to do my own version with some more features!
 
 ## I. Try it out
-- v3 - url1
-- v4 - url2
+- v3 - The original assignment
+  - https://tonethar.github.io/projects/procedural-flowers/original-assignment/index.html
+- v5 - Lot's of new feaatures!
+  - https://tonethar.github.io/projects/procedural-flowers/index.html
+  - https://tonethar.github.io/projects/procedural-flowers/latest-esm/index.html
 
 ## II. Instructions
 - `git clone https://github.com/tonethar/24-procedural-flowers.git`
@@ -44,7 +47,6 @@
 - Vanilla ES6 with *main.js* and *utils.js* modules - needs to run off of a web server.
 - ES6 `Flower` class
 - Arrow functions
-- ESLint
 - JSDoc for generating documentation
 
 ### v3
@@ -61,4 +63,3 @@
 - Multiple flowers
   - option for periodically spawned flowers with random starting values
 - Click on canvas to create a new flower
-
