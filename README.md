@@ -7,8 +7,8 @@
 ## I. Try it out
 - v3 - The original assignment
   - https://tonethar.github.io/projects/procedural-flowers/original-assignment/index.html
-- v5 - Lot's of new feaatures!
-  - https://tonethar.github.io/projects/procedural-flowers/index.html
+- v5 - Lot's of new features!
+  - https://tonethar.github.io/projects/procedural-flowers/latest/index.html
   - https://tonethar.github.io/projects/procedural-flowers/latest-esm/index.html
 
 ## II. Instructions
