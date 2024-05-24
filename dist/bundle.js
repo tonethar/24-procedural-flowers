@@ -695,6 +695,11 @@ var setupUI = function setupUI(defaults, state, callbacks) {
   canvas.onclick = function (e) {
     return callbacks.canvasClickFunction(e);
   };
+
+  // V. Keyboard interaction
+  onkeyup = function onkeyup(e) {
+    if (e.key == "g" || e.key == "G") callbacks.gimme10Function();
+  };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (setupUI);
 
