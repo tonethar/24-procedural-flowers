@@ -250,6 +250,11 @@ export const setupUI = (defaults, state, callbacks) => {
 
   // IV. Mouse interaction
   canvas.onclick = (e) => callbacks.canvasClickFunction(e);
+
+  // V. Keyboard interaction
+  onkeyup = (e) => {
+    if (e.key == "g" || e.key == "G") callbacks.gimme10Function();
+  };
 };
 
 export default setupUI;
