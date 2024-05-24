@@ -10,4 +10,5 @@
  * @property {function} goFullScreenFunction
  * @property {function} resetFunction
  * @property {function} restartFunction
+ * @property {function} gimme10Function
  */

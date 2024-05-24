@@ -182,6 +182,7 @@ const init = () => {
     goFullScreenFunction: () => goFullScreen(canvas),
     resetFunction: () => window.location.reload(),
     restartFunction: initFlowerSprite,
+    gimme10Function: () => initRandomFlowerSprites(10),
   };
   setupUI(appDefaults, state, uiCallbacks);
 

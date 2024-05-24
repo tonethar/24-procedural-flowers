@@ -4,9 +4,11 @@ import { fillRect } from "./utils/utils-canvas.js";
 
 // JSDoc interface
 import "./types/IUICallbacks.js";
+import "./types/IAppDefaults.js";
 
 /**
  * @function setupUI
+ * @param {IAppDefaults} defaults
  * @param {import("./types/IAppState.js").IAppState} state 
  * @param {IUICallbacks} callbacks 
  */
@@ -40,6 +42,13 @@ export const setupUI = (defaults, state, callbacks) => {
 
   /* INITIALIZE UI ELEMENTS */
   // I. Buttons
+  /**
+   * @var btnGimme10
+   * @type {!HTMLButtonElement}
+   */
+  const btnGimme10 = assertIsNotNull(document.querySelector("#btn-gimme-10"));
+  btnGimme10.onclick = () => callbacks.gimme10Function();
+
   /**
    * @var btnRestart
    * @type {!HTMLButtonElement}  

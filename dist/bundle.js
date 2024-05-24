@@ -440,6 +440,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_utils_canvas_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/utils-canvas.js */ "./src/utils/utils-canvas.js");
 /* harmony import */ var _types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./types/IUICallbacks.js */ "./src/types/IUICallbacks.js");
 /* harmony import */ var _types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_types_IUICallbacks_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _types_IAppDefaults_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./types/IAppDefaults.js */ "./src/types/IAppDefaults.js");
+/* harmony import */ var _types_IAppDefaults_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_types_IAppDefaults_js__WEBPACK_IMPORTED_MODULE_3__);
 // @ts-check
 
 
@@ -447,8 +449,10 @@ __webpack_require__.r(__webpack_exports__);
 // JSDoc interface
 
 
+
 /**
  * @function setupUI
+ * @param {IAppDefaults} defaults
  * @param {import("./types/IAppState.js").IAppState} state 
  * @param {IUICallbacks} callbacks 
  */
@@ -483,6 +487,15 @@ var setupUI = function setupUI(defaults, state, callbacks) {
 
   /* INITIALIZE UI ELEMENTS */
   // I. Buttons
+  /**
+   * @var btnGimme10
+   * @type {!HTMLButtonElement}
+   */
+  var btnGimme10 = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__.assertIsNotNull)(document.querySelector("#btn-gimme-10"));
+  btnGimme10.onclick = function () {
+    return callbacks.gimme10Function();
+  };
+
   /**
    * @var btnRestart
    * @type {!HTMLButtonElement}  
@@ -1062,6 +1075,7 @@ _defineProperty(RotatingFlower, "maxPetals", 50);
  * @property {function} goFullScreenFunction
  * @property {function} resetFunction
  * @property {function} restartFunction
+ * @property {function} gimme10Function
  */
 
 /***/ }),
@@ -1534,7 +1548,10 @@ var init = function init() {
     resetFunction: function resetFunction() {
       return window.location.reload();
     },
-    restartFunction: initFlowerSprite
+    restartFunction: initFlowerSprite,
+    gimme10Function: function gimme10Function() {
+      return initRandomFlowerSprites(10);
+    }
   };
   (0,_app_ui_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"], _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"], uiCallbacks);
 
