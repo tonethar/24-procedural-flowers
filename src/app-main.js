@@ -98,10 +98,27 @@ const createRandomFlower = (x, y) => {
  * @desc clears flowers list, instantiates initial flower using defaults, and adds it to list.
  */
 const initFlowerSprite = () => {
-  // clear list
+  // clear flower list
   state.flowerList.length = 0;
   // add flower to list
   addFlowerToList(createFlowerWithCurrentUISettings(appDefaults.canvasWidth/2, appDefaults.canvasHeight/2));
+};
+
+/**
+ * @name initRandomFlowerSprites
+ * @param {number} howMany 
+ * @desc clears flowers list, instantiates random flowers, and adds them to list.
+ */
+const initRandomFlowerSprites = (howMany) => {
+  // clear flower list
+  state.flowerList.length = 0;
+   // add random flowers to list
+  for(let i = 0; i < howMany; i++){
+    const padding = appDefaults.randomFlowerPadding;
+    const x = randomNumber(padding, appDefaults.canvasWidth-padding);
+    const y = randomNumber(padding, appDefaults.canvasHeight-padding);
+    addFlowerToList(createRandomFlower(x, y));
+  }
 };
 
 /**
@@ -146,6 +163,7 @@ const init = () => {
   /**
    * @name canvasClickFunction
    * @param {MouseEvent} e 
+   * @desc inner function scoped to init
    */
   const canvasClickFunction = e => {
     /** @type {IPoint} */
@@ -183,6 +201,7 @@ const init = () => {
 
   // initialize starting flower
   initFlowerSprite();
+  //initRandomFlowerSprites(10);
 
   // IV. start up app
   loop(state.ctx);

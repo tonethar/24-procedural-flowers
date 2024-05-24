@@ -1437,10 +1437,27 @@ var createRandomFlower = function createRandomFlower(x, y) {
  * @desc clears flowers list, instantiates initial flower using defaults, and adds it to list.
  */
 var initFlowerSprite = function initFlowerSprite() {
-  // clear list
+  // clear flower list
   _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].flowerList.length = 0;
   // add flower to list
   addFlowerToList(createFlowerWithCurrentUISettings(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth / 2, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight / 2));
+};
+
+/**
+ * @name initRandomFlowerSprites
+ * @param {number} howMany 
+ * @desc clears flowers list, instantiates random flowers, and adds them to list.
+ */
+var initRandomFlowerSprites = function initRandomFlowerSprites(howMany) {
+  // clear flower list
+  _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].flowerList.length = 0;
+  // add random flowers to list
+  for (var i = 0; i < howMany; i++) {
+    var padding = _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowerPadding;
+    var x = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasWidth - padding);
+    var y = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_5__.randomNumber)(padding, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].canvasHeight - padding);
+    addFlowerToList(createRandomFlower(x, y));
+  }
 };
 
 /**
@@ -1495,6 +1512,7 @@ var init = function init() {
   /**
    * @name canvasClickFunction
    * @param {MouseEvent} e 
+   * @desc inner function scoped to init
    */
   var canvasClickFunction = function canvasClickFunction(e) {
     /** @type {IPoint} */
@@ -1535,6 +1553,7 @@ var init = function init() {
 
   // initialize starting flower
   initFlowerSprite();
+  //initRandomFlowerSprites(10);
 
   // IV. start up app
   loop(_app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].ctx);
