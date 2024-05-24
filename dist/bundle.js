@@ -1434,7 +1434,7 @@ var createRandomFlower = function createRandomFlower(x, y) {
 
 /**
  * @name initFlowerSprite
- * @desc instantiates initial flower using defaults and adds it to flowers list.
+ * @desc clears flowers list, instantiates initial flower using defaults, and adds it to list.
  */
 var initFlowerSprite = function initFlowerSprite() {
   // clear list
