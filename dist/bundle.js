@@ -1433,10 +1433,10 @@ var createRandomFlower = function createRandomFlower(x, y) {
 };
 
 /**
- * @name initFlowerSprites
+ * @name initFlowerSprite
  * @desc instantiates initial flower using defaults and adds it to flowers list.
  */
-var initFlowerSprites = function initFlowerSprites() {
+var initFlowerSprite = function initFlowerSprite() {
   // clear list
   _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].flowerList.length = 0;
   // add flower to list
@@ -1516,7 +1516,7 @@ var init = function init() {
     resetFunction: function resetFunction() {
       return window.location.reload();
     },
-    restartFunction: initFlowerSprites
+    restartFunction: initFlowerSprite
   };
   (0,_app_ui_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"], _app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"], uiCallbacks);
 
@@ -1534,7 +1534,7 @@ var init = function init() {
   }, _app_defaults_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomFlowerDelay);
 
   // initialize starting flower
-  initFlowerSprites();
+  initFlowerSprite();
 
   // IV. start up app
   loop(_app_state_js__WEBPACK_IMPORTED_MODULE_3__["default"].ctx);

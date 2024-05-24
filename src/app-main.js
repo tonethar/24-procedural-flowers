@@ -94,10 +94,10 @@ const createRandomFlower = (x, y) => {
 };
 
 /**
- * @name initFlowerSprites
+ * @name initFlowerSprite
  * @desc instantiates initial flower using defaults and adds it to flowers list.
  */
-const initFlowerSprites = () => {
+const initFlowerSprite = () => {
   // clear list
   state.flowerList.length = 0;
   // add flower to list
@@ -163,7 +163,7 @@ const init = () => {
     getPetalColorFunction: getPetalColorFunction,
     goFullScreenFunction: () => goFullScreen(canvas),
     resetFunction: () => window.location.reload(),
-    restartFunction: initFlowerSprites,
+    restartFunction: initFlowerSprite,
   };
   setupUI(appDefaults, state, uiCallbacks);
 
@@ -182,7 +182,7 @@ const init = () => {
   }, appDefaults.randomFlowerDelay);
 
   // initialize starting flower
-  initFlowerSprites();
+  initFlowerSprite();
 
   // IV. start up app
   loop(state.ctx);
